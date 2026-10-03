@@ -27,7 +27,7 @@ import rasterio
 import rasterio.transform
 import torch
 from rasterio.windows import Window
-from lightglue import ALIKED, LightGlue, SuperPoint
+from lightglue import ALIKED, DISK, SIFT, DoGHardNet, LightGlue, SuperPoint
 from lightglue.utils import numpy_image_to_torch, rbd
 
 from geo_utils import enu_to_lonlat_m, haversine_m
@@ -186,7 +186,7 @@ class LocalizationPipeline:
         if footprint_candidates_m is not None:
             self.QUERY_FOOTPRINT_CANDIDATES_M = tuple(footprint_candidates_m)
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
-        Ext = {"superpoint": SuperPoint, "aliked": ALIKED}[features]
+        Ext = {"superpoint": SuperPoint, "aliked": ALIKED, "disk": DISK, "sift": SIFT, "doghardnet": DoGHardNet}[features]
         self.extractor = Ext(max_num_keypoints=max_keypoints).eval().to(self.device)
         self.map_extractor_net = (Ext(max_num_keypoints=map_max_keypoints).eval().to(self.device)
                                   if map_max_keypoints else self.extractor)

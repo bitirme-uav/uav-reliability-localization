@@ -1,0 +1,21 @@
+havuz            etiket test        AUROC  kabul   risk  en kotu (taban)
+AerialVL-yalniz  y10    aerialvl    0.900  0.350  0.153    0.269 (0.47)
+AerialVL-yalniz  y10    anyvisloc   0.929  0.111  0.012    0.067 (0.59)  <- gorulmemis
+AerialVL-yalniz  y10    visloc      0.826  0.006  0.250      nan (0.10)  <- gorulmemis
+AerialVL-yalniz  y10    vpair       0.816  0.100  0.063    0.063 (0.41)  <- gorulmemis
+AerialVL-yalniz  y10    alto        0.745  0.026  0.041    0.041 (0.39)  <- gorulmemis
+AerialVL-yalniz  y25    aerialvl    0.938  0.786  0.158    0.233 (0.68)
+AerialVL-yalniz  y25    anyvisloc   0.976  0.677  0.056    0.303 (0.67)  <- gorulmemis
+AerialVL-yalniz  y25    visloc      0.843  0.561  0.398    0.557 (0.37)  <- gorulmemis
+AerialVL-yalniz  y25    vpair       0.775  0.865  0.248    0.248 (0.67)  <- gorulmemis
+AerialVL-yalniz  y25    alto        0.929  0.905  0.043    0.043 (0.89)  <- gorulmemis
+KARISIK          y10    aerialvl    0.899  0.602  0.280    0.395 (0.47)
+KARISIK          y10    anyvisloc   0.964  0.636  0.101    0.274 (0.59)
+KARISIK          y10    visloc      0.881  0.176  0.650    0.694 (0.10)
+KARISIK          y10    vpair       0.829  0.838  0.518    0.518 (0.41)  <- gorulmemis
+KARISIK          y10    alto        0.757  0.885  0.566    0.566 (0.39)  <- gorulmemis
+KARISIK          y25    aerialvl    0.940  0.881  0.229    0.303 (0.68)
+KARISIK          y25    anyvisloc   0.985  0.761  0.128    0.521 (0.67)
+KARISIK          y25    visloc      0.868  0.611  0.400    0.561 (0.37)
+KARISIK          y25    vpair       0.781  0.913  0.265    0.265 (0.67)  <- gorulmemis
+KARISIK          y25    alto        0.967  0.951  0.069    0.069 (0.89)  <- gorulmemis

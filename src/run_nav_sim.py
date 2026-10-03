@@ -37,6 +37,7 @@ R_MIN, R_MAX = 60.0, 400.0
 DOWNWEIGHT_R_SCALE = 4.0
 VEL_WINDOW = 6  # dead-reckoning hizi icin son N adim
 ALL_POLICIES = ("E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9", "E10")
+V2_POLICIES = ("M10", "M25", "A25")   # reliability_v2_bundle.pkl: karisik/AerialVL modelleri, 10/25 m etiketi
 
 
 class Policy:
@@ -119,6 +120,10 @@ def main():
     r_nom = float(np.mean(np.diag(R_nominal)))
     m_vis = models["cal_visual (logreg)"]
     m_vm = models["cal_vis+Mahal (gbm)"]
+    V2 = {}
+    if any(pp in V2_POLICIES for pp in args.policies.split(",")):
+        with open("../outputs/reliability_v2_bundle.pkl", "rb") as f:
+            V2 = pickle.load(f)
 
     if args.dataset == "visloc":
         from visloc_attitude import correct_fix_enu as att_correct, load_coef
@@ -241,16 +246,20 @@ def main():
                                                p=[probs["accept"], probs["down-weight"], probs["reject"]])
                 elif p == "E10":
                     decision = "accept" if rec.safe_primary else "reject"
+                elif p in V2_POLICIES:
+                    rec.calibrated_reliability = float(V2[p]["model"].predict_proba([row])[0])
+                    decision = three_level(rec.calibrated_reliability, V2[p]["th"])
                 else:
                     decision = "reject"
             rec.decision = decision
             writer.write(rec)
             if fix is not None:
                 pol.counts[decision] += 1
+                r_use = float(np.mean(np.diag(V2[p]["R"]))) if p in V2_POLICIES else r_nom
                 if decision == "accept":
-                    pol.correct(fix, r_nom, gx, gy)
+                    pol.correct(fix, r_use, gx, gy)
                 elif decision == "down-weight":
-                    pol.correct(fix, r_nom * DOWNWEIGHT_R_SCALE, gx, gy)
+                    pol.correct(fix, r_use * DOWNWEIGHT_R_SCALE, gx, gy)
     writer.close()
 
     wall = time.monotonic() - t0

@@ -1,0 +1,21 @@
+havuz            etiket test        OOD ucus |   NORMAL kabul/risk/enkotu |   OOD-KAPILI kabul/risk/enkotu
+AerialVL-yalniz  y10   aerialvl      0/3    |   0.350   0.153   0.269    |   0.350   0.153   0.269
+AerialVL-yalniz  y10   anyvisloc    11/11   |   0.111   0.012   0.067    |   0.019   0.000   0.000
+AerialVL-yalniz  y10   visloc        4/4    |   0.006   0.250     nan    |   0.000     nan     nan
+AerialVL-yalniz  y10   vpair         1/1    |   0.100   0.063   0.063    |   0.014   0.062   0.062
+AerialVL-yalniz  y10   alto          1/1    |   0.026   0.041   0.041    |   0.001   0.000     nan
+AerialVL-yalniz  y25   aerialvl      0/3    |   0.786   0.158   0.233    |   0.786   0.158   0.233
+AerialVL-yalniz  y25   anyvisloc    11/11   |   0.677   0.056   0.303    |   0.197   0.000   0.000
+AerialVL-yalniz  y25   visloc        4/4    |   0.561   0.398   0.557    |   0.077   0.185   0.255
+AerialVL-yalniz  y25   vpair         1/1    |   0.865   0.248   0.248    |   0.327   0.121   0.121
+AerialVL-yalniz  y25   alto          1/1    |   0.905   0.043   0.043    |   0.161   0.000   0.000
+KARISIK          y10   aerialvl      0/3    |   0.602   0.280   0.395    |   0.602   0.280   0.395
+KARISIK          y10   anyvisloc     0/11   |   0.636   0.101   0.274    |   0.636   0.101   0.274
+KARISIK          y10   visloc        0/4    |   0.176   0.650   0.694    |   0.176   0.650   0.694
+KARISIK          y10   vpair         0/1    |   0.838   0.518   0.518    |   0.838   0.518   0.518
+KARISIK          y10   alto          0/1    |   0.885   0.566   0.566    |   0.885   0.566   0.566
+KARISIK          y25   aerialvl      0/3    |   0.881   0.229   0.303    |   0.881   0.229   0.303
+KARISIK          y25   anyvisloc     0/11   |   0.761   0.128   0.521    |   0.761   0.128   0.521
+KARISIK          y25   visloc        0/4    |   0.611   0.400   0.561    |   0.611   0.400   0.561
+KARISIK          y25   vpair         0/1    |   0.913   0.265   0.265    |   0.913   0.265   0.265
+KARISIK          y25   alto          0/1    |   0.951   0.069   0.069    |   0.951   0.069   0.069
