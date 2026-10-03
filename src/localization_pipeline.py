@@ -336,19 +336,10 @@ class LocalizationPipeline:
 
     def _match_and_verify(self, feats_q: dict, qshape: tuple[int, int], feats_m: dict,
                           map_extractor: MapExtractor, window: Window) -> RawLocalizationResult:
-        with torch.no_grad():
-            matches01 = self.matcher({"image0": feats_q, "image1": feats_m})
-        feats_q_, feats_m_, matches01 = (rbd(x) for x in (feats_q, feats_m, matches01))
-        matches = matches01["matches"]  # (N,2) idx into kpts0/kpts1
-        kpts_q = feats_q_["keypoints"]
-        kpts_m = feats_m_["keypoints"]
-
-        num_matches = int(matches.shape[0])
+        pts_q, pts_m = self._correspondences(feats_q, feats_m)
+        num_matches = int(len(pts_q))
         if num_matches < 4:
             return RawLocalizationResult(None, None, num_matches, 0, 0.0, None, None, None, 0.0, 0.0)
-
-        pts_q = kpts_q[matches[:, 0]].cpu().numpy()
-        pts_m = kpts_m[matches[:, 1]].cpu().numpy()
 
         # transform_model: "similarity" (4 DOF, az inlier'da stabil) veya
         # "homography" (8 DOF, perspektifi de modeller; bol inlier gerekir).
@@ -402,6 +393,17 @@ class LocalizationPipeline:
             transform_scale=float(np.sqrt(abs(np.linalg.det(M[:2, :2])))),
             second_inlier_count=second_inliers,
         )
+
+    def _correspondences(self, feats_q: dict, feats_m: dict) -> tuple[np.ndarray, np.ndarray]:
+        """Nokta eslesmeleri (query piksel, harita-kesiti piksel). Alt siniflar (ör. RoMa) degistirir."""
+        with torch.no_grad():
+            matches01 = self.matcher({"image0": feats_q, "image1": feats_m})
+        feats_q_, feats_m_, matches01 = (rbd(x) for x in (feats_q, feats_m, matches01))
+        matches = matches01["matches"]  # (N,2) idx into kpts0/kpts1
+        if int(matches.shape[0]) == 0:
+            return np.zeros((0, 2)), np.zeros((0, 2))
+        return (feats_q_["keypoints"][matches[:, 0]].cpu().numpy(),
+                feats_m_["keypoints"][matches[:, 1]].cpu().numpy())
 
     def _ransac(self, pts_q: np.ndarray, pts_m: np.ndarray):
         # "similarity" (4 DOF, az inlier'da stabil) veya "homography" (8 DOF)

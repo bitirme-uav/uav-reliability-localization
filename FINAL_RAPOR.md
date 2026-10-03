@@ -461,3 +461,23 @@ Karşılaştırma: GLOBAL (eğitim eşiği) ve ETİKETLİ-ALAN (o alanın etiket
 - **Sınırlama:** VPAIR örneği tek uçuş ve 159 test karesi; sonuçlar yön gösterici. Tam veri (2.706 kare) için başvuru formu var.
 
 **Not, disk:** AerialVL TRAIN sekanslarının görüntüleri, açık-döngü veri setinde kullanılan 341 kare dışında silindi (22 GB; dosya listesi `outputs/aerialvl_train_manifest.json`). Tüm sonuçlar ve modeller etkilenmiyor. Yalnızca boresight/yön analiz scriptleri (`analyze_bias.py`, `analyze_heading.py`) TRAIN'den rastgele seçtikleri için birebir yeniden çalıştırılamaz; ölçülen ofset kodda kayıtlı.
+
+---
+
+## 16. Ek deney: eşleştiriciyi değiştirmek (RoMa) — 2026-10-04
+
+**Soru:** Görünüm farkına dayanıklılığıyla bilinen yoğun eşleştirici RoMa (Edstedt vd., CVPR 2024; AnyVisLoc resmi kodunda kullanılıyor), SuperPoint + LightGlue'nun yerine konursa eşleşme iyileşir mi?
+
+**Kurulum:**
+- `src/roma_pipeline.py`: Lokalizerin ölçek araması, RANSAC ve konum hesabı aynen korundu; yalnızca nokta eşleşmeleri RoMa'dan geliyor (`romatch`, "outdoor" ağırlıkları).
+- Yalnızca geliştirme verisi kullanıldı: UAV-VisLoc TUNE + RECAL uçuşları (5 uçuş × 15 kare) ve VPAIR TUNE (40 kare). Prior 30 m hatalı, arama 60 m.
+- Lokalizer kodundaki yeniden düzenleme (eşleşme adımı ayrı fonksiyona alındı), AerialVL'de dondurulmuş kodla 10/10 kare birebir aynı sonucu verdi.
+
+| Veri | Yöntem | Median | ≤ 10 m | ≤ 25 m | > 100 m / yok | Süre |
+|---|---|---|---|---|---|---|
+| UAV-VisLoc dev | SuperPoint + LightGlue | 23.5 m | %25 | %55 | %35 | 0.6 s/kare |
+| UAV-VisLoc dev | RoMa | 23.0 m | %27 | %53 | %27 | 4.5 s/kare |
+| VPAIR TUNE | SuperPoint + LightGlue | 8.5 m | %57 | %98 | %0 | 0.2 s/kare |
+| VPAIR TUNE | RoMa | 9.4 m | %55 | %100 | %0 | 3.1 s/kare |
+
+**Bulgu:** RoMa kaybolan kareleri biraz azaltıyor (UAV-VisLoc'ta > 100 m: %35 → %27), ama 10 m hassasiyetini değiştirmiyor ve 7–15 kat yavaş. Jetson hedefi düşünüldüğünde değmez. Bu, §13'teki bulguyu destekliyor: UAV-VisLoc ve VPAIR'deki 10 m sınırı eşleştiriciden değil, irtifa/tutum belirsizliğinden ve harita kalitesinden kaynaklanıyor. Eşleştirici değiştirilmedi; bu nedenle güvenilirlik deneyleri de tekrarlanmadı.

@@ -1,0 +1,2 @@
+superpoint n=40 median=  8.5m <=5m= 22% <=10m= 57% <=25m= 98% median_inlier=141 0.2 s/kare
+roma       n=40 median=  9.4m <=5m= 25% <=10m= 55% <=25m=100% median_inlier=1908 3.1 s/kare
