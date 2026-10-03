@@ -1,0 +1,14 @@
+AerialVL TEST : n=1050 safe=46.7%
+visloc RECAL  : n=1400 safe=25.7%  fix'li=98%
+visloc TEST   : n=1400 safe=13.7%  fix'li=92%
+  lokalizer (RECAL, prior 0/30 m): median=14.4m <=10m=31% <=25m=67% fix-yok/>100m=20%
+  lokalizer (TEST, prior 0/30 m): median=22.3m <=10m=15% <=25m=58% fix-yok/>100m=14%
+
+yontem              AUROC  AUPRC | DONDURULMUS: ECE  kabul   risk | YENIDEN KAL.: ECE  kabul   risk
+ham skor            0.574  0.149 |            0.193  0.000    nan |             0.145  0.025  1.000
+SatLoc-tarzi        0.591  0.156 |            0.700  0.000    nan |             0.140  0.000    nan
+chi-square          0.641  0.288 |            0.140  0.000    nan |             0.122  0.364  0.786
+kal. goruntu-only   0.593  0.157 |            0.356  0.212  0.882 |             0.150  0.401  0.819
+kal. gor.+Mahal.    0.747  0.263 |            0.089  0.130  0.731 |             0.144  0.073  0.716
+yeniden egitim      0.874  0.509 |                                |             0.120  0.213  0.574
+(kabul = TEST kayitlarinda kabul orani; risk = kabul edilenlerde >10 m orani; hedef 0.2)

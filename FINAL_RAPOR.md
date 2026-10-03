@@ -306,3 +306,92 @@ for s in 02 04 07 09 11 12 13 18 19 22 24; do $PY anyvisloc_build_fix_dataset.py
 $PY visloc_eval_calibration.py anyvisloc
 $PY make_figures.py anyvisloc
 ```
+
+---
+
+## 13. Ek deneyler: UAV-VisLoc için tarihli haritalar ve karışık-alan eğitimi — 2026-10-03
+
+### 13.1 Tarihli harita denemesi (UAV-VisLoc)
+
+**Hipotez:** Harita ile uçuş arasındaki yıl/mevsim farkı eşleşmeyi bozuyor; uçuş tarihine yakın harita düzeltir.
+
+**Kaynaklar:**
+- **Esri World Imagery Wayback** (`src/wayback_fetch.py`).
+- **Google Earth geçmiş görüntüleri** (GEHistoricalImagery aracı, `src/gehi_fetch.py`; akademik ödev kapsamında). İki bağımsız araştırma ajanı aynı tarihleri buldu (`UAV_VISLOC_HARITA_BULGULAR.md`).
+- Uçuş 11 için yakın tarihli Google görüntüsü yok; bu uçuş yalnızca veri setinin haritası ve Wayback ile kaldı.
+
+**Harita seçim kuralları** (geliştirme uçuşlarına göre, TEST'ten önce sabitlendi):
+- **K1, gerçekçi:** Her koşulda veri setinin haritası ve Google'ın uçuştan **önceki** en yakın çekimi denenir; en çok inlier vereni seçilir (gerçek konum kullanılmaz).
+- **K2, geriye dönük:** Uçuştan sonraki Google çekimleri ve tüm Wayback çekimleri de aday.
+
+**Lokalizer, TEST uçuşları (02, 04, 08, 11), prior 0/30 m:**
+
+| Harita | Median | ≤ 10 m | ≤ 25 m | fix yok / > 100 m |
+|---|---|---|---|---|
+| Veri seti | 28.3 m | %13 | %45 | %25 |
+| K1 | 24.4 m | %14 | %52 | %19 |
+| K2 | 22.3 m | %15 | %58 | %14 |
+
+Uçuş bazında (≤ 25 m, veri seti → K1): 02: %34 → %38, 04: %67 → %70, **08: %35 → %58**, 11: %43 → %43.
+
+**Bulgular:**
+- Uygun tarihli harita **kaba eşleşmeyi** belirgin iyileştiriyor: kaybolan kare azalıyor, ≤ 25 m oranı artıyor. Ama **10 m hassasiyetini değiştirmiyor**.
+- Kalan hata sistematik değil, rastgele. RECAL uçuşlarında doğru eşleşmelerin ortalama kayması ~0, standart sapma ~10–13 m (uçuş 01 hariç; orada ileri yönde −18 m). 400–550 m yükseklikte 1° tutum hatası yerde ~9 m eder. Bu yüzden ≤ 10 m etiketi bu platformda fiziksel olarak çok sıkı; kamera düzeltmesini yeniden uydurmak işe yaramaz.
+- Bazı uçuşlarda harita tarihi sorun değil:
+  - **06:** Veri setinin haritası zaten uçuştan 13 gün önceki Google görüntüsü; sorun ormanlık, dağlık arazi.
+  - **01:** Nehir üstü, yeniden yapılaşmış şehir.
+- Ayrıca veri seti haritalarının bir kısmının makalede belirtilenden farklı tarihli Google görüntüleri olduğu görüldü (uçuş 04, tek noktada kontrol edildi).
+- **Güvenilirlik açısından:** Dondurulmuş modelin AUROC'u (≤ 10 m) veri seti haritasında 0.795, K1'de 0.773, K2'de 0.747. Güvenli oran düşük kaldığı için (%10–14) dondurulmuş eşik neredeyse hiçbir şey kabul etmiyor. İkincil etiketle (≤ 25 m) AUROC: kalibre 0.735 / 0.710, ham skor 0.565 / 0.597.
+
+### 13.2 Karışık-alan eğitimi ve bir-veri-setini-dışarıda-bırak (LODO)
+
+**Tasarım** (sonuçlara bakmadan sabitlendi; `src/mixed_training.py`):
+- **Eğitim havuzları** (hiçbiri TEST değil): AerialVL TRAIN + VAL (2.240 kayıt), AnyVisLoc RECAL (3.080), UAV-VisLoc RECAL, veri seti haritası (1.400).
+- **Model:** Dondurulmuş modelle aynı tarif (görüntü + Mahalanobis özellikleri, GBM + isotonic).
+- **Eşik:** Eğitim havuzunda sekans/sahne gruplu 5-kat çapraz doğrulama tahminlerinden, kabul edilenlerde risk ≤ %20 kuralıyla. TEST kullanılmadı.
+- **Deneyler:** DONMUŞ (mevcut AerialVL modeli), KARIŞIK (üç havuz), LODO (iki havuzla eğit, üçüncüde ölç; görülmemiş alan).
+
+**Ayırt etme (AUROC, ≤ 10 m etiketi):**
+
+| TEST | DONMUŞ (yalnız AerialVL) | KARIŞIK | LODO (bu veri seti hiç görülmeden) |
+|---|---|---|---|
+| AerialVL | 0.887 | **0.899** | 0.856 |
+| AnyVisLoc | 0.929 | **0.964** | 0.949 |
+| UAV-VisLoc | 0.795 | **0.881** | 0.842 |
+| UAV-VisLoc (K1) | 0.773 | **0.870** | 0.823 |
+
+**Kalibrasyon (ECE):**
+
+| TEST | DONMUŞ | KARIŞIK |
+|---|---|---|
+| AerialVL | 0.093 | **0.030** |
+| AnyVisLoc | 0.323 | **0.025** |
+| UAV-VisLoc | 0.043 | 0.045 |
+
+**Karar (kabul oranı / kabul edilenlerde > 10 m oranı; hedef ≤ %20):**
+
+| TEST | DONMUŞ | KARIŞIK, tek ortak eşik | KARIŞIK + alan-bazlı eşik* | LODO, görülmemiş alan |
+|---|---|---|---|---|
+| AerialVL | %36.7 / %16.6 | %60.2 / %28.0 | %30.9 / **%12.7** | %79.2 / %41.8 |
+| AnyVisLoc | %20.9 / %2.2 | %63.6 / %10.1 | %76.6 / %22.6 | %14.9 / %1.3 |
+| UAV-VisLoc | %0.4 / %16.7 | %17.6 / %65.0 | %2.0 / %21.4 | %55.1 / %83.0 |
+| UAV-VisLoc (K1) | %0.4 / %33.3 | %20.6 / %64.4 | %2.4 / %30.3 | %62.6 / %83.0 |
+
+\* **Sonradan analiz** (önceden planlanmadı): Her alanın eşiği, karışık modelin yalnızca o alanın eğitim/RECAL havuzundaki çapraz doğrulama tahminlerinden seçildi.
+
+**Bulgular:**
+1. **Çeşitli veriyle eğitim genellemeyi artırıyor.** Karışık model her TEST kümesinde dondurulmuş modelden daha iyi sıralıyor. Daha önemlisi, iki veri setiyle eğitilen model **hiç görmediği** üçüncü veri setinde, yalnızca AerialVL ile eğitilen modelden genelde daha iyi (UAV-VisLoc: 0.842 vs 0.795; AnyVisLoc: 0.949 vs 0.929). AerialVL'yi görmeyen modelin AerialVL'deki skoru (0.856) dondurulmuş modelin kendi TEST'inden düşük; bu beklenen bir durum.
+2. **Olasılıklar çok daha dürüst.** Karışık modelin ECE'si AerialVL ve AnyVisLoc'ta 3–13 kat düştü. §4'teki "taban oran kayması" sorunu büyük ölçüde gitti.
+3. **Tek bir ortak eşik bütün bölgelerde risk sözünü tutamıyor.** Bölgelerin güvenli oranları çok farklı (UAV-VisLoc %10, AerialVL %47, AnyVisLoc %59). Havuzda seçilen eşik kolay bölgelerin ağırlığıyla belirleniyor, zor bölgede çok fazla kabul ediyor. LODO'da görülmemiş alandaki risk de hedefi aşıyor (AnyVisLoc dışında).
+4. **Alan-bazlı eşik riski hedef civarına getiriyor** (%13–23). Ama UAV-VisLoc'ta güvenli kabul edilebilecek fix çok az (%2). Bu bir model sorunu değil; o platformda lokalizerin 10 m içi doğru fix oranının düşüklüğünden kaynaklanıyor.
+5. **Pratik tarif:** Çok bölgeden eğitilmiş güvenilirlik modeli + her yeni bölgede küçük bir yerel veriyle eşik ayarı. Yerel veri yoksa, görülmemiş bölgede sıralama güvenilir ama eşik güvenilir değil. Bu durumda temkinli bir eşik ve REACQUIRE teyidi şart.
+
+### 13.3 Yeniden üretme
+```bash
+cd src; PY=../venv/bin/python
+$PY gehi_fetch.py                                   # Google geçmiş görüntüler (araç: ../../tools/gehi)
+$PY visloc_build_fix_dataset.py --group test  --maps k1     # k2 için --maps k2
+$PY visloc_build_fix_dataset.py --group recal --maps k1
+$PY visloc_eval_calibration.py visloc k1
+$PY mixed_training.py
+```

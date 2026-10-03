@@ -21,8 +21,9 @@ from reliability_model import VISUAL_PLUS_MAHALANOBIS, ReliabilityModel, expecte
 
 RISK = 0.20
 DS = sys.argv[1] if len(sys.argv) > 1 else "visloc"          # visloc | anyvisloc
-recal = load_records(f"../outputs/{DS}_fixes_recal.jsonl")
-test = load_records(f"../outputs/{DS}_fixes_test.jsonl")
+SUF = f"_{sys.argv[2]}" if len(sys.argv) > 2 else ""            # ör. k1 (UAV-VisLoc harita kurali)
+recal = load_records(f"../outputs/{DS}_fixes_recal{SUF}.jsonl")
+test = load_records(f"../outputs/{DS}_fixes_test{SUF}.jsonl")
 aer = load_records("../outputs/fixes_test.jsonl")
 bundle = pickle.load(open("../outputs/calibration_models.pkl", "rb"))
 TH = json.load(open("../outputs/thresholds.json"))
@@ -108,5 +109,5 @@ summary["yeniden egitim (gbm, RECAL)"] = dict(auroc=roc_auc_score(y_t, pt), aupr
 print(f"{'yeniden egitim':18s} {roc_auc_score(y_t, pt):6.3f} {average_precision_score(y_t, pt):6.3f} | {'':16s} {'':6s} {'':6s} | "
       f"{expected_calibration_error(y_t, pt):17.3f} {cov_c:6.3f} {risk_c:6.3f}")
 print(f"(kabul = TEST kayitlarinda kabul orani; risk = kabul edilenlerde >10 m orani; hedef {RISK})")
-json.dump(summary, open(f"../outputs/{DS}_calibration_summary.json", "w"), indent=2, default=float)
-pickle.dump({"R_vis": R_vis}, open(f"../outputs/{DS}_recal_bundle.pkl", "wb"))
+json.dump(summary, open(f"../outputs/{DS}{SUF}_calibration_summary.json", "w"), indent=2, default=float)
+pickle.dump({"R_vis": R_vis}, open(f"../outputs/{DS}{SUF}_recal_bundle.pkl", "wb"))

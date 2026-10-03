@@ -1,0 +1,28 @@
+KARISIK (3 veri seti): esik=0.332
+LODO: aerialvl disarida: esik=0.198
+LODO: anyvisloc disarida: esik=0.664
+LODO: visloc disarida: esik=0.206
+
+deney                        test        AUROC AUROC25    ECE  kabul   risk  (guvenli oran)
+DONMUS (AerialVL)            aerialvl    0.887   0.906  0.093  0.367  0.166  (0.467)
+DONMUS (AerialVL)            anyvisloc   0.929   0.940  0.323  0.209  0.022  (0.593)
+DONMUS (AerialVL)            visloc      0.795   0.735  0.043  0.004  0.167  (0.099)
+DONMUS (AerialVL)            visloc_k1   0.773   0.710  0.050  0.004  0.333  (0.113)
+KARISIK (3 veri seti)        aerialvl    0.899   0.919  0.030  0.602  0.280  (0.467)
+KARISIK (3 veri seti)        anyvisloc   0.964   0.979  0.025  0.636  0.101  (0.593)
+KARISIK (3 veri seti)        visloc      0.881   0.830  0.045  0.176  0.650  (0.099)
+KARISIK (3 veri seti)        visloc_k1   0.870   0.811  0.053  0.206  0.644  (0.113)
+LODO: aerialvl disarida      aerialvl    0.856   0.915  0.158  0.792  0.418  (0.467) <- GORULMEMIS ALAN
+LODO: aerialvl disarida      anyvisloc   0.963   0.979  0.032  0.707  0.168  (0.593)
+LODO: aerialvl disarida      visloc      0.862   0.827  0.041  0.331  0.737  (0.099)
+LODO: aerialvl disarida      visloc_k1   0.852   0.808  0.047  0.381  0.738  (0.113)
+LODO: anyvisloc disarida     aerialvl    0.905   0.918  0.056  0.360  0.138  (0.467)
+LODO: anyvisloc disarida     anyvisloc   0.949   0.945  0.258  0.149  0.013  (0.593) <- GORULMEMIS ALAN
+LODO: anyvisloc disarida     visloc      0.878   0.779  0.047  0.021  0.172  (0.099)
+LODO: anyvisloc disarida     visloc_k1   0.865   0.756  0.051  0.021  0.172  (0.113)
+LODO: visloc disarida        aerialvl    0.901   0.920  0.049  0.667  0.324  (0.467)
+LODO: visloc disarida        anyvisloc   0.967   0.981  0.024  0.669  0.130  (0.593)
+LODO: visloc disarida        visloc      0.842   0.822  0.288  0.551  0.830  (0.099) <- GORULMEMIS ALAN
+LODO: visloc disarida        visloc_k1   0.823   0.807  0.333  0.626  0.830  (0.113) <- GORULMEMIS ALAN
+yazildi: outputs/mixed_training_summary.json
+KARISIK_BITTI
