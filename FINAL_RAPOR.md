@@ -395,3 +395,37 @@ $PY visloc_build_fix_dataset.py --group recal --maps k1
 $PY visloc_eval_calibration.py visloc k1
 $PY mixed_training.py
 ```
+
+---
+
+## 14. Ek deney: etiketsiz bölgeye uyum — 2026-10-03
+
+**Soru:** Yeni bir bölgede etiket (gerçek konum) yokken, eşiği o bölgeye kendiliğinden uyarlayabilir miyiz?
+
+**Yöntem** (sonuçlara bakmadan sabitlendi; `src/online_adapt.py`). Yalnızca modelin o uçuştaki olasılıkları kullanılıyor:
+1. **EM taban-oran düzeltmesi** (Saerens vd. 2002): Uçuştaki tahminlerden bölgenin güvenli oranı tahmin edilir ve olasılıklar buna göre düzeltilir.
+2. **Öz-tahmin risk eşiği:** Kabul edilenlerin *tahmini* hata oranı ≤ %20 olacak en geniş kabul seçilir.
+
+Bölge = uçuş/sahne. Varyantlar:
+- **OTO-TOPLU:** Uçuşun tüm fix'leri birlikte.
+- **OTO-ÇEVRİMİÇİ:** Her an yalnızca o ana kadarki fix'ler; ilk 30 kayıtta eğitim eşiği.
+- **OTO-EMSİZ:** Yalnızca öz-tahmin eşiği, EM düzeltmesi yok.
+
+Karşılaştırma: GLOBAL (eğitim eşiği) ve ETİKETLİ-ALAN (o alanın etiketli RECAL verisiyle eşik; referans).
+
+**Sonuçlar** (kabul / kabul edilenlerde > 10 m; hedef ≤ %20):
+
+| Model → TEST | GLOBAL | OTO-EMSİZ | OTO-TOPLU | OTO-ÇEVRİMİÇİ | ETİKETLİ-ALAN |
+|---|---|---|---|---|---|
+| DONMUŞ → AerialVL | %36.7 / %16.6 | %40.2 / %18.2 | %41.9 / %19.1 | %39.8 / %16.0 | %46.1 / %21.1 |
+| DONMUŞ → AnyVisLoc | %20.9 / %2.2 | %17.6 / %2.6 | %15.3 / %0.6 | %16.8 / %3.1 | %76.6 / %24.1 |
+| DONMUŞ → UAV-VisLoc | %0.4 / %16.7 | %0.1 / %0 | %0 / – | %0 / – | %2.2 / %45.2 |
+| **LODO → AnyVisLoc (görülmemiş)** | %14.9 / %1.3 | %20.8 / %1.9 | **%47.2 / %9.8** | **%45.7 / %10.5** | %73.8 / %20.6 |
+| LODO → AerialVL (görülmemiş) | %79.2 / %41.8 | %74.6 / %39.1 | %86.7 / %46.6 | %90.5 / %48.6 | %21.8 / %18.8 |
+| LODO → UAV-VisLoc (görülmemiş) | %55.1 / %83.0 | %38.1 / %77.7 | %40.9 / %84.5 | %44.4 / %85.0 | %1.1 / %18.8 |
+
+**Bulgular (dürüst):**
+- **Etiketsiz uyum yalnızca kayma "taban oran" türündeyse işe yarıyor.** Görülmemiş AnyVisLoc'ta kabul oranı **%15'ten %46–47'ye** çıktı, risk hâlâ hedefin altında (%10). Bu, çevrimiçi sürümde de geçerli. Yani sahada uçarken kendiliğinden yapılabiliyor.
+- **Görülmemiş UAV-VisLoc ve AerialVL'de işe yaramıyor.** Orada model yeni bölgede **kendinden emin ama yanlış**. Aynı özellik değerleri bu bölgelerde başka anlamlara geliyor (özellik/kavram kayması). EM bunu düzeltemez; öz-tahmin eşiği de olasılıkların doğru olduğunu varsaydığı için risk %40–85'te kalıyor. Bu yöntemin bilinen teorik sınırı.
+- **Dondurulmuş modelde** AerialVL'de küçük kazanç var (%37 → %40–42, risk hedefte). AnyVisLoc'ta ise biraz daha temkinli.
+- **Sonuç:** Yeni bölgede etiketsiz eşik uyarlama bazı bölgelerde güvenli şekilde kapsamı artırıyor, ama **genel bir güvence vermiyor**. Güvenli sistem için ya o bölgeden az miktarda etiketli veri gerekiyor (ETİKETLİ-ALAN riskleri %19–24 civarında), ya da modelin "bu bölge eğitim verisine benzemiyor" diyebileceği bir **dağılım-dışı (OOD) tespiti** ile temkinli moda geçiş. OOD tespiti sonraki adım olarak öneriliyor.
