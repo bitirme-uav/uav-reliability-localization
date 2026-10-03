@@ -1,0 +1,12 @@
+VPAIR TEST lokalizer (prior 0/30 m): median=11.9 m <=10m=44% <=25m=71% >100/yok=6%  | tum kayitlarda guvenli oran 41.1%
+ham skor AUROC=0.685
+
+DONMUS (AerialVL): AUROC=0.818 AUROC25=0.772 ECE=0.066
+   GLOBAL         kabul=0.310 risk=0.246
+   OTO-TOPLU      kabul=0.235 risk=0.214
+   OTO-CEVRIMICI  kabul=0.222 risk=0.126
+
+KARISIK (3 veri seti): AUROC=0.829 AUROC25=0.789 ECE=0.373
+   GLOBAL         kabul=0.838 risk=0.518
+   OTO-TOPLU      kabul=0.993 risk=0.586
+   OTO-CEVRIMICI  kabul=0.964 risk=0.574

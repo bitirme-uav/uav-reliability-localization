@@ -429,3 +429,35 @@ Karşılaştırma: GLOBAL (eğitim eşiği) ve ETİKETLİ-ALAN (o alanın etiket
 - **Görülmemiş UAV-VisLoc ve AerialVL'de işe yaramıyor.** Orada model yeni bölgede **kendinden emin ama yanlış**. Aynı özellik değerleri bu bölgelerde başka anlamlara geliyor (özellik/kavram kayması). EM bunu düzeltemez; öz-tahmin eşiği de olasılıkların doğru olduğunu varsaydığı için risk %40–85'te kalıyor. Bu yöntemin bilinen teorik sınırı.
 - **Dondurulmuş modelde** AerialVL'de küçük kazanç var (%37 → %40–42, risk hedefte). AnyVisLoc'ta ise biraz daha temkinli.
 - **Sonuç:** Yeni bölgede etiketsiz eşik uyarlama bazı bölgelerde güvenli şekilde kapsamı artırıyor, ama **genel bir güvence vermiyor**. Güvenli sistem için ya o bölgeden az miktarda etiketli veri gerekiyor (ETİKETLİ-ALAN riskleri %19–24 civarında), ya da modelin "bu bölge eğitim verisine benzemiyor" diyebileceği bir **dağılım-dışı (OOD) tespiti** ile temkinli moda geçiş. OOD tespiti sonraki adım olarak öneriliyor.
+
+---
+
+## 15. Ek deney: VPAIR, dördüncü görülmemiş alan (Almanya) — 2026-10-04
+
+**Veri:** VPAIR örnek alt kümesi ([zenodo 6473989](https://zenodo.org/record/6473989)). Hafif uçaktan çekilmiş 200 ardışık kare (~45 m aralık, ~9 km rota). AGL ~300–330 m, kamera aşağı bakıyor. Her kare için aynı pozdan dik-aşağı, kuzey-yukarı render edilmiş referans görüntüsü ve derinlik haritası var.
+
+**Kurulum:**
+- **Harita:** 199 referans görüntüsü, derinlik haritasıyla yere izdüşürülüp tek bir ortofoto rota haritasında birleştirildi (`src/vpair_loader.py`, 0.8 m/px).
+- **Odak uzaklığı** (f = 747 px): ardışık referansların kaymasından ölçüldü.
+- **Ayrım** (sonuçlara bakmadan): TUNE = kare 1–40, TEST = kare 41–200 (159 kare × 7 koşul).
+- **Sabit kamera ofseti** (ileri 1.1 m, sağ 5.6 m): yalnızca TUNE karelerinden ölçüldü ve TEST'te düzeltme olarak uygulandı.
+- **Yön:** −yaw ile kuzey-yukarı döndürme; diğer veri setleriyle aynı konvansiyon. TUNE'da +yaw / −yaw / dönmesiz arasında fark yok, çünkü uçuş kuzeye.
+
+**Lokalizer (TEST, prior 0/30 m):** median 11.9 m, ≤ 10 m %44, ≤ 25 m %71, > 100 m / yok %6. Eşleşme güçlü (median ~100 inlier), ama render haritası bulanık olduğundan hassasiyet ~8–12 m. Bu, 10 m etiket sınırının tam üstü.
+
+**Güvenilirlik (VPAIR hiçbir modelin eğitiminde yok):**
+
+| Model | AUROC | AUROC (≤ 25 m) | ECE | Eğitim eşiği: kabul / risk | OTO-TOPLU | OTO-ÇEVRİMİÇİ |
+|---|---|---|---|---|---|---|
+| Ham skor | 0.685 | – | – | – | – | – |
+| DONMUŞ (yalnız AerialVL) | 0.818 | 0.772 | **0.066** | %31.0 / %24.6 | %23.5 / %21.4 | **%22.2 / %12.6** |
+| KARIŞIK (3 veri seti) | **0.829** | **0.789** | 0.373 | %83.8 / %51.8 | %99.3 / %58.6 | %96.4 / %57.4 |
+
+**Bulgular (dürüst):**
+- Her iki kalibre model de ham skordan belirgin iyi sıralıyor (0.82–0.83'e karşı 0.69). Kalibre güvenilirlik fikri dördüncü bölgede de geçerli.
+- **Karışık model bu bölgede aşırı kendinden emin** (ECE 0.373). Sıralaması biraz daha iyi, ama eşiği fix'lerin %84'ünü %52 riskle kabul ediyor. Etiketsiz uyum bunu düzeltemiyor, aksine kötüleştiriyor. Muhtemel neden: VPAIR'de eşleşme güven ipuçları çok yüksek (çok inlier), ama bulanık harita yüzünden hata 10 m sınırında. Karışık havuzda "çok inlier → doğru" ilişkisi baskın.
+- **Dondurulmuş model + çevrimiçi etiketsiz uyum hedefi tutturdu:** %22 kabul, %12.6 risk. Eğitim eşiğiyle risk %24.6'ydı, hedefin biraz üstü.
+- **§13–14 ile birlikte genel ders:** Görülmemiş bir bölgede **hiçbir eğitim stratejisi tek başına risk güvencesi vermiyor**. Karışık eğitim bazı bölgelerde (UAV-VisLoc, AnyVisLoc) büyük kazanç sağladı, VPAIR'de kalibrasyonu bozdu. Etiketsiz uyum AnyVisLoc ve VPAIR'de (dondurulmuş modelle) işe yaradı, UAV-VisLoc'ta yaramadı. Güvenli konuşlandırma için yeni bölgede küçük bir etiketli kalibrasyon kümesi ya da dağılım-dışı tespiti + temkinli mod gerekiyor.
+- **Sınırlama:** VPAIR örneği tek uçuş ve 159 test karesi; sonuçlar yön gösterici. Tam veri (2.706 kare) için başvuru formu var.
+
+**Not, disk:** AerialVL TRAIN sekanslarının görüntüleri, açık-döngü veri setinde kullanılan 341 kare dışında silindi (22 GB; dosya listesi `outputs/aerialvl_train_manifest.json`). Tüm sonuçlar ve modeller etkilenmiyor. Yalnızca boresight/yön analiz scriptleri (`analyze_bias.py`, `analyze_heading.py`) TRAIN'den rastgele seçtikleri için birebir yeniden çalıştırılamaz; ölçülen ofset kodda kayıtlı.

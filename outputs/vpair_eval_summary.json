@@ -1,0 +1,66 @@
+{
+  "DONMUS (AerialVL)": {
+    "metrics": {
+      "auroc": 0.8175718498158724,
+      "auprc": 0.7718260296387764,
+      "auroc25": 0.7720110192837466,
+      "ece": 0.06579982956491146,
+      "coverage": 0.30997304582210244,
+      "risk": 0.24637681159420288,
+      "base_safe": 0.4106019766397125
+    },
+    "GLOBAL": {
+      "coverage": 0.30997304582210244,
+      "risk": 0.24637681159420288,
+      "flights_over_30": 0,
+      "flights_eval": 1,
+      "worst_flight_risk": 0.24637681159420288
+    },
+    "OTO-TOPLU": {
+      "coverage": 0.23539982030548068,
+      "risk": 0.2137404580152672,
+      "flights_over_30": 0,
+      "flights_eval": 1,
+      "worst_flight_risk": 0.2137404580152672
+    },
+    "OTO-CEVRIMICI": {
+      "coverage": 0.22192273135669363,
+      "risk": 0.1255060728744939,
+      "flights_over_30": 0,
+      "flights_eval": 1,
+      "worst_flight_risk": 0.1255060728744939
+    }
+  },
+  "KARISIK (3 veri seti)": {
+    "metrics": {
+      "auroc": 0.8291815658856807,
+      "auprc": 0.7320986487048601,
+      "auroc25": 0.7886354453627181,
+      "ece": 0.37347005148030693,
+      "coverage": 0.8382749326145552,
+      "risk": 0.517684887459807,
+      "base_safe": 0.4106019766397125
+    },
+    "GLOBAL": {
+      "coverage": 0.8382749326145552,
+      "risk": 0.517684887459807,
+      "flights_over_30": 1,
+      "flights_eval": 1,
+      "worst_flight_risk": 0.517684887459807
+    },
+    "OTO-TOPLU": {
+      "coverage": 0.9928122192273136,
+      "risk": 0.5864253393665159,
+      "flights_over_30": 1,
+      "flights_eval": 1,
+      "worst_flight_risk": 0.5864253393665159
+    },
+    "OTO-CEVRIMICI": {
+      "coverage": 0.9640610961365679,
+      "risk": 0.5740913327120223,
+      "flights_over_30": 1,
+      "flights_eval": 1,
+      "worst_flight_risk": 0.5740913327120223
+    }
+  }
+}
