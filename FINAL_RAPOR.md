@@ -514,3 +514,76 @@ Karşılaştırma: GLOBAL (eğitim eşiği) ve ETİKETLİ-ALAN (o alanın etiket
 - Lokalizer bu bölgede iyi çalışıyor (≤ 25 m %93). Ama hassasiyet ~10 m civarında toplandığından **10 m etiketi pratikte "sınırın hangi tarafında" sorusuna dönüşüyor**. Bu, eşleşme ipuçlarından kestirilemiyor (AUROC 0.72–0.76).
 - **Büyük hataları yakalama (≤ 25 m etiketi) çok iyi**, özellikle karışık modelde (AUROC 0.96). VPAIR (§15) ve UAV-VisLoc (§13) ile aynı örüntü: güvenilirlik modelleri asıl olarak **kaba hataları** ayırt ediyor, 10 m civarındaki ince farkı değil.
 - 10 m etiketiyle risk sözü bu bölgede tutmuyor (görülmemiş alanlarda §13–15'teki genel bulgu).
+
+---
+
+## 18. Gece iyileştirmeleri (1): eşleştiriciler, 25 m hedefi, tanıdık-olmayan-bölge tespiti, kapalı döngü — 2026-10-04
+
+### 18.1 Eşleştirici taraması (yalnızca geliştirme/ayar verisi)
+Her veri setinden 40 kare, prior 30 m hatalı, arama 60 m (`src/matcher_sweep.py`, `outputs/matcher_sweep.json`). Değerler: ≤ 10 m / ≤ 25 m / kare başına süre.
+
+| Eşleştirici | AerialVL VAL | UAV-VisLoc dev | AnyVisLoc TUNE | VPAIR TUNE | ALTO TUNE |
+|---|---|---|---|---|---|
+| SuperPoint + LG (mevcut) | %50 / %82 / 0.35 s | %25 / %45 / 0.83 s | %88 / %92 / 0.66 s | %48 / %98 / 0.35 s | %78 / %90 / 0.36 s |
+| SuperPoint-4096 | %48 / %82 | %20 / %45 | %85 / %90 | %48 / %98 | %78 / %90 |
+| ALIKED + LG | %50 / %85 | %28 / %57 | %85 / %92 | %50 / %100 | %80 / %98 |
+| DISK + LG | %50 / %75 | %12 / %52 | %57 / %72 | %42 / %72 | %15 / %18 |
+| **XFeat** | %48 / **%90** / **0.17 s** | %25 / **%65** / 0.39 s | %85 / **%100** / 0.32 s | **%55** / %100 / **0.12 s** | %78 / %90 / **0.10 s** |
+| RoMa (§16) | – | %27 / %53 / 4.5 s | – | %55 / %100 / 3.1 s | – |
+
+SIFT ve DoGHardNet + LG döndürülmüş/maskeli sorgularda çalışmadı (AerialVL dışında hata); AerialVL'de de üstünlükleri yok, düzeltilmedi.
+
+**Bulgu:** XFeat beş veri setinin hepsinde SuperPoint'e eşit ya da daha iyi, kaba hataları daha az (≤ 25 m), ve 2–3 kat hızlı (Jetson için önemli). 10 m hassasiyeti değişmiyor. Bu yüzden XFeat ile tüm açık-döngü kayıtları **aynı kare / aynı prior** ile yeniden üretiliyor (§19).
+
+### 18.2 İkincil etiket (≤ 25 m) ile güvenilirlik — 5 alan
+`src/reliability_v2.py`. Aynı tarif (GBM + isotonic), eşik havuzda OOF ile (risk ≤ %20). VPAIR ve ALTO hiçbir havuzda yok. Değerler: kabul / kabul edilenlerde hata (o etikete göre).
+
+| Havuz → TEST | ≤ 10 m etiketi | ≤ 25 m etiketi |
+|---|---|---|
+| AerialVL-yalnız → AnyVisLoc | %11 / %1 | **%68 / %6** |
+| AerialVL-yalnız → ALTO | %3 / %4 | **%91 / %4** |
+| AerialVL-yalnız → VPAIR | %10 / %6 | %87 / %25 |
+| AerialVL-yalnız → UAV-VisLoc | %1 / %25 | %56 / %40 |
+| KARIŞIK → ALTO (görülmemiş) | %89 / %57 | **%95 / %7** |
+| KARIŞIK → VPAIR (görülmemiş) | %84 / %52 | %91 / %27 |
+| KARIŞIK → UAV-VisLoc | %18 / %65 | %61 / %40 |
+
+**Bulgu:** Güvenilirlik modelleri kaba hataları çok iyi yakalıyor (≤ 25 m AUROC: ALTO 0.93–0.97, AnyVisLoc 0.98). 25 m hedefiyle risk sözü görülmemiş bölgelerin çoğunda tutuyor ve kapsam %0–20'den %60–95'e çıkıyor. İstisna UAV-VisLoc.
+
+### 18.3 Tanıdık-olmayan-bölge (OOD) tespiti + temkinli mod
+`src/ood_gate.py`. Etiketsiz uçuş skoru: fix özelliklerinin eğitim havuzuna ortalama Mahalanobis uzaklığı (Ledoit-Wolf). "Tanıdık" sınırı = havuz uçuşlarının birini-dışarıda-bırak skorlarının en büyüğü. OOD uçuşta eşik, havuzda risk ≤ %5 olacak şekilde sıkılaştırılıyor.
+
+| AerialVL-yalnız, ≤ 25 m | OOD alarmı | Normal: kabul / risk / en kötü uçuş | OOD-kapılı: kabul / risk / en kötü uçuş |
+|---|---|---|---|
+| AerialVL TEST | 0/3 | %79 / %16 / %23 | aynı |
+| AnyVisLoc | 11/11 | %68 / %6 / %30 | %20 / %0 / %0 |
+| UAV-VisLoc | 4/4 | %56 / **%40** / %56 | %8 / **%19** / %26 |
+| VPAIR | 1/1 | %87 / %25 / %25 | %33 / %12 / %12 |
+| ALTO | 1/1 | %91 / %4 / %4 | %16 / %0 / – |
+
+**Bulgu:** Tek bölgeden eğitilmiş modelde tespit kusursuz: kendi test uçuşlarında hiç alarm yok, yabancı uçuşların hepsinde alarm var. Temkinli mod **beş alanın hepsinde** riski hedefe çekiyor; bedeli düşük kapsam. Karışık havuzda ise "tanıdık" bölge çok geniş olduğu için hiç alarm vermiyor (VPAIR/ALTO dahil). Yani bu basit tespit, çeşitli eğitim verisiyle birlikte işe yaramıyor.
+
+### 18.4 Kapalı-döngü (TEST): yeni politikalar
+`src/build_v2_bundle.py`, `src/run_nav_sim.py`:
+- **M10:** karışık model, ≤ 10 m etiketi.
+- **M25:** karışık model, ≤ 25 m etiketi.
+- **A25:** AerialVL-yalnız model, ≤ 25 m etiketi.
+
+Eşikler havuz OOF'undan (risk %20 / %35), ölçüm gürültüsü R havuzdaki etiket-güvenli fix'lerden. AerialVL TEST 3 uçuş (ilk 1.200 kare) ve UAV-VisLoc TEST 4 uçuş (ilk 150 kare); drift orta/şiddetli × filtre doğru/yanlış; çağrı 10 s. Toplam 28 koşu.
+
+| RMSE (m) | E1 drift | E2 hepsi | E5 chi² | E7 (dondurulmuş) | **M10** | M25 | A25 |
+|---|---|---|---|---|---|---|---|
+| AerialVL, filtre doğru (median) | 84 | 22 | 19 | **17** | 19 | 19 | 21 |
+| AerialVL, yanlış-belirtilmiş (median) | 84 | **28** | 81 | 67 | 35 | 35 | 37 |
+| AerialVL ortalama / en kötü koşu | 96 / 169 | 26 / 44 | 61 / 174 | 46 / 155 | **29 / 63** | 30 / 60 | 31 / 64 |
+| UAV-VisLoc, filtre doğru (median) | 370 | 193 | 291 | 297 | **53** | 95 | 95 |
+| UAV-VisLoc, yanlış-belirtilmiş (median) | 370 | 148 | 366 | 370 | 271 | 139 | **134** |
+| UAV-VisLoc ortalama / en kötü koşu | 369 / 590 | 366 / 1130 | 361 / 590 | 342 / 590 | **207 / 475** | 436 / **4762** | 199 / 697 |
+
+**Bulgular:**
+- **M10 (karışık model, 10 m hedefi) en sağlam politika.**
+  - AerialVL'de ortalama hata 46 → 29 m, en kötü koşu 155 → 63 m. Dondurulmuş E7'nin yanlış-belirtilmiş filtrede çöküşü büyük ölçüde gitti (67 → 35 m).
+  - UAV-VisLoc'ta ortalama 342 → 207 m, en kötü koşu drift-only'nin altında (475 < 590). Hiçbir koşuda felaket yok.
+- **M25 açık-döngüde iyi görünse de kapalı döngüde riskli.** Bir UAV-VisLoc koşusunda 4.762 m'ye saptı: daha fazla kabul, yanlış fix dizilerinin filtreyi sürüklemesine izin veriyor. 25 m hedefi, ancak REACQUIRE'daki gibi ardışık-teyitle birlikte güvenli olabilir.
+- Filtre doğruyken AerialVL'de dondurulmuş E7 hâlâ en iyi (17 m). Kendi bölgesinde uzmanlaşmış model orada üstün.
+- **Pratik öneri:** Konuşlandırmada karışık-alan modeli (M10). Kabul eşiği yeni bölgede küçük bir yerel veriyle ayarlanmalı. REACQUIRE + 2-fix teyidi açık kalmalı.
