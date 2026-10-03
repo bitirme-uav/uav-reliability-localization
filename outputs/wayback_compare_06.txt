@@ -1,0 +1,6 @@
+ucus 06, ucus tarihi ?, 30 kare
+  veri seti            median=  182.4m <=10m= 20% <=25m= 33% >100m/yok= 57%  (duzeltmesiz <=25m= 27%)  median inlier=4
+  wayback 2013-11-24   median=  340.3m <=10m=  0% <=25m= 10% >100m/yok= 90%  (duzeltmesiz <=25m= 10%)  median inlier=3
+  wayback 2024-08-19   median=  292.1m <=10m= 13% <=25m= 23% >100m/yok= 70%  (duzeltmesiz <=25m= 13%)  median inlier=3
+  EN IYI (inlier'e gore) median=  160.3m <=10m= 20% <=25m= 40% >100m/yok= 53%  (duzeltmesiz <=25m= 33%)  median inlier=4
+  sadece wayback, en iyi median=  236.3m <=10m= 13% <=25m= 23% >100m/yok= 73%  (duzeltmesiz <=25m= 17%)  median inlier=3

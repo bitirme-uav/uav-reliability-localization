@@ -1,0 +1,308 @@
+# Calibrated Reliability-Aware RGB Map Relocalization — Sonuç Raporu
+
+**Tarih:** 2026-10-02 · **Donanım:** PC (RTX 4060 Laptop GPU) · **Veri:** AerialVL (VAL bölümü)
+**Durum:** M1–M10 ve E1–E11 tamamlandı, TEST bir kez koşuldu. M11 (Jetson) donanım olmadığı için yapılmadı.
+
+---
+
+## 1. Tek paragrafta sonuç
+
+GPS'siz bir İHA'nın kamera görüntüsünü uydu haritasıyla eşleştirip konum bulan bir sistem kuruldu. Bu konuma ne zaman güvenileceğine karar veren **kalibre güvenilirlik modeli**, hiç görülmemiş TEST uçuşlarında doğru ve yanlış fix'leri ham eşleşme skorundan (AUROC 0.78), SatLoc-tarzı sezgisel güvenden (0.76) ve chi-square tutarlılık testinden (0.61) belirgin şekilde daha iyi ayırdı (**AUROC 0.89**). VAL'de seçilen eşik TEST'e taşındığında kalibre model fix'lerin **%37'sini %17 riskle** kabul etti; ham skor ise yalnızca %6'sını %34 riskle kabul edebildi, yani VAL'de verdiği risk sözünü TEST'te tutamadı. Kapalı-döngü navigasyonda kalibre gate, filtrenin kovaryansı doğru olduğunda en düşük hatayı verdi (TEST median RMSE 19.1 m). Kovaryans yanlış belirtildiğinde ise Mahalanobis tabanlı tüm gate'ler (chi-square dahil) doğru fix'leri reddederek çöktü (PDF'in H4/H5 hipotezleri). Bunun çaresi olarak önerilen **REACQUIRE + 2-fix teyidi**, 300 m'lik ani sıçramadan sonra **TEST'teki 12 koşunun tamamında, hiç yanlış kabul yapmadan** 18–21 sn'de kurtardı. Teyitsiz sürüm ise 15 yanlış kabul yaptı.
+
+---
+
+## 2. Ne yapıldı (PDF maddelerine göre)
+
+| Madde | Yapılan | Dosya |
+|---|---|---|
+| **M1** Veri | AerialVL VAL: 11 sekans, 15.136 kare, 2 coğrafi referanslı harita. Sekans bazlı sabit ayrım: 6 TRAIN, 2 VAL, 3 TEST. | `src/splits.py`, `src/aerialvl_loader.py` |
+| **M2** Lokalizasyon | SuperPoint + LightGlue + RANSAC (similarity), çok-ölçekli arama, büyük alanda karolu kaba→ince arama | `src/localization_pipeline.py` |
+| **M3** Etiket | fix_error ≤ 10 m güvenli (birincil), ≤ 25 m (ikincil). Sonuçlardan sonra değiştirilmedi. | `src/fix_record.py` |
+| **M4** Özellikler | eşleşme/inlier sayısı, inlier oranı, reprojeksiyon hatası, inlier dağılımı, dönüşüm koşul sayısı, top1–top2 farkı, ölçek oranı, Mahalanobis mesafesi | `src/build_fix_dataset.py` |
+| **M5** Baseline + kalibrasyon | ham skor, SatLoc-tarzı sezgisel, chi-square, kalibre (logreg/GBM + isotonic) | `src/eval_calibration.py`, `src/reliability_model.py` |
+| **M6** Drift simülatörü | sabit sapma, hız/ölçek hatası, rastgele yürüyüş, yön sapması, ani sıçrama; hafif/orta/şiddetli; filtre gürültüsü ayrı (doğru / yanlış-belirtilmiş) | `src/drift_simulator.py` |
+| **M7** Arama yarıçapı | r = clip(3σ, 60, 400) m; açık-döngü fix verisi farklı (prior hatası, σ) koşullarında | `src/build_fix_dataset.py` |
+| **M8** Karar politikası | kabul / down-weight (R×4) / red, 2D Kalman güncellemesi, chi-square kapısı | `src/run_nav_sim.py`, `src/gates.py` |
+| **M9** REACQUIRE | 3 ardışık red → r_max'ta arama, Mahalanobis askıda, k-fix teyidi (dead-reckoning tutarlılığı, τ = 25 m) | `src/run_reacquire.py` |
+| **M10** Karşılaştırma | E1–E10, 4 çağrı aralığı × 2 drift rejimi × 2 filtre ayarı | `src/run_nav_sim.py`, `src/sweep.py` |
+| **§9.1** Config freeze | 36 dosya SHA-256 ile donduruldu (`outputs/config_freeze.json`); TEST öncesi ve sonrası doğrulandı: **değişmemiş** | `src/freeze_config.py` |
+
+---
+
+## 3. Lokalizasyon (M2)
+
+İlk sürümde median hata ~200 m'ydi. İki kök neden bulundu:
+
+1. **90° yönelim farkı.** AerialVL kareleri doğuya, haritalar kuzeye bakıyor; SuperPoint dönmeye dayanıklı değil. Query 90° döndürülünce ortalama inlier sayısı 7'den 282'ye çıktı.
+2. **Sabit kamera ofseti.** Tahmin, uçuş yönünde sistematik olarak ~15.7 m geride kalıyordu. Hıza bağlı değildi (zaman gecikmesi değil), sekanslar arasında tutarlıydı. Bu ofset TRAIN üzerinde ölçüldü ve sabit bir düzeltme olarak eklendi. Çalışma anında uçuş yönü ground truth'tan değil, navigasyon tahmininin kendi hızından alınıyor.
+
+Büyük arama alanlarında (r = 400 m) tek parça eşleştirme çöküyordu (median 322 m). Karolu kaba→ince aramayla 9 m'ye indi.
+
+| Bölüm | Prior hatası | n | Median hata | ≤ 10 m | ≤ 25 m | > 100 m |
+|---|---|---|---|---|---|---|
+| VAL | 0 m | 120 | 9.2 m | %52 | %87 | %1 |
+| **TEST** | 0 m | 150 | **8.7 m** | **%57** | **%82** | %1 |
+| **TEST** | 300 m (karolu) | 150 | **8.8 m** | **%58** | **%82** | %11 |
+
+Gecikme (RTX 4060): tek crop ~270 ms, karolu arama ~930 ms.
+
+---
+
+## 4. RQ1 / RQ2 — Güven sinyalleri ve kalibrasyon
+
+Etiket: fix_error ≤ 10 m. Modeller TRAIN'de eğitildi, eşikler VAL'de seçildi (kabul edilenlerde risk ≤ %20), TEST'te **yeniden eğitim yapılmadan** değerlendirildi.
+
+| Yöntem | AUROC | AUPRC | Brier | ECE | VAL eşiğinde TEST kabul oranı | TEST'te gerçek risk |
+|---|---|---|---|---|---|---|
+| Ham skor (inlier oranı) | 0.783 | 0.701 | 0.189 | **0.063** | %5.9 | **%33.9** ✗ |
+| SatLoc-tarzı sezgisel | 0.760 | 0.647 | 0.435 | 0.457 | – (hedefe ulaşamadı) | – |
+| Chi-square p-değeri | 0.608 | 0.592 | 0.354 | 0.342 | – | – |
+| Kalibre, görüntü-only (logreg) | 0.803 | 0.716 | 0.184 | 0.087 | %2.6 | %29.6 |
+| **Kalibre, görüntü + Mahalanobis (GBM)** | **0.887** | **0.845** | **0.152** | 0.093 | **%36.7** | **%16.6** ✓ |
+
+TEST'te güvenli fix oranı %46.7 (taban risk %53.3).
+
+![Risk-kapsam](outputs/figures/test_risk_coverage.png)
+
+**Yorum:**
+- **H1 destekleniyor:** Ham skorlar faydalı ama kusurlu tahminciler.
+- **H2 destekleniyor (ayırt etme açısından):** Hafif bir kalibre model, ham skordan ve sezgiselden belirgin şekilde iyi ayırt ediyor. En önemlisi, VAL'de verdiği risk sözünü TEST'te tutuyor (%20 hedefi, %16.6 gerçekleşen).
+- **Dürüst sınırlama, kalibrasyon kalitesi:** ECE'de ham inlier oranı biraz daha iyi (0.063'e karşı 0.093). Güvenilirlik diyagramında kalibre model orta aralıkta **fazla temkinli**: 0.25 dediğinde gerçek oran ~0.55. Muhtemel sebep taban oran kayması: TRAIN'de güvenli oran %38, TEST'te %47. Yani model sıralamada çok iyi, mutlak olasılık değerleri ise kaymış. Bu, VAL üzerinde yeniden kalibrasyon (Platt/isotonic, sadece kalibrasyon katmanı) ile düzeltilebilir; config freeze sonrası yapılmadı.
+
+![Güvenilirlik diyagramı](outputs/figures/test_reliability_diagram.png)
+
+---
+
+## 5. RQ3 — Kapalı-döngü navigasyon (M10, E1–E10)
+
+Her TEST sekansının ilk ~10 dakikası; çağrı aralığı 5/10/20/40 s; drift orta/şiddetli; filtre gürültüsü doğru / yanlış-belirtilmiş (filtre "hafif" sanıyor). Toplam 48 koşu. Tüm politikalar aynı drift tohumu ve aynı çağrı zamanlarıyla yarıştı.
+
+**Median konum RMSE (m), TEST:**
+
+| Filtre | E1 drift | E2 hepsini kabul | E3 ham | E4 SatLoc | E5 chi² | E6 kal. görüntü | **E7 kal. +Mahal.** | E8 E7+chi² | E9 rastgele | E10 kâhin |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Doğru | 84.2 | 24.1 | 22.2 | 21.9 | 22.2 | 20.7 | **19.1** | 25.6 | 25.2 | 24.8 |
+| Yanlış-belirtilmiş | 84.2 | **29.1** | 38.8 | 43.0 | 86.4 | 40.8 | 60.7 | 84.6 | 34.2 | 39.2 |
+| Zararlı düzeltme oranı | – | 0.19 | 0.13 | 0.13 | 0.35 | 0.13 | 0.16 | 0.27 | 0.20 | 0.04 |
+
+İkili (TEST, 48 koşu): E7, drift-only'den **48/48**, chi-square'den **36/48**, E8'den 42/48 koşuda daha iyi. Ham skora karşı 23/48, yani başa baş.
+
+![Navigasyon](outputs/figures/test_nav_rmse.png)
+
+**Yorum:**
+- **Düzeltme şart:** Her kamera tabanlı politika drift-only'yi (84 m) büyük farkla geçiyor.
+- **Kovaryans doğruysa** kalibre gate (E7) en iyi sonucu veriyor ve chi-square'den belirgin şekilde güvenilir (zararlı düzeltme 0.16'ya karşı 0.35).
+- **Kovaryans yanlışsa H4/H5 net biçimde doğrulanıyor:** Filtre kendine fazla güvendiğinde, prior'a uzaklık (Mahalanobis) doğru fix'leri "tutarsız" gösteriyor. Bu sinyali kullanan E5/E7/E8 drift-only seviyesine çöküyor. Görüntü-only gate'ler (E3/E4/E6) çökmüyor. "Hepsini kabul et" (E2) bu durumda iyi görünüyor çünkü küçük kovaryans Kalman kazancını küçültüyor ve her düzeltme doğal olarak zayıflatılıyor. Bu stratejinin kovaryans doğru olduğunda 500 m'ye sapabildiği VAL'de görüldü.
+- **E10 (etiket-kâhini) bir üst sınır değil:** PDF'in uyardığı gibi, "güvenli" bir fix bile zaten doğru olan bir prior'u bozabiliyor ve kâhin, reddettiği uzak fix'lerle kurtarma fırsatını kaçırıyor.
+- **Ablasyon sonucu (PDF M4):** Mahalanobis özelliği RQ2 sınıflandırmasında açık fayda sağlıyor (aynı GBM ile TEST AUROC 0.81 → 0.89), ama kapalı döngüde kovaryans yanlışsa zarara dönüşüyor. Bu, eğitim verisindeki bir kapsam boşluğuyla da ilgili: açık-döngü veride "Mahalanobis büyük ama fix doğru" örnekleri az (bkz. §8).
+
+---
+
+## 6. RQ4 — Büyük drift kurtarma (M9, E11)
+
+Uçuşun 60. saniyesinde prior'a 300 m'lik sıçrama eklendi; filtre bundan habersiz (kovaryans büyütülmedi).
+- **Senaryo A:** Sonrasında gerçek lokalizasyon fix'leri.
+- **Senaryo B:** REACQUIRE'da gate'i geçen ilk aday, aynı güvenli özelliklerle ama 150 m kaydırılmış bir **inandırıcı yanlış fix** ile değiştirildi.
+
+| | Varyant | Kurtarılan (TEST) | Median kurtarma süresi | Yanlış kabul | Median son hata |
+|---|---|---|---|---|---|
+| A | chi-square | 0/6 | – | 0 | 343 m |
+| A | kalibre (REACQUIRE yok) | 0/6 | – | 0 | 296 m |
+| A | REACQUIRE, teyitsiz (k=1) | 6/6 | 19 s | **5** | 12.4 m |
+| A | **REACQUIRE + teyit (k=2)** | **6/6** | **21 s** | **0** | **12.2 m** |
+| B | REACQUIRE, teyitsiz (k=1) | 6/6 | 26 s | **10** | 12.4 m |
+| B | **REACQUIRE + teyit (k=2)** | **6/6** | **18 s** | **0** | **12.2 m** |
+
+VAL'de de aynı tablo: k=2 8/8 kurtardı, 0 yanlış kabul; k=1 15 yanlış kabul yaptı. Bir VAL koşusunda bu, 590 m hataya yol açtı.
+
+**Yorum:** Normal gate'ler (chi-square dahil) büyük drift sonrası doğru-ama-uzak fix'leri reddettiği için **hiç kurtaramıyor**. REACQUIRE kurtarıyor, ama güvenli görünen yanlış fix'e karşı koruma **yalnızca teyit adımından** geliyor. PDF'in "rahatlatılmış tutarlılık, yanlış fix'i kabul etmeyi kolaylaştırmamalı" kuralının deneysel karşılığı bu.
+
+---
+
+## 7. RQ5 — Gömülü dağıtım (M11)
+
+**Yapılmadı.** Jetson Orin Nano donanımı yok. PC ölçümleri (RTX 4060): fix başına ~270 ms (tek crop), ~930 ms (karolu). Güvenilirlik modelinin kendi maliyeti ihmal edilebilir (< 1 ms). PDF Jetson'ı zorunlu sayıyor; donanım gelince aynı dondurulmuş kodla `localization_latency_ms` ölçümü ve `tegrastats` loglaması yapılmalı.
+
+---
+
+## 8. Sınırlamalar ve PDF'ten sapmalar (dürüst liste)
+
+1. **Tek coğrafi bölge (ana deneyler).** AerialVL'nin 11 sekansı aynı haritanın üzerinde; ayrım zamansal, coğrafi değil. Başka bölgelere transfer sonradan UAV-VisLoc ile test edildi (§11): genelleme **zayıf**.
+2. **Çağrı aralıkları 5/10/20/40 s.** PDF 1/2/5/10/20 s örneği veriyor. 2 s'lik bir koşu ~55 dk sürdüğü için hesap maliyeti nedeniyle çıkarıldı; sekanslar ilk 1200 kareyle (~10 dk uçuş) sınırlandı.
+3. **Tohum sayısı.** Navigasyon taraması tek tohumla (sekans × 16 koşul), kurtarma 2 tohumla koşuldu. Sonuçlar 3 TEST sekansına dayanıyor; güven aralıkları geniş.
+4. **Mahalanobis kapsam boşluğu.** Açık-döngü eğitim koşullarında, yanlış-belirtilmiş kovaryans durumları çoğunlukla "doğru konum arama penceresinin dışında" vakaları üretti. Model "Mahalanobis büyük → yanlış" ilişkisini fazla güçlü öğrenmiş olabilir. Bu bulgu TEST'ten önce VAL'de görüldü, ama sonuca göre ayar yapmamak için değiştirilmedi.
+5. **Kalibrasyon kayması.** §4'teki taban oran kayması; isotonic katman TRAIN taban oranına bağlı.
+6. **Kamera ofseti** TRAIN'den tahmin edilen tek sabit bir değer; farklı bir platformda yeniden ölçülmeli.
+7. **VAL aşamasında yapılan iki düzeltme** (config freeze'den önce, VAL'e dayanarak): REACQUIRE aday eşiği E6-yüksek'ten E6-düşük'e indirildi (yüksek eşik VAL fix'lerinin %0.1'ini geçiriyordu), ve Senaryo B enjeksiyonu "gate'i geçen ilk aday"a taşındı (önceki sürüm testi fiilen atlıyordu).
+8. **Atlanan TRAIN verisi.** Eski, bozuk eşleştirme döneminde (2026-09-30) tüm sekanslar tanılama amaçlı çalıştırılmıştı. O sonuçlar hiçbir ayarda kullanılmadı.
+
+---
+
+## 9. Sonraki adımlar (öncelik sırasıyla)
+
+1. **Lokalizeri farklı bölgelere dayanıklı hale getirmek** (§11): UAV-VisLoc'ta 10 m içi oran %13. Bu düzelmeden güvenilirlik katmanı yeni bölgede işe yaramıyor. Adaylar: mevsim/yıl farkına dayanıklı, uydu-drone eşleştirmesi için eğitilmiş bir eşleştirici; harita yaşı/mevsimi meta verisi.
+2. **Hedef bölgede uçuş-başına kalibrasyon** ya da birden çok bölgeden karışık eğitim: tek bölgede eğitilen eşikler yeni bölgede ya aşırı temkinli ya aşırı riskli kalıyor.
+3. ~~AnyVisLoc~~ — yapıldı (§12).
+4. **Jetson Orin Nano profilleme (M11/E13).**
+5. Daha fazla tohum ve 2 s çağrı aralığı (geceleri arka planda).
+6. Açık-döngü veriye "doğru-ama-uzak" koşulları eklemek (ör. prior 80 m, σ 8 m → r = 60 m, pencere içinde ama Mahalanobis 10). Yeni bir config sürümü olarak; mevcut TEST sonuçları ayrıca raporlanarak.
+7. M12 paketi: demo videosu, makale taslağı.
+
+---
+
+## 10. Yeniden üretme
+
+```bash
+cd /media/davut/disk2/proje/uav_reliability_localization/src
+PY=../venv/bin/python
+$PY build_fix_dataset.py --split train --n 200
+$PY build_fix_dataset.py --split val   --n 120
+./run_val_pipeline.sh                        # kalibrasyon, eşikler, VAL tarama, VAL kurtarma
+$PY freeze_config.py                         # config freeze
+./run_test_pipeline.sh                       # TEST: bir kez (içinde freeze doğrulaması)
+$PY make_figures.py test
+```
+
+Ham sonuçlar: `outputs/fixes_{train,val,test}.jsonl` (açık-döngü fix kayıtları, PDF §7 şeması), `outputs/sweep_{val,test}/fix/*.jsonl` (kapalı-döngü fix kayıtları), `outputs/sweep_{val,test}/sum/*.jsonl` (koşu özetleri), `outputs/calibration_summary_{val,test}.json`, `outputs/thresholds.json`, `outputs/config_freeze.json`.
+
+---
+
+## 11. Ek deney: başka bölgelere transfer (UAV-VisLoc, AnyVisLoc) — 2026-10-03 gecesi
+
+**Soru (PDF RQ6 / H6 / E12):** AerialVL'de eğitilip dondurulan güvenilirlik sistemi, farklı şehirlerde, farklı kamera/irtifada ve farklı yılda çekilmiş haritalarla hâlâ işe yarıyor mu?
+
+### 11.1 UAV-VisLoc kurulumu
+
+- 11 uçuş, Çin'in 8 farklı bölgesi, 6.742 kare; irtifa 400–2.500 m (deniz seviyesi), 0.25 m/px uydu haritaları. Uçuş 07 (30 kare) kullanılmadı.
+- **Ayrım (sonuçlara bakmadan sabitlendi, `src/visloc_splits.py`):** platform ayarı TUNE {05, 10}; geliştirme/yeniden kalibrasyon RECAL {01, 03, 06, 09}; **TEST {02, 04, 08, 11}**. Dürüstlük notu: kurulum kontrolü sırasında her TEST uçuşundan 1 kare (toplam 28 kayıt) görüldü; hiçbir ayarda kullanılmadı.
+- **Platform farkları ve yapılan uyarlamalar (yalnızca TUNE/RECAL uçuşlarında):**
+  - Kareler sabit yönde değil; her karenin yaw'ı (`Phi1`) ile görüntü kuzey-yukarı döndürüldü. Konvansiyon görsel olarak ve açı taramasıyla doğrulandı.
+  - Tek kare 300–600 m'lik alanı kapsıyor. Harita kesitine bu kadar pay eklendi ve harita 0.8 m/px çalışma çözünürlüğüne küçültüldü. Mekanik doğrulama: haritadan kesilip döndürülen sentetik sorgu 0.5 m hatayla bulunuyor.
+  - **Kamera eğiklik ofseti:** Hata, kamera eğikliğiyle 0.97 korelasyonlu çıktı (yükseklik × tan(açı)). Eşleşmeden çıkan yer kapsamı yükseklik vekili olarak kullanılıp "eğiklik + sabit" modeli uyduruldu. Birini-dışarıda-bırak testinde 6 geliştirme uçuşunda median hata 19.9 m → 14.3 m (`src/visloc_attitude.py`).
+  - SuperPoint'e karşı ALIKED geliştirme uçuşlarında denendi: marjinal fark (25 m içi %44 → %50, 10 m içi aynı). Dondurulmuş kalibrasyon SuperPoint özellikleriyle eğitildiği için değiştirilmedi.
+
+### 11.2 Lokalizasyon doğruluğu (açık döngü, prior 0–30 m)
+
+| | Median hata | ≤ 10 m | ≤ 25 m | fix yok / > 100 m |
+|---|---|---|---|---|
+| AerialVL TEST | 8.7 m | **%57** | %82 | %1 |
+| UAV-VisLoc RECAL | 21.8 m | %19 | %55 | %31 |
+| **UAV-VisLoc TEST** | **28.3 m** | **%13** | %45 | %25 |
+
+Ana sebep görünüm farkı: uydu haritaları farklı yıl ve mevsimde çekilmiş (bir uçuşta fotoğraf yeşil, harita kuru/bej). Bazı karelerde hiçbir açı ve ölçekte eşleşme oluşmuyor. LoFTR, DISK ve ALIKED de denendi, bu farkı aşamadı.
+
+### 11.3 Kalibrasyon transferi (E12)
+
+AerialVL'de eğitilmiş modeller UAV-VisLoc TEST uçuşlarına uygulandı (1.400 açık-döngü kayıt, güvenli oran %9.9).
+
+| Yöntem | AUROC | AUPRC | Dondurulmuş eşik: kabul / risk | RECAL'de yeniden kalibre: kabul / risk |
+|---|---|---|---|---|
+| Ham skor | 0.551 | 0.102 | %0 / – | %0 / – |
+| SatLoc-tarzı | 0.565 | 0.107 | %0 / – | %0 / – |
+| Chi-square | 0.701 | 0.272 | – | %29.4 / **%80.8** |
+| Kalibre, görüntü-only | 0.647 | 0.137 | %0 / – | %0 / – |
+| **Kalibre, görüntü + Mahalanobis** | **0.795** | **0.348** | **%0.4 / %16.7** | %3.4 / %56.2 |
+| Referans: RECAL'de baştan eğitim | 0.866 | 0.453 | – | %12.3 / %59.3 |
+
+(Hedef risk %20. Risk = kabul edilenlerde > 10 m oranı.)
+
+![UAV-VisLoc risk-kapsam](outputs/figures/visloc_risk_coverage.png)
+
+**Bulgular:**
+- **Görüntü kalitesi sinyalleri taşınmıyor.** Ham skor, SatLoc ve görüntü-only kalibre model yeni bölgede taban orandan ayırt edilemiyor (AUROC 0.55–0.65). Eşleşme sayısının "iyi"yi gösterdiği seviye bölgeye ve haritaya özgü.
+- **Tutarlılık sinyali taşınıyor.** Yalnızca prior'a göre tutarlılığı kullananlar (chi-square 0.70, görüntü+Mahalanobis kalibre 0.80) ayırt edebiliyor. AerialVL'de görüntü özellikleri baskındı; burada sıralama tersine döndü.
+- **Dondurulmuş eşik risk sözünü tutuyor ama aşırı temkinli.** Kalibre model %16.7 riskle fix'lerin yalnızca %0.4'ünü kabul ediyor.
+- **Hedef bölgede yeniden kalibrasyon başarısız oldu.** RECAL uçuşlarında seçilen eşikler TEST uçuşlarında %56–81 riske çıktı. Uçuşlar arası fark büyük (güvenli oran RECAL'de %14, TEST'te %10; uçuşa göre %0–%44). Tek bir "hedef bölge kalibrasyonu" yetmiyor. **H6 güçlü biçimde destekleniyor.**
+
+### 11.4 Kapalı-döngü navigasyon (UAV-VisLoc TEST)
+
+4 TEST uçuşunun ilk 150 karesi (~10–12 dk), çağrı aralığı 10/20 s, drift orta/şiddetli × filtre doğru/yanlış = 32 koşu. Tüm eşikler ve modeller AerialVL'den **dondurulmuş**, R_nominal de AerialVL'den. Bu uçuşlar daha hızlı ve uzun olduğundan drift-only hata AerialVL'dekinin ~4 katı.
+
+| Median RMSE (m) | E1 drift | E2 hepsi | E3 ham | E4 SatLoc | E5 chi² | E6 kal. görüntü | E7 kal. +Mahal. | E8 E7+chi² | E9 rastgele | E10 kâhin |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Filtre doğru | 370 | **102** | 277 | 455 | 300 | 106 | 296 | 315 | 107 | 154 |
+| Yanlış-belirtilmiş | 370 | **139** | 276 | 341 | 366 | 176 | 370 | 368 | 151 | 168 |
+| Uygulanan düzeltme / çağrı | 0 | 0.74 | 0.07 | 0.08 | 0.02 | 0.63 | 0.05 | 0.01 | 0.63 | 0.09 |
+| Zararlı / uygulanan | – | 0.27 | 0.25 | 0.40 | 0.22 | 0.17 | **0.05** | 0.14 | 0.21 | 0.03 |
+
+Uçuşa göre büyük fark var. Uçuş 04 ve 11'de E2/E6 ~35–60 m'ye iniyor; uçuş 02'de E2 1.062 m'ye sapıyor.
+
+![UAV-VisLoc navigasyon](outputs/figures/visloc_nav_rmse.png)
+
+**Bulgular:**
+- Dondurulmuş gate'ler yeni bölgede **düzeltme uygulamaktan kaçınıyor** (çağrıların %1–8'i). Bu yüzden drift-only'ye yakın kalıyorlar. Mahalanobis tabanlılar (E5/E7/E8), drift arama penceresini aştıktan sonra REACQUIRE olmadan bir daha düzeltme kabul edemiyor (AerialVL'deki H4/H5 bulgusu, burada daha uzun uçuşlar nedeniyle daha sık).
+- E7'nin zararlı düzeltme oranı en düşük (%5), ama o kadar az düzeltme uyguluyor ki navigasyona katkısı yok. **Güvenli ama işe yaramaz.**
+- Sık kabul eden stratejiler (E2, E6, E9) ortalamada daha iyi, ama bir uçuşta felakete gidiyorlar (E2: 1 km). Kazanç uçuşa ve şansa bağlı.
+- **Sonuç:** Tek bir bölgede kalibre edilen güvenilirlik sistemi, yeni bölgeye **olduğu gibi taşınamıyor**. Bu, PDF'in H6 hipotezinin ("bir veri/harita alanında öğrenilen kalibrasyon, alan değişince bozulur") güçlü bir doğrulaması. Pratik çıkarım: konuşlanacak bölgenin haritasıyla (benzer mevsim/yıl) yerinde kalibrasyon şart; olmadığı durumda en azından REACQUIRE açık olmalı.
+
+### 11.5 AnyVisLoc
+
+İlk denemede başarısız oldu. Sebebi veri değil, poz konvansiyonunun yanlış okunmasıydı; çözümü ve sonuçları §12'de.
+
+### 11.6 Bu bölüm için yeniden üretme
+
+```bash
+cd src; PY=../venv/bin/python
+$PY visloc_build_fix_dataset.py --group recal --per-flight 50
+$PY visloc_build_fix_dataset.py --group test  --per-flight 50
+$PY visloc_eval_calibration.py
+$PY run_nav_sim.py --dataset visloc --allow-test --sequence 04 --drift moderate --call-interval 10 --max-frames 150
+$PY make_figures.py visloc
+```
+Not: §11 için lokalizere eklenen parametreler (keyfi açılı döndürme, harita payı, çalışma çözünürlüğü, ALIKED, sanal-nadir maskesi) varsayılan değerleriyle AerialVL davranışını değiştirmiyor (30 rastgele VAL karesinde dondurulmuş kodla inlier sayısı ve konum hatası birebir aynı). AerialVL TEST sonuçlarını üreten dondurulmuş kod `outputs/localization_pipeline.frozen_aerialvl.py` ve `outputs/config_freeze.json` olarak saklı.
+
+---
+
+## 12. Ek deney: AnyVisLoc transferi (E12) — 2026-10-03
+
+### 12.1 Kurulum
+- 24 sahne, düşük irtifa (150–340 m), **eğik kareler** (nadirden 0–57°). Kameralar farklı (odak uzaklığı 579–2021 px). Uydu haritaları 0.13–0.55 m/px.
+- **Ayrım (sonuçlara bakmadan, sabit tohumla; `src/anyvisloc_splits.py`):** TUNE {01, 03} (platform ayarı için bakıldı); RECAL 11 sahne {05, 06, 08, 10, 14, 15, 16, 17, 20, 21, 23}; **TEST 11 sahne {02, 04, 07, 09, 11, 12, 13, 18, 19, 22, 24}**. Sahne başına 40 kare × 7 açık-döngü koşulu (AerialVL ile aynı), toplam 3.080 + 3.080 kayıt.
+- **Poz konvansiyonu (asıl hata buradaydı):** Npz içindeki `pose_c2w` matrisi bizim varsaydığımız eksen düzeninde değil. Resmi kod (UAV-AVL/Benchmark, `view_center_anyvisloc`) yalnızca euler açılarını kullanıyor: yaw kuzeyden saat yönünde, pitch nadirden eğiklik. Haritada satırlar güneye doğru artıyor. Kamera yönelimi bu tanımla euler'den kuruldu (`AnyVisLoc.camera_R`). Doğrulama: aynı karelerden üretilmiş hava haritasına karşı kayma 0.2–3.8 m (önce 100–230 m ya da hiç eşleşme yok).
+- **Kullanılan bilgi** (sahada da olur): IMU tutumu (roll/pitch/yaw), barometrik irtifa, kaba DEM (ALOS 30 m). Kare, sanal nadir kameraya homografiyle çevriliyor. Yer kapsamı = irtifa − DEM'den; ölçek adayları ve harita payı kare başına bu kapsamdan türetiliyor.
+- Güvenilirlik modelleri ve eşikler AerialVL'den **dondurulmuş**, değiştirilmedi.
+
+### 12.2 Lokalizasyon doğruluğu (prior 0–30 m)
+
+| | Median hata | ≤ 10 m | ≤ 25 m | fix yok / > 100 m |
+|---|---|---|---|---|
+| AerialVL TEST | 8.7 m | %57 | %82 | %1 |
+| UAV-VisLoc TEST | 28.3 m | %13 | %45 | %25 |
+| AnyVisLoc RECAL | 3.5 m | %70 | %76 | %14 |
+| **AnyVisLoc TEST** | **4.7 m** | **%66** | %73 | %17 |
+
+### 12.3 Kalibrasyon transferi
+
+| Yöntem | AUROC | AUPRC | Dondurulmuş eşik: kabul / risk | RECAL'de yeniden kalibre: kabul / risk |
+|---|---|---|---|---|
+| Ham skor | 0.819 | 0.830 | %0.3 / %37.5 | %57.9 / %19.6 |
+| SatLoc-tarzı | 0.817 | 0.792 | %0 / – | %65.6 / %20.6 |
+| Chi-square | 0.762 | 0.804 | %0 / – | %70.0 / %25.7 |
+| Kalibre, görüntü-only | 0.886 | 0.885 | %4.7 / %6.2 | %76.4 / %24.7 |
+| **Kalibre, görüntü + Mahalanobis** | **0.929** | **0.946** | **%20.9 / %2.2** | %76.9 / %24.2 |
+| Referans: RECAL'de baştan eğitim | 0.967 | 0.971 | – | %79.2 / %25.2 |
+
+(TEST güvenli oranı %59.3. Hedef risk %20.)
+
+![AnyVisLoc risk-kapsam](outputs/figures/anyvisloc_risk_coverage.png)
+
+**Bulgular:**
+- **Lokalizer çalışınca güvenilirlik modeli de taşınıyor.** AerialVL'de eğitilen kalibre model, hiç dokunulmadan farklı şehirlerde ve farklı kameralarda AUROC 0.929 veriyor; bu, AerialVL TEST'teki 0.887'den bile yüksek. Risk-kapsam eğrisinde %60 kapsama kadar diğer tüm yöntemlerin belirgin altında.
+- **Dondurulmuş eşik güvenli ama temkinli.** Kabul edilen fix'lerin yalnızca %2.2'si hatalı (hedef ≤%20), ama fix'lerin sadece %21'i kabul ediliyor. Eşikler AerialVL'nin taban oranına göre seçildiği için yeni bölgede aşırı muhafazakâr kalıyor.
+- **Hedef bölgede yeniden kalibrasyon kapsamı büyük ölçüde açıyor** (%21 → %77). Ama TEST riski %24, hedefin biraz üstünde. RECAL ile TEST sahnelerinin güvenli oranları farklı (%63.5 vs %59.3); taban oran kayması yine görülüyor.
+- **UAV-VisLoc ile karşılaştırma (§11):** Orada transferin çökmesinin ana sebebi güvenilirlik modeli değil, **lokalizerin kendisiydi** (10 m içi %13). Harita ile görüntü arasındaki yıl/mevsim farkı ve yüksek irtifa eşleşmeyi bozuyordu. Lokalizer yeni bölgede çalıştığında (AnyVisLoc, %66), kalibre güvenilirlik modeli de çalışıyor.
+
+### 12.4 Dürüstlük notları
+- TUNE sahneleri (01, 03) konvansiyon ve ölçek ayarı için görsel olarak incelendi. RECAL ve TEST sahnelerine sonuç üretiminden önce bakılmadı.
+- Bellek taşması nedeniyle üretim sahne başına ayrı süreçte tekrarlandı. Test sahnelerinden 8'i ilk koşudan, 3'ü (19, 22, 24) ikinci koşudan geldi; bu üçünün kare örneklemi sahneye özgü sabit tohumla yapıldı. Sahne 19 için sanal görüntü boyutu sınırlandı (bellek); diğer sahneleri etkilemiyor.
+- AnyVisLoc kayıtlarında zaman damgası yok (yalnızca kare numarası). Bu yüzden kapalı-döngü navigasyon simülasyonu (M10) bu veri setinde henüz yapılmadı.
+
+### 12.5 Yeniden üretme
+```bash
+cd src; PY=../venv/bin/python
+$PY anyvisloc_prep_maps.py                      # zip'lerden harita + DSM
+for s in 05 06 08 10 14 15 16 17 20 21 23; do $PY anyvisloc_build_fix_dataset.py --group recal --scene $s; done
+for s in 02 04 07 09 11 12 13 18 19 22 24; do $PY anyvisloc_build_fix_dataset.py --group test  --scene $s; done
+$PY visloc_eval_calibration.py anyvisloc
+$PY make_figures.py anyvisloc
+```

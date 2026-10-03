@@ -1,0 +1,24 @@
+# Python ortami ve onbellekler
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Buyuk / yeniden uretilebilir ciktilar
+final_rapor.zip
+outputs/sweep_*/fix/
+outputs/sweep_*/log/
+outputs/sweep_*/_killed_partial/
+outputs/_partial/
+outputs/*.log
+outputs/smoke_*.jsonl
+
+# Gecici teshis gorselleri (rapor grafikleri outputs/figures/ altinda tutulur)
+outputs/*.jpg
+outputs/*.png
+
+# Veri setleri ve haritalar bu klasorde degil (uav_vloc_datasets/), yine de
+*.tif
+*.tfw
+*.zip
+*.npz

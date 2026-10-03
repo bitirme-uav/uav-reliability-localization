@@ -1,0 +1,65 @@
+{
+  "raw (inlier_ratio)": {
+    "auroc": 0.7831851311953353,
+    "auprc": 0.7007417626018684,
+    "brier": 0.1888647852402343,
+    "ece": 0.06269781166540803,
+    "risk25": 0.27862595419847325,
+    "frozen_high_coverage": 0.05904761904761905,
+    "frozen_high_risk": 0.33870967741935487
+  },
+  "heuristic (SatLoc-tarzi)": {
+    "auroc": 0.7604500728862973,
+    "auprc": 0.6465669321566636,
+    "brier": 0.4349395617013285,
+    "ece": 0.45692705356045493,
+    "risk25": 0.30916030534351147,
+    "frozen_high_coverage": NaN,
+    "frozen_high_risk": NaN
+  },
+  "chi2 (p-degeri)": {
+    "auroc": 0.6077696793002915,
+    "auprc": 0.5923638215650746,
+    "brier": 0.353975697837911,
+    "ece": 0.3419584989736437,
+    "risk25": 0.48091603053435117,
+    "frozen_high_coverage": NaN,
+    "frozen_high_risk": NaN
+  },
+  "cal_visual (logreg)": {
+    "auroc": 0.8032306851311953,
+    "auprc": 0.7160054535538113,
+    "brier": 0.1837443842745684,
+    "ece": 0.0870995496262538,
+    "risk25": 0.25190839694656486,
+    "frozen_high_coverage": 0.025714285714285714,
+    "frozen_high_risk": 0.2962962962962963
+  },
+  "cal_vis+Mahal (logreg)": {
+    "auroc": 0.8080466472303208,
+    "auprc": 0.7203998913033627,
+    "brier": 0.18059136022804528,
+    "ece": 0.07899194708766692,
+    "risk25": 0.2595419847328244,
+    "frozen_high_coverage": NaN,
+    "frozen_high_risk": NaN
+  },
+  "cal_visual (gbm)": {
+    "auroc": 0.8083053935860058,
+    "auprc": 0.7171089752556223,
+    "brier": 0.19728836311020803,
+    "ece": 0.1398217590245011,
+    "risk25": 0.2557251908396947,
+    "frozen_high_coverage": NaN,
+    "frozen_high_risk": NaN
+  },
+  "cal_vis+Mahal (gbm)": {
+    "auroc": 0.8870754373177842,
+    "auprc": 0.8454289259380952,
+    "brier": 0.15195543223870844,
+    "ece": 0.09290239748718454,
+    "risk25": 0.1145038167938931,
+    "frozen_high_coverage": 0.36666666666666664,
+    "frozen_high_risk": 0.1662337662337663
+  }
+}
