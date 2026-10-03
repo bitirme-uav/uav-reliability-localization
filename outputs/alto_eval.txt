@@ -1,0 +1,12 @@
+alto TEST lokalizer (prior 0/30 m): median=11.0 m <=10m=43% <=25m=93% >100/yok=3%  | tum kayitlarda guvenli oran 38.9%
+ham skor AUROC=0.656
+
+DONMUS (AerialVL): AUROC=0.720 AUROC25=0.869 ECE=0.104
+   GLOBAL         kabul=0.239 risk=0.390
+   OTO-TOPLU      kabul=0.038 risk=0.099
+   OTO-CEVRIMICI  kabul=0.060 risk=0.292
+
+KARISIK (3 veri seti): AUROC=0.757 AUROC25=0.960 ECE=0.415
+   GLOBAL         kabul=0.885 risk=0.566
+   OTO-TOPLU      kabul=1.000 risk=0.611
+   OTO-CEVRIMICI  kabul=0.992 risk=0.608

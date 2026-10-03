@@ -481,3 +481,36 @@ Karşılaştırma: GLOBAL (eğitim eşiği) ve ETİKETLİ-ALAN (o alanın etiket
 | VPAIR TUNE | RoMa | 9.4 m | %55 | %100 | %0 | 3.1 s/kare |
 
 **Bulgu:** RoMa kaybolan kareleri biraz azaltıyor (UAV-VisLoc'ta > 100 m: %35 → %27), ama 10 m hassasiyetini değiştirmiyor ve 7–15 kat yavaş. Jetson hedefi düşünüldüğünde değmez. Bu, §13'teki bulguyu destekliyor: UAV-VisLoc ve VPAIR'deki 10 m sınırı eşleştiriciden değil, irtifa/tutum belirsizliğinden ve harita kalitesinden kaynaklanıyor. Eşleştirici değiştirilmedi; bu nedenle güvenilirlik deneyleri de tekrarlanmadı.
+
+---
+
+## 17. Ek deney: ALTO, beşinci görülmemiş alan (ABD, Ohio) — 2026-10-04
+
+**Veri:** ALTO ICRA 2022 yarışma alt kümesi, **Val** bölümü (Train ve Test indirildi; Test'te konum etiketi yok).
+- 1.684 ardışık helikopter karesi (~2.5 m aralık, 500 × 500 px, aşağı bakan kamera).
+- Rota boyunca ~10 m aralıklı uydu referans kesitleri; ayrıca 20 ve 40 m kuzey/güney kaydırmalı kesitler.
+
+**Kurulum** (`src/alto_loader.py`, `src/alto_build_fix_dataset.py`):
+- **Veriden ölçülenler** (yalnızca TUNE = ilk %20 kare):
+  - referans GSD 0.613 m/px, query GSD ~0.506 m/px (yer kapsamı ~253 m), ardışık görüntü kaymalarından
+  - kuzey-yukarı dönüş = quaternion ZYX-Z açısı − 3.3°
+  - sabit gövde ofseti: ileri 1.0 m, sağ 6.2 m
+- **Harita:** 2.295 referans kesiti birleştirildi (0.8 m/px).
+- **TEST:** Kalan 1.348 karenin her 5'incisi, 270 kare × 7 koşul.
+
+**Dürüstlük notu, harita hatası:** İlk harita sürümü UTM → enlem/boylam dönüşümünü doğrusal kabul ediyordu. UTM ızgara yakınsaması (~0.3°) nedeniyle rota boyunca ~10 m kayma oluştu. Bu hata **TEST sonuçlarına bakılarak fark edildi** (10 m içi oran TUNE'da %47, TEST'te %23; TEST'te tutarlı ~10 m güneybatı kayması). Düzeltme ayarlanmış bir parametre değil, doğru coğrafi dönüşüm: her kesit kendi gerçek enlem/boylamına yerleştirildi. Sabit ofset düzeltilmiş haritada TUNE'da yeniden ölçüldü, ardından TEST bir kez daha koşuldu. Hatalı sürümün çıktıları `outputs/_partial/*buggy_map*` altında saklı.
+
+**Lokalizer (TEST, prior 0/30 m):** median 11.0 m, ≤ 10 m %43, **≤ 25 m %93**, > 100 m / yok %3.
+
+**Güvenilirlik (ALTO hiçbir modelin eğitiminde yok):**
+
+| Model | AUROC (≤ 10 m) | AUROC (≤ 25 m) | ECE | Eğitim eşiği: kabul / risk | OTO-TOPLU | OTO-ÇEVRİMİÇİ |
+|---|---|---|---|---|---|---|
+| Ham skor | 0.656 | – | – | – | – | – |
+| DONMUŞ (AerialVL) | 0.720 | 0.869 | 0.104 | %23.9 / %39.0 | %3.8 / %9.9 | %6.0 / %29.2 |
+| KARIŞIK (3 veri seti) | 0.757 | **0.960** | 0.415 | %88.5 / %56.6 | %100 / %61.1 | %99.2 / %60.8 |
+
+**Bulgular:**
+- Lokalizer bu bölgede iyi çalışıyor (≤ 25 m %93). Ama hassasiyet ~10 m civarında toplandığından **10 m etiketi pratikte "sınırın hangi tarafında" sorusuna dönüşüyor**. Bu, eşleşme ipuçlarından kestirilemiyor (AUROC 0.72–0.76).
+- **Büyük hataları yakalama (≤ 25 m etiketi) çok iyi**, özellikle karışık modelde (AUROC 0.96). VPAIR (§15) ve UAV-VisLoc (§13) ile aynı örüntü: güvenilirlik modelleri asıl olarak **kaba hataları** ayırt ediyor, 10 m civarındaki ince farkı değil.
+- 10 m etiketiyle risk sözü bu bölgede tutmuyor (görülmemiş alanlarda §13–15'teki genel bulgu).
