@@ -586,4 +586,12 @@ Eşikler havuz OOF'undan (risk %20 / %35), ölçüm gürültüsü R havuzdaki et
   - UAV-VisLoc'ta ortalama 342 → 207 m, en kötü koşu drift-only'nin altında (475 < 590). Hiçbir koşuda felaket yok.
 - **M25 açık-döngüde iyi görünse de kapalı döngüde riskli.** Bir UAV-VisLoc koşusunda 4.762 m'ye saptı: daha fazla kabul, yanlış fix dizilerinin filtreyi sürüklemesine izin veriyor. 25 m hedefi, ancak REACQUIRE'daki gibi ardışık-teyitle birlikte güvenli olabilir.
 - Filtre doğruyken AerialVL'de dondurulmuş E7 hâlâ en iyi (17 m). Kendi bölgesinde uzmanlaşmış model orada üstün.
+- **Sağlamlık kontrolü, ikinci drift tohumu** (aynı 28 koşul, `outputs/sweep_v2s1/`; iki tohum toplam 56 koşu):
+
+  | Ortalama / en kötü RMSE (m), 2 tohum | E1 | E2 | E7 | **M10** | M25 | A25 |
+  |---|---|---|---|---|---|---|
+  | AerialVL (24 koşu) | 103 / 182 | 27 / 45 | 45 / 155 | **33 / 142** | 31 / 73 | 33 / 84 |
+  | UAV-VisLoc (32 koşu) | 372 / 590 | 409 / 1913 | 345 / 590 | **217 / 510** | 392 / 4762 | 297 / 1479 |
+
+  M10, dondurulmuş E7'den UAV-VisLoc'ta **28/32**, AerialVL'de 17/24 koşuda daha iyi. UAV-VisLoc'ta en kötü koşusu drift-only'nin altında kalan tek kamera politikası. 25 m politikaları (M25, A25) ve "hepsini kabul" (E2) ikinci tohumda da felakete sapan koşular üretti. Sonuç tohuma bağlı değil.
 - **Pratik öneri:** Konuşlandırmada karışık-alan modeli (M10). Kabul eşiği yeni bölgede küçük bir yerel veriyle ayarlanmalı. REACQUIRE + 2-fix teyidi açık kalmalı.
