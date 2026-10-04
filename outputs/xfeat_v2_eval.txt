@@ -1,0 +1,62 @@
+== 1) Lokalizer (tum kosullar | prior 0/30 m) ==
+aerialvl         fixes_test.jsonl             superpoint <=10  47% <=25  68% >100  19% | p0/30 <=10  56% <=25  82% | 299 ms
+aerialvl         fixes_test.jsonl             xfeat      <=10  44% <=25  68% >100  20% | p0/30 <=10  56% <=25  87% | 146 ms
+anyvisloc        anyvisloc_fixes_test.jsonl   superpoint <=10  59% <=25  67% >100  24% | p0/30 <=10  65% <=25  72% | 395 ms
+anyvisloc        anyvisloc_fixes_test.jsonl   xfeat      <=10  39% <=25  50% >100  33% | p0/30 <=10  41% <=25  52% | 204 ms
+visloc           visloc_fixes_test.jsonl      superpoint <=10  10% <=25  37% >100  37% | p0/30 <=10  13% <=25  45% | 631 ms
+visloc           visloc_fixes_test.jsonl      xfeat      <=10  14% <=25  45% >100  27% | p0/30 <=10  16% <=25  48% | 420 ms
+vpair            vpair_fixes_test.jsonl       superpoint <=10  41% <=25  67% >100   9% | p0/30 <=10  44% <=25  71% | 226 ms
+vpair            vpair_fixes_test.jsonl       xfeat      <=10  44% <=25  75% >100   3% | p0/30 <=10  44% <=25  74% | 128 ms
+alto             alto_fixes_test.jsonl        superpoint <=10  39% <=25  89% >100   5% | p0/30 <=10  43% <=25  93% | 226 ms
+alto             alto_fixes_test.jsonl        xfeat      <=10  26% <=25  86% >100   8% | p0/30 <=10  28% <=25  88% | 163 ms
+aerialvl-havuz   fixes_train.jsonl            superpoint <=10  38% <=25  63% >100  19% | p0/30 <=10  43% <=25  74% | 311 ms
+aerialvl-havuz   fixes_train.jsonl            xfeat      <=10  36% <=25  65% >100  19% | p0/30 <=10  45% <=25  81% | 177 ms
+aerialvl-havuz   fixes_val.jsonl              superpoint <=10  44% <=25  66% >100  24% | p0/30 <=10  51% <=25  83% | 578 ms
+aerialvl-havuz   fixes_val.jsonl              xfeat      <=10  46% <=25  70% >100  21% | p0/30 <=10  61% <=25  92% | 174 ms
+anyvisloc-havuz  anyvisloc_fixes_recal.jsonl  superpoint <=10  64% <=25  69% >100  24% | p0/30 <=10  70% <=25  75% | 320 ms
+anyvisloc-havuz  anyvisloc_fixes_recal.jsonl  xfeat      <=10  45% <=25  53% >100  35% | p0/30 <=10  48% <=25  57% | 181 ms
+visloc-havuz     visloc_fixes_recal.jsonl     superpoint <=10  14% <=25  43% >100  46% | p0/30 <=10  19% <=25  55% | 626 ms
+visloc-havuz     visloc_fixes_recal.jsonl     xfeat      <=10  22% <=25  60% >100  26% | p0/30 <=10  22% <=25  64% | 376 ms
+
+== 2) Guvenilirlik (her eslestirici kendi kayitlariyla) ==
+esl.       havuz            etiket test        AUROC  kabul   risk  en kotu
+superpoint AerialVL-yalniz  y10   aerialvl    0.900  0.350  0.153    0.269
+superpoint AerialVL-yalniz  y10   anyvisloc   0.931  0.111  0.003    0.033
+superpoint AerialVL-yalniz  y10   visloc      0.826  0.006  0.250      nan
+superpoint AerialVL-yalniz  y10   vpair       0.816  0.100  0.063    0.063
+superpoint AerialVL-yalniz  y10   alto        0.745  0.026  0.041    0.041
+superpoint AerialVL-yalniz  y25   aerialvl    0.938  0.786  0.158    0.233
+superpoint AerialVL-yalniz  y25   anyvisloc   0.972  0.682  0.067    0.425
+superpoint AerialVL-yalniz  y25   visloc      0.843  0.561  0.398    0.557
+superpoint AerialVL-yalniz  y25   vpair       0.775  0.865  0.248    0.248
+superpoint AerialVL-yalniz  y25   alto        0.929  0.905  0.043    0.043
+superpoint KARISIK          y10   aerialvl    0.898  0.607  0.275    0.390
+superpoint KARISIK          y10   anyvisloc   0.968  0.635  0.101    0.297
+superpoint KARISIK          y10   visloc      0.888  0.194  0.676    0.750
+superpoint KARISIK          y10   vpair       0.835  0.843  0.520    0.520
+superpoint KARISIK          y10   alto        0.763  0.884  0.565    0.565
+superpoint KARISIK          y25   aerialvl    0.941  0.899  0.244    0.317
+superpoint KARISIK          y25   anyvisloc   0.982  0.773  0.136    0.533
+superpoint KARISIK          y25   visloc      0.869  0.622  0.406    0.560
+superpoint KARISIK          y25   vpair       0.788  0.926  0.274    0.274
+superpoint KARISIK          y25   alto        0.965  0.957  0.074    0.074
+xfeat      AerialVL-yalniz  y10   aerialvl    0.885  0.009  0.111    0.143
+xfeat      AerialVL-yalniz  y10   anyvisloc   0.925  0.000    nan      nan
+xfeat      AerialVL-yalniz  y10   visloc      0.767  0.000    nan      nan
+xfeat      AerialVL-yalniz  y10   vpair       0.774  0.000    nan      nan
+xfeat      AerialVL-yalniz  y10   alto        0.778  0.000    nan      nan
+xfeat      AerialVL-yalniz  y25   aerialvl    0.939  0.840  0.192    0.256
+xfeat      AerialVL-yalniz  y25   anyvisloc   0.885  0.332  0.054    1.000
+xfeat      AerialVL-yalniz  y25   visloc      0.764  0.492  0.345    0.605
+xfeat      AerialVL-yalniz  y25   vpair       0.685  0.878  0.210    0.210
+xfeat      AerialVL-yalniz  y25   alto        0.940  0.526  0.010    0.010
+xfeat      KARISIK          y10   aerialvl    0.904  0.402  0.192    0.308
+xfeat      KARISIK          y10   anyvisloc   0.956  0.341  0.113    0.867
+xfeat      KARISIK          y10   visloc      0.831  0.127  0.646    0.896
+xfeat      KARISIK          y10   vpair       0.820  0.726  0.421    0.421
+xfeat      KARISIK          y10   alto        0.809  0.365  0.507    0.507
+xfeat      KARISIK          y25   aerialvl    0.942  0.858  0.209    0.288
+xfeat      KARISIK          y25   anyvisloc   0.961  0.596  0.197    0.612
+xfeat      KARISIK          y25   visloc      0.760  0.736  0.394    0.642
+xfeat      KARISIK          y25   vpair       0.695  0.944  0.218    0.218
+xfeat      KARISIK          y25   alto        0.950  0.888  0.051    0.051

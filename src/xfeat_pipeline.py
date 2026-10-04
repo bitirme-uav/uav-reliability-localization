@@ -21,13 +21,13 @@ class XFeatPipeline(RomaPipeline):
 
     def _correspondences(self, feats_q, feats_m):
         qa, mb = feats_q["img"], feats_m["img"]
-        if min(qa.shape[:2]) < 16 or min(mb.shape[:2]) < 16:
+        if min(qa.shape[:2]) < 32 or min(mb.shape[:2]) < 32:   # XFeat 32 px'lik bloklarla calisir
             return np.zeros((0, 2)), np.zeros((0, 2))
         try:
             with torch.no_grad():
                 ka, kb = self.xfeat.match_xfeat(cv2.cvtColor(qa, cv2.COLOR_BGR2RGB), cv2.cvtColor(mb, cv2.COLOR_BGR2RGB),
                                                 top_k=self.TOP_K)
-        except (IndexError, RuntimeError):   # hic anahtar nokta yok (bos/tekduze bolge) -> eslesme yok
+        except (IndexError, RuntimeError, ZeroDivisionError):   # hic anahtar nokta yok (bos/tekduze bolge) -> eslesme yok
             return np.zeros((0, 2)), np.zeros((0, 2))
         ka, kb = np.asarray(ka, float), np.asarray(kb, float)
         if len(ka) and feats_q.get("mask") is not None:

@@ -595,3 +595,31 @@ Eşikler havuz OOF'undan (risk %20 / %35), ölçüm gürültüsü R havuzdaki et
 
   M10, dondurulmuş E7'den UAV-VisLoc'ta **28/32**, AerialVL'de 17/24 koşuda daha iyi. UAV-VisLoc'ta en kötü koşusu drift-only'nin altında kalan tek kamera politikası. 25 m politikaları (M25, A25) ve "hepsini kabul" (E2) ikinci tohumda da felakete sapan koşular üretti. Sonuç tohuma bağlı değil.
 - **Pratik öneri:** Konuşlandırmada karışık-alan modeli (M10). Kabul eşiği yeni bölgede küçük bir yerel veriyle ayarlanmalı. REACQUIRE + 2-fix teyidi açık kalmalı.
+
+---
+
+## 19. XFeat v2: tam ölçekli eşleştirilmiş karşılaştırma — 2026-10-04
+
+**Kurulum:** Tüm açık-döngü kayıtları (havuzlar + 5 TEST), XFeat ile **aynı kare, aynı prior, aynı arama yarıçapı** kullanılarak yeniden üretildi (`src/replay_fixes.py`, `outputs/v2_xfeat/`).
+- Yeniden oynatma doğrulaması: SuperPoint ile tekrar koşulduğunda AerialVL, UAV-VisLoc, VPAIR ve ALTO kayıtları birebir aynı çıktı.
+- AnyVisLoc'un eski kayıtları, sonradan eklenen sanal-görüntü boyut sınırından önce üretilmişti. Adil karşılaştırma için AnyVisLoc tabanı SuperPoint ile güncel kodla yeniden oynatıldı (`outputs/v2_superpoint/`).
+- Değerlendirme: `src/xfeat_v2_eval.py`, `outputs/xfeat_v2_eval.txt`.
+
+**Lokalizer (TEST, prior 0/30 m), ≤ 10 m / ≤ 25 m / median süre:**
+
+| TEST | SuperPoint + LightGlue | XFeat |
+|---|---|---|
+| AerialVL | %56 / %82 / 299 ms | %56 / **%87** / **146 ms** |
+| AnyVisLoc | **%65 / %72** / 395 ms | %41 / %52 / 204 ms |
+| UAV-VisLoc | %13 / %45 / 631 ms | **%16 / %48** / 420 ms |
+| VPAIR | %44 / %71 / 226 ms | %44 / **%74** / 128 ms |
+| ALTO | **%43 / %93** / 226 ms | %28 / %88 / 163 ms |
+
+**Güvenilirlik** (her eşleştiricinin kendi kayıtlarıyla yeniden eğitilmiş, §18.2 tarifi; AUROC ≤ 10 m):
+- **KARIŞIK:** SuperPoint / XFeat: AerialVL 0.898 / 0.904, AnyVisLoc 0.968 / 0.956, UAV-VisLoc 0.888 / 0.831, VPAIR 0.835 / 0.820, ALTO 0.763 / 0.809.
+- **AerialVL-yalnız XFeat modeli, y10:** OOF eşiği çok yüksek çıktığı için TEST'te neredeyse hiçbir şey kabul etmiyor (%0–1).
+
+**Bulgular (dürüst):**
+- **40 karelik geliştirme taraması (§18.1) yanıltıcı oldu.** Tam ölçekte XFeat, UAV-VisLoc, VPAIR ve AerialVL'de eşit ya da daha iyi (özellikle kaba hatalarda) ve ~2 kat hızlı. Ama AnyVisLoc'ta (eğik, maskeli sanal-nadir görüntüler) ve ALTO'da 10 m doğruluğu belirgin düşüyor (%65 → %41, %43 → %28). ALTO'da bunun bir kısmı, sabit ofset düzeltmesinin SuperPoint ile ölçülmüş olmasından kaynaklanıyor olabilir; bu ayrıca ölçülmedi.
+- Güvenilirlik modelleri XFeat özellikleriyle iyileşmedi.
+- **Karar:** Ana eşleştirici **SuperPoint + LightGlue olarak kalıyor**. XFeat, Jetson'da hız gerekirse ve hedef bölge AerialVL/VPAIR benzeriyse yedek seçenek. Bu karar TEST sonuçları da görülerek verildi; sistem değiştirilmediği için TEST sonuçlarını etkilemiyor.
