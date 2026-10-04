@@ -127,7 +127,7 @@ def main():
     m_vis = models["cal_visual (logreg)"]
     m_vm = models["cal_vis+Mahal (gbm)"]
     V2 = {}
-    if any(pp in V2_POLICIES for pp in args.policies.split(",")):
+    if any(pp not in ALL_POLICIES for pp in args.policies.split(",")):
         with open("../outputs/reliability_v2_bundle.pkl", "rb") as f:
             V2 = pickle.load(f)
 
@@ -252,7 +252,7 @@ def main():
                                                p=[probs["accept"], probs["down-weight"], probs["reject"]])
                 elif p == "E10":
                     decision = "accept" if rec.safe_primary else "reject"
-                elif p in V2_POLICIES:
+                elif p in V2 or p == "M10T":
                     b = V2["M10" if p == "M10T" else p]
                     rec.calibrated_reliability = float(b["model"].predict_proba([row])[0])
                     decision = three_level(rec.calibrated_reliability, b["th"])
@@ -271,7 +271,7 @@ def main():
             writer.write(rec)
             if fix is not None:
                 pol.counts[decision] += 1
-                r_use = float(np.mean(np.diag(V2["M10" if p == "M10T" else p]["R"]))) if p in V2_POLICIES else r_nom
+                r_use = float(np.mean(np.diag(V2["M10" if p == "M10T" else p]["R"]))) if (p in V2 or p == "M10T") else r_nom
                 if decision == "accept":
                     pol.correct(fix, r_use, gx, gy)
                 elif decision == "down-weight":
