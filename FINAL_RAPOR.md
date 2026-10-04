@@ -623,3 +623,38 @@ Eşikler havuz OOF'undan (risk %20 / %35), ölçüm gürültüsü R havuzdaki et
 - **40 karelik geliştirme taraması (§18.1) yanıltıcı oldu.** Tam ölçekte XFeat, UAV-VisLoc, VPAIR ve AerialVL'de eşit ya da daha iyi (özellikle kaba hatalarda) ve ~2 kat hızlı. Ama AnyVisLoc'ta (eğik, maskeli sanal-nadir görüntüler) ve ALTO'da 10 m doğruluğu belirgin düşüyor (%65 → %41, %43 → %28). ALTO'da bunun bir kısmı, sabit ofset düzeltmesinin SuperPoint ile ölçülmüş olmasından kaynaklanıyor olabilir; bu ayrıca ölçülmedi.
 - Güvenilirlik modelleri XFeat özellikleriyle iyileşmedi.
 - **Karar:** Ana eşleştirici **SuperPoint + LightGlue olarak kalıyor**. XFeat, Jetson'da hız gerekirse ve hedef bölge AerialVL/VPAIR benzeriyse yedek seçenek. Bu karar TEST sonuçları da görülerek verildi; sistem değiştirilmediği için TEST sonuçlarını etkilemiyor.
+
+---
+
+## 20. Ardışık-fix tutarlılığı ve eğitim havuzuna ALTO Train — 2026-10-04
+
+### 20.1 Ardışık-fix tutarlılığı (M10T)
+**Fikir:** REACQUIRE'daki 2-fix teyidini normal moda taşımak. Önceki fix (kabul edilsin edilmesin) ölü-hesap hızıyla bugüne taşınır.
+- Yeni fix 25 m içindeyse ikisi birbirini doğrular: down-weight kararı accept'e yükselir.
+- Değilse karar bir kademe düşer: accept → down-weight → reject.
+
+Taban politika M10 (`src/run_nav_sim.py`). Aynı 28 koşul × 2 tohum = 56 koşu (`outputs/sweep_t/`).
+
+| | M10 ortalama / median / en kötü | M10T ortalama / median / en kötü | M10T daha iyi |
+|---|---|---|---|
+| AerialVL (24) | 32.7 / 20.8 / 142 | **30.9 / 20.5** / 143 | 18/24 |
+| UAV-VisLoc (32) | **217 / 182 / 510** | 248 / 202 / 572 | 3/32 |
+
+**Bulgu:** Yalnızca AerialVL'de küçük kazanç var (özellikle yanlış-belirtilmiş filtrede); UAV-VisLoc'ta kötüleştiriyor. Ardışık iki çağrıda prior ve arama penceresi neredeyse aynı olduğundan, eşleştirici **aynı yanlış yere tekrar takılabiliyor**. Yani iki fix bağımsız tanık değil. Ayrıca hızlı uçuşta ölü-hesap hatası, doğru ama gürültülü fix'leri tolerans dışına itiyor. REACQUIRE'da teyit işe yarıyordu, çünkü orada arama geniş alanda ve büyük sıçrama sonrası yapılıyor. **M10T benimsenmedi.**
+
+### 20.2 Eğitim havuzuna ALTO Train
+`src/alto_train.py`:
+- ALTO Train (10.436 kare, 28.5 km) zip'ten okundu.
+- Rota ~3 km'lik örtüşen 10 parçaya bölünüp her parçaya harita yapıldı.
+- Her 20. kare × 7 koşul (522 kare, 3.654 kayıt).
+- Platform ayarları ALTO Val TUNE'dan (aynı helikopter).
+
+| ≤ 10 m etiketi | AUROC, KARIŞIK-3 → KARIŞIK-4 | Kabul / risk, KARIŞIK-3 | Kabul / risk, KARIŞIK-4 |
+|---|---|---|---|
+| AerialVL | 0.899 → **0.908** | %60 / %28 | %53 / **%22** |
+| AnyVisLoc | 0.964 → **0.975** | %64 / %10 | %55 / **%4** |
+| UAV-VisLoc | 0.881 → **0.894** | %18 / %65 | %12 / %57 |
+| **VPAIR (görülmemiş)** | 0.829 → **0.855** | %84 / %52 | %58 / **%35** |
+| ALTO Val (aynı platform, farklı uçuş) | 0.757 → **0.826** | %89 / %57 | %54 / **%40** |
+
+**Bulgu:** Dördüncü bir alan eklemek her TEST kümesinde ayırt etmeyi artırdı ve kabul edilenlerdeki riski düşürdü. Bu, **hiç görülmemiş VPAIR'de de** geçerli (risk %52 → %35). Çeşitli eğitim verisinin genellemeye katkısının bir kez daha kanıtı. Görülmemiş alanlarda risk hâlâ %20 hedefinin üstünde; yerel eşik ayarı önerisi geçerliliğini koruyor. (`outputs/mixed4_eval.txt`)

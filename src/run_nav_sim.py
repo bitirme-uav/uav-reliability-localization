@@ -37,7 +37,12 @@ R_MIN, R_MAX = 60.0, 400.0
 DOWNWEIGHT_R_SCALE = 4.0
 VEL_WINDOW = 6  # dead-reckoning hizi icin son N adim
 ALL_POLICIES = ("E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9", "E10")
-V2_POLICIES = ("M10", "M25", "A25")   # reliability_v2_bundle.pkl: karisik/AerialVL modelleri, 10/25 m etiketi
+V2_POLICIES = ("M10", "M25", "A25", "M10T", "M10A")
+# M10T: M10 karari + ardisik-fix tutarliligi (REACQUIRE teyit fikrinin normal moda tasinmasi).
+# Onceki fix (kabul edilsin edilmesin) olu-hesap hiziyla bugune tasinir; yeni fix TAU icindeyse ikisi
+# birbirini dogrular (down-weight -> accept), degilse bir kademe dusurulur (accept -> dw -> reject).
+CONS_TAU_M = 25.0
+CONS_MAX_GAP_CALLS = 2.5   # reliability_v2_bundle.pkl: karisik/AerialVL modelleri, 10/25 m etiketi
 
 
 class Policy:
@@ -50,6 +55,7 @@ class Policy:
         self.incs: deque = deque(maxlen=VEL_WINDOW)
         self.last_post: np.ndarray | None = None
         self.last_t: float | None = None
+        self.last_fix: tuple | None = None   # (xy, t) son uretilen fix (M10T)
 
     def step(self, t, gx, gy):
         s = self.sim.step(t, gx, gy)
@@ -247,15 +253,25 @@ def main():
                 elif p == "E10":
                     decision = "accept" if rec.safe_primary else "reject"
                 elif p in V2_POLICIES:
-                    rec.calibrated_reliability = float(V2[p]["model"].predict_proba([row])[0])
-                    decision = three_level(rec.calibrated_reliability, V2[p]["th"])
+                    b = V2["M10" if p == "M10T" else p]
+                    rec.calibrated_reliability = float(b["model"].predict_proba([row])[0])
+                    decision = three_level(rec.calibrated_reliability, b["th"])
+                    if p == "M10T":
+                        lf = pol.last_fix
+                        if lf is not None and t - lf[1] <= CONS_MAX_GAP_CALLS * args.call_interval:
+                            pred = lf[0] + pol.dr_velocity() * (t - lf[1])
+                            if float(np.hypot(*(fix - pred))) <= CONS_TAU_M:
+                                decision = "accept" if decision in ("accept", "down-weight") else decision
+                            else:
+                                decision = {"accept": "down-weight", "down-weight": "reject"}.get(decision, decision)
+                        pol.last_fix = (fix.copy(), t)
                 else:
                     decision = "reject"
             rec.decision = decision
             writer.write(rec)
             if fix is not None:
                 pol.counts[decision] += 1
-                r_use = float(np.mean(np.diag(V2[p]["R"]))) if p in V2_POLICIES else r_nom
+                r_use = float(np.mean(np.diag(V2["M10" if p == "M10T" else p]["R"]))) if p in V2_POLICIES else r_nom
                 if decision == "accept":
                     pol.correct(fix, r_use, gx, gy)
                 elif decision == "down-weight":
