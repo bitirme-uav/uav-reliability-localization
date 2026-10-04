@@ -23,9 +23,12 @@ class XFeatPipeline(RomaPipeline):
         qa, mb = feats_q["img"], feats_m["img"]
         if min(qa.shape[:2]) < 16 or min(mb.shape[:2]) < 16:
             return np.zeros((0, 2)), np.zeros((0, 2))
-        with torch.no_grad():
-            ka, kb = self.xfeat.match_xfeat(cv2.cvtColor(qa, cv2.COLOR_BGR2RGB), cv2.cvtColor(mb, cv2.COLOR_BGR2RGB),
-                                            top_k=self.TOP_K)
+        try:
+            with torch.no_grad():
+                ka, kb = self.xfeat.match_xfeat(cv2.cvtColor(qa, cv2.COLOR_BGR2RGB), cv2.cvtColor(mb, cv2.COLOR_BGR2RGB),
+                                                top_k=self.TOP_K)
+        except (IndexError, RuntimeError):   # hic anahtar nokta yok (bos/tekduze bolge) -> eslesme yok
+            return np.zeros((0, 2)), np.zeros((0, 2))
         ka, kb = np.asarray(ka, float), np.asarray(kb, float)
         if len(ka) and feats_q.get("mask") is not None:
             m = feats_q["mask"]
