@@ -658,3 +658,15 @@ Taban politika M10 (`src/run_nav_sim.py`). Aynı 28 koşul × 2 tohum = 56 koşu
 | ALTO Val (aynı platform, farklı uçuş) | 0.757 → **0.826** | %89 / %57 | %54 / **%40** |
 
 **Bulgu:** Dördüncü bir alan eklemek her TEST kümesinde ayırt etmeyi artırdı ve kabul edilenlerdeki riski düşürdü. Bu, **hiç görülmemiş VPAIR'de de** geçerli (risk %52 → %35). Çeşitli eğitim verisinin genellemeye katkısının bir kez daha kanıtı. Görülmemiş alanlarda risk hâlâ %20 hedefinin üstünde; yerel eşik ayarı önerisi geçerliliğini koruyor. (`outputs/mixed4_eval.txt`)
+
+### 20.3 Kapalı döngüde M10A (4 veri setiyle eğitilmiş M10)
+`src/build_m10a.py`. Aynı tarif ve aynı eşik kuralı (OOF, risk %20 / %35). Eşikler: M10A high 0.534 / low 0.108 (M10: 0.332 / 0.071). Aynı 56 koşu (`outputs/sweep_m10a/`).
+
+| | M10 ortalama / median / en kötü | M10A ortalama / median / en kötü | M10A daha iyi |
+|---|---|---|---|
+| AerialVL (24) | **32.7 / 20.8 / 142** | 42.9 / 23.1 / 160 | 7/24 |
+| UAV-VisLoc (32) | **217 / 182 / 510** | 288 / 236 / 590 | 4/32 |
+
+**Bulgu:** Açık-döngüde her ölçütte daha iyi olan M10A, kapalı döngüde **daha kötü**. Daha yüksek eşik nedeniyle daha az düzeltme kabul ediyor ve drift birikiyor; özellikle yanlış-belirtilmiş filtrede (AerialVL 47 → 68 m). Ders: "kabul edilenlerde risk ≤ %20" açık-döngü kuralı, navigasyon için en iyi çalışma noktasını garanti etmiyor. Sıralama gücü artsa bile eşik yanlış yerdeyse kazanç kayboluyor. **Ana model M10 olarak kalıyor.**
+
+**Önerilen sonraki adım:** Eşiği açık-döngü riskine göre değil, doğrulama (VAL) uçuşlarında doğrudan kapalı-döngü RMSE'sine göre seçmek; TEST yine bir kez ölçülür. M10A'nın daha iyi sıralama gücü ancak böyle navigasyona yansıyabilir.
