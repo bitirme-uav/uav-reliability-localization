@@ -1,0 +1,29 @@
+xFormers not available
+xFormers not available
+Overall Progress:   0%|          | 0/112 [00:00<?, ?img/s]
+Retrieval Progress:   0%|          | 0/112 [00:00<?, ?img/s][A===========building convnext===========
+using model_type: convnext_base as a backbone
+https://dl.fbaipublicfiles.com/convnext/convnext_base_22k_1k_224.pth
+Using coarse resolution (560, 560), and upsample res (864, 864)
+
+
+Image Retrieval:   0%|          | 0/2 [00:00<?, ?it/s][A[A
+
+Image Retrieval:  50%|█████     | 1/2 [00:03<00:03,  3.67s/it][A[A
+
+Image Retrieval: 100%|██████████| 2/2 [00:04<00:00,  1.74s/it][A[AImage Retrieval: 100%|██████████| 2/2 [00:04<00:00,  2.03s/it]
+
+Retrieval Progress:   1%|          | 1/112 [00:30<56:55, 30.77s/img][A                                                          
+                                                                    [AOverall Progress:   0%|          | 0/112 [00:38<?, ?img/s]
+Retrieval Progress:   1%|          | 1/112 [00:38<56:55, 30.77s/img][AOverall Progress:   1%|          | 1/112 [00:38<1:11:57, 38.90s/img]Localization Error Scene_05/L05_0001: 1.1 m
+
+
+Image Retrieval:   0%|          | 0/2 [00:00<?, ?it/s][A[A
+
+Image Retrieval:  50%|█████     | 1/2 [00:00<00:00,  1.34it/s][A[A
+
+Image Retrieval: 100%|██████████| 2/2 [00:01<00:00,  1.64it/s][A[AImage Retrieval: 100%|██████████| 2/2 [00:01<00:00,  1.58it/s]
+
+Retrieval Progress:   2%|▏         | 2/112 [00:40<33:47, 18.43s/img][A                                                                    
+                                                                    [AOverall Progress:   1%|          | 1/112 [00:46<1:11:57, 38.90s/img]
+Retrieval Progress:   2%|▏         | 2/112 [00:46<33:47, 18.43s/img][AOverall Progress:   2%|▏         | 2/112 [00:46<37:52, 20.66s/img]  

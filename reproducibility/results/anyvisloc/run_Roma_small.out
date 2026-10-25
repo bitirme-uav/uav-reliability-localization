@@ -1,0 +1,5 @@
+Scene_23 196 20 attempt 1 rc 0 exceptions 20 A@5 0.0
+Scene_23 196 20 attempt 2 rc 0 exceptions 0 A@5 1.0
+Scene_18 214 22 attempt 1 rc 1 exceptions None A@5 None
+Scene_18 214 22 attempt 2 rc 0 exceptions 0 A@5 0.8636363636363636
+Scene_22 220 22 attempt 1 rc 0 exceptions 13 A@5 0.4090909090909091

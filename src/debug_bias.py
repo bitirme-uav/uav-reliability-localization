@@ -10,7 +10,8 @@ from aerialvl_loader import AerialVLVal
 from geo_utils import enu_to_lonlat_m, lonlat_to_enu_m
 from localization_pipeline import LocalizationPipeline, MapExtractor
 
-VAL_ROOT = "/media/davut/disk2/proje/uav_vloc_datasets/AerialVL_data/images/VAL/extracted"
+from paths import DATA_ROOT
+VAL_ROOT = str(DATA_ROOT / "AerialVL_data/images/VAL/extracted")
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 30
 RADIUS = float(sys.argv[2]) if len(sys.argv) > 2 else 60.0
 

@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "D:\proje\uav_reliability_localization\reproducibility\anyvisloc_run.py", line 164, in <module>
+    main()
+  File "D:\proje\uav_reliability_localization\reproducibility\anyvisloc_run.py", line 136, in main
+    return summarise(a)
+           ^^^^^^^^^^^^
+  File "D:\proje\uav_reliability_localization\reproducibility\anyvisloc_run.py", line 104, in summarise
+    scene_mean = {k: round(sum(v[k] for v in per_scene.values()) / len(per_scene), 1)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\proje\uav_reliability_localization\reproducibility\anyvisloc_run.py", line 104, in <genexpr>
+    scene_mean = {k: round(sum(v[k] for v in per_scene.values()) / len(per_scene), 1)
+                               ~^^^
+KeyError: 'A@5m'

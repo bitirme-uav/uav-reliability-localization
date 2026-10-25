@@ -14,7 +14,8 @@ import numpy as np
 from aerialvl_loader import AerialVLVal
 from localization_pipeline import MapExtractor
 
-VAL_ROOT = "/media/davut/disk2/proje/uav_vloc_datasets/AerialVL_data/images/VAL/extracted"
+from paths import DATA_ROOT
+VAL_ROOT = str(DATA_ROOT / "AerialVL_data/images/VAL/extracted")
 
 val = AerialVLVal(VAL_ROOT)
 candidates = [f for f in val.all_frames() if val.map_for(f.lon, f.lat) is not None]

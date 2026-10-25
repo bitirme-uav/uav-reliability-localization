@@ -1,0 +1,352 @@
+xFormers not available
+xFormers not available
+Overall Progress:   0%|          | 0/22 [00:00<?, ?img/s]
+Retrieval Progress:   0%|          | 0/22 [00:00<?, ?img/s][A===========building convnext===========
+using model_type: convnext_base as a backbone
+https://dl.fbaipublicfiles.com/convnext/convnext_base_22k_1k_224.pth
+Using coarse resolution (560, 560), and upsample res (864, 864)
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:06<00:00,  6.53s/it][A[AImage Retrieval: 100%|██████████| 1/1 [00:06<00:00,  6.53s/it]
+
+Retrieval Progress:   5%|▍         | 1/22 [00:37<13:07, 37.50s/img][A                                                         
+                                                                   [AOverall Progress:   0%|          | 0/22 [00:50<?, ?img/s]
+Retrieval Progress:   5%|▍         | 1/22 [00:50<13:07, 37.50s/img][AOverall Progress:   5%|▍         | 1/22 [00:50<17:42, 50.60s/img]Localization Error Scene_22/L22_0001: 0.9 m
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.09s/it][A[AImage Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.09s/it]
+
+Retrieval Progress:   9%|▉         | 2/22 [00:52<07:59, 23.98s/img][A                                                                 
+                                                                   [AOverall Progress:   5%|▍         | 1/22 [00:58<17:42, 50.60s/img]
+Retrieval Progress:   9%|▉         | 2/22 [00:58<07:59, 23.98s/img][AOverall Progress:   9%|▉         | 2/22 [00:58<08:32, 25.64s/img]Localization Error Scene_22/L22_0011: 0.2 m
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.03s/it][A[AImage Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.03s/it]
+
+Retrieval Progress:  14%|█▎        | 3/22 [01:00<05:18, 16.75s/img][A                                                                 
+                                                                   [AOverall Progress:   9%|▉         | 2/22 [01:06<08:32, 25.64s/img]
+Retrieval Progress:  14%|█▎        | 3/22 [01:06<05:18, 16.75s/img][AOverall Progress:  14%|█▎        | 3/22 [01:06<05:33, 17.56s/img]Localization Error Scene_22/L22_0021: 0.5 m
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.15it/s][A[AImage Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.15it/s]
+
+Retrieval Progress:  18%|█▊        | 4/22 [01:07<03:57, 13.22s/img][A                                                                 
+                                                                   [AOverall Progress:  14%|█▎        | 3/22 [01:14<05:33, 17.56s/img]
+Retrieval Progress:  18%|█▊        | 4/22 [01:14<03:57, 13.22s/img][AOverall Progress:  18%|█▊        | 4/22 [01:14<04:07, 13.75s/img]Localization Error Scene_22/L22_0031: 0.5 m
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.57s/it][A[AImage Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.57s/it]
+
+Retrieval Progress:  23%|██▎       | 5/22 [01:16<03:18, 11.65s/img][A                                                                 
+                                                                   [AOverall Progress:  18%|█▊        | 4/22 [01:23<04:07, 13.75s/img]
+Retrieval Progress:  23%|██▎       | 5/22 [01:23<03:18, 11.65s/img][AOverall Progress:  23%|██▎       | 5/22 [01:23<03:24, 12.04s/img]Localization Error Scene_22/L22_0041: 0.4 m
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.04s/it][A[AImage Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.04s/it]
+
+Retrieval Progress:  27%|██▋       | 6/22 [01:25<02:47, 10.47s/img][A                                                                 
+                                                                   [AOverall Progress:  23%|██▎       | 5/22 [01:31<03:24, 12.04s/img]
+Retrieval Progress:  27%|██▋       | 6/22 [01:31<02:47, 10.47s/img][AOverall Progress:  27%|██▋       | 6/22 [01:31<02:50, 10.69s/img]Localization Error Scene_22/L22_0051: 0.5 m
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.34s/it][A[AImage Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.34s/it]
+
+Retrieval Progress:  32%|███▏      | 7/22 [01:33<02:26,  9.79s/img][A                                                                 
+                                                                   [AOverall Progress:  27%|██▋       | 6/22 [01:40<02:50, 10.69s/img]
+Retrieval Progress:  32%|███▏      | 7/22 [01:40<02:26,  9.79s/img][AOverall Progress:  32%|███▏      | 7/22 [01:40<02:29,  9.94s/img]Localization Error Scene_22/L22_0061: 0.4 m
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.45s/it][A[AImage Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.45s/it]
+
+Retrieval Progress:  36%|███▋      | 8/22 [01:41<02:11,  9.39s/img][A                                                                 
+                                                                   [AOverall Progress:  32%|███▏      | 7/22 [01:48<02:29,  9.94s/img]
+Retrieval Progress:  36%|███▋      | 8/22 [01:48<02:11,  9.39s/img][AOverall Progress:  36%|███▋      | 8/22 [01:48<02:12,  9.48s/img]Localization Error Scene_22/L22_0071: 0.1 m
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.02it/s][A[AImage Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.02it/s]
+
+Retrieval Progress:  41%|████      | 9/22 [01:49<01:56,  8.94s/img][A                                                                 
+                                                                   [AOverall Progress:  36%|███▋      | 8/22 [01:56<02:12,  9.48s/img]
+Retrieval Progress:  41%|████      | 9/22 [01:56<01:56,  8.94s/img][AOverall Progress:  41%|████      | 9/22 [01:56<01:57,  9.03s/img]Localization Error Scene_22/L22_0081: 0.4 m
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[AImage Retrieval:   0%|          | 0/1 [00:00<?, ?it/s]
+                                                                 
+                                                                   [AOverall Progress:  41%|████      | 9/22 [01:56<01:57,  9.03s/img]
+Retrieval Progress:  41%|████      | 9/22 [01:56<01:56,  8.94s/img][A
+Retrieval Progress:  45%|████▌     | 10/22 [01:56<01:40,  8.36s/img][AOverall Progress:  45%|████▌     | 10/22 [01:56<01:16,  6.34s/img]Localization Error Scene_22/L22_0091: failed
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[AImage Retrieval:   0%|          | 0/1 [00:00<?, ?it/s]
+                                                                  
+                                                                    [AOverall Progress:  45%|████▌     | 10/22 [01:57<01:16,  6.34s/img]
+Retrieval Progress:  45%|████▌     | 10/22 [01:57<01:40,  8.36s/img][A
+Retrieval Progress:  50%|█████     | 11/22 [01:57<01:04,  5.86s/img][AOverall Progress:  50%|█████     | 11/22 [01:57<00:49,  4.46s/img]Localization Error Scene_22/L22_0101: failed
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[AImage Retrieval:   0%|          | 0/1 [00:00<?, ?it/s]
+                                                                  
+                                                                    [AOverall Progress:  50%|█████     | 11/22 [01:57<00:49,  4.46s/img]
+Retrieval Progress:  50%|█████     | 11/22 [01:57<01:04,  5.86s/img][A
+Retrieval Progress:  55%|█████▍    | 12/22 [01:57<00:41,  4.15s/img][AOverall Progress:  55%|█████▍    | 12/22 [01:57<00:31,  3.17s/img]Localization Error Scene_22/L22_0111: failed
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[AImage Retrieval:   0%|          | 0/1 [00:00<?, ?it/s]
+                                                                  
+                                                                    [AOverall Progress:  55%|█████▍    | 12/22 [01:58<00:31,  3.17s/img]
+Retrieval Progress:  55%|█████▍    | 12/22 [01:58<00:41,  4.15s/img][A
+Retrieval Progress:  59%|█████▉    | 13/22 [01:58<00:28,  3.13s/img][AOverall Progress:  59%|█████▉    | 13/22 [01:58<00:22,  2.45s/img]Localization Error Scene_22/L22_0121: failed
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[AImage Retrieval:   0%|          | 0/1 [00:00<?, ?it/s]
+                                                                  
+                                                                    [AOverall Progress:  59%|█████▉    | 13/22 [01:58<00:22,  2.45s/img]
+Retrieval Progress:  59%|█████▉    | 13/22 [01:58<00:28,  3.13s/img][A
+Retrieval Progress:  64%|██████▎   | 14/22 [01:58<00:17,  2.25s/img][AOverall Progress:  64%|██████▎   | 14/22 [01:58<00:14,  1.77s/img]Localization Error Scene_22/L22_0131: failed
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[AImage Retrieval:   0%|          | 0/1 [00:00<?, ?it/s]
+                                                                  
+                                                                    [AOverall Progress:  64%|██████▎   | 14/22 [01:58<00:14,  1.77s/img]
+Retrieval Progress:  64%|██████▎   | 14/22 [01:58<00:17,  2.25s/img][A
+Retrieval Progress:  68%|██████▊   | 15/22 [01:58<00:11,  1.63s/img][AOverall Progress:  68%|██████▊   | 15/22 [01:58<00:09,  1.29s/img]Localization Error Scene_22/L22_0141: failed
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[AImage Retrieval:   0%|          | 0/1 [00:00<?, ?it/s]
+                                                                  
+                                                                    [AOverall Progress:  68%|██████▊   | 15/22 [01:58<00:09,  1.29s/img]
+Retrieval Progress:  68%|██████▊   | 15/22 [01:58<00:11,  1.63s/img][A
+Retrieval Progress:  73%|███████▎  | 16/22 [01:58<00:07,  1.19s/img][AOverall Progress:  73%|███████▎  | 16/22 [01:58<00:05,  1.04img/s]Localization Error Scene_22/L22_0151: failed
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[AImage Retrieval:   0%|          | 0/1 [00:00<?, ?it/s]
+                                                                  
+                                                                    [AOverall Progress:  73%|███████▎  | 16/22 [01:58<00:05,  1.04img/s]
+Retrieval Progress:  73%|███████▎  | 16/22 [01:58<00:07,  1.19s/img][A
+Retrieval Progress:  77%|███████▋  | 17/22 [01:58<00:04,  1.12img/s][AOverall Progress:  77%|███████▋  | 17/22 [01:58<00:03,  1.37img/s]Localization Error Scene_22/L22_0161: failed
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.02s/it][A[AImage Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.02s/it]
+
+Retrieval Progress:  82%|████████▏ | 18/22 [02:00<00:04,  1.11s/img][A                                                                  
+                                                                    [AOverall Progress:  77%|███████▋  | 17/22 [02:03<00:03,  1.37img/s]
+Retrieval Progress:  82%|████████▏ | 18/22 [02:03<00:04,  1.11s/img][AOverall Progress:  82%|████████▏ | 18/22 [02:03<00:07,  1.80s/img]Localization Error Scene_22/L22_0171: failed
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[AImage Retrieval:   0%|          | 0/1 [00:00<?, ?it/s]
+                                                                  
+                                                                    [AOverall Progress:  82%|████████▏ | 18/22 [02:03<00:07,  1.80s/img]
+Retrieval Progress:  82%|████████▏ | 18/22 [02:03<00:04,  1.11s/img][A
+Retrieval Progress:  86%|████████▋ | 19/22 [02:03<00:04,  1.65s/img][AOverall Progress:  86%|████████▋ | 19/22 [02:03<00:03,  1.33s/img]Localization Error Scene_22/L22_0181: failed
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[AImage Retrieval:   0%|          | 0/1 [00:00<?, ?it/s]
+                                                                  
+                                                                    [AOverall Progress:  86%|████████▋ | 19/22 [02:03<00:03,  1.33s/img]
+Retrieval Progress:  86%|████████▋ | 19/22 [02:03<00:04,  1.65s/img][A
+Retrieval Progress:  91%|█████████ | 20/22 [02:03<00:02,  1.21s/img][AOverall Progress:  91%|█████████ | 20/22 [02:03<00:01,  1.01img/s]Localization Error Scene_22/L22_0191: failed
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[AImage Retrieval:   0%|          | 0/1 [00:00<?, ?it/s]
+                                                                  
+                                                                    [AOverall Progress:  91%|█████████ | 20/22 [02:03<00:01,  1.01img/s]
+Retrieval Progress:  91%|█████████ | 20/22 [02:03<00:02,  1.21s/img][A
+Retrieval Progress:  95%|█████████▌| 21/22 [02:03<00:00,  1.10img/s][AOverall Progress:  95%|█████████▌| 21/22 [02:03<00:00,  1.32img/s]Localization Error Scene_22/L22_0201: failed
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[AImage Retrieval:   0%|          | 0/1 [00:00<?, ?it/s]
+                                                                  
+                                                                    [AOverall Progress:  95%|█████████▌| 21/22 [02:04<00:00,  1.32img/s]
+Retrieval Progress:  95%|█████████▌| 21/22 [02:04<00:00,  1.10img/s][A
+Retrieval Progress: 100%|██████████| 22/22 [02:04<00:00,  1.43img/s][AOverall Progress: 100%|██████████| 22/22 [02:04<00:00,  1.70img/s]Retrieval Progress: 100%|██████████| 22/22 [02:06<00:00,  5.73s/img]
+Overall Progress: 100%|██████████| 22/22 [02:06<00:00,  5.73s/img]
+Localization Error Scene_22/L22_0211: failed
+xFormers not available
+xFormers not available
+Overall Progress:   0%|          | 0/22 [00:00<?, ?img/s]
+Retrieval Progress:   0%|          | 0/22 [00:00<?, ?img/s][A
+Retrieval Progress:   5%|▍         | 1/22 [00:21<07:21, 21.00s/img][AOverall Progress:   5%|▍         | 1/22 [00:21<07:21, 21.01s/img]
+Retrieval Progress:  14%|█▎        | 3/22 [00:21<01:44,  5.49s/img][AOverall Progress:  14%|█▎        | 3/22 [00:21<01:44,  5.49s/img]
+Retrieval Progress:  23%|██▎       | 5/22 [00:21<00:45,  2.70s/img][AOverall Progress:  23%|██▎       | 5/22 [00:21<00:45,  2.70s/img]
+Retrieval Progress:  32%|███▏      | 7/22 [00:21<00:23,  1.59s/img][AOverall Progress:  32%|███▏      | 7/22 [00:21<00:23,  1.59s/img]
+Retrieval Progress:  41%|████      | 9/22 [00:21<00:13,  1.02s/img][AOverall Progress:  41%|████      | 9/22 [00:21<00:13,  1.02s/img]===========building convnext===========
+using model_type: convnext_base as a backbone
+https://dl.fbaipublicfiles.com/convnext/convnext_base_22k_1k_224.pth
+Using coarse resolution (560, 560), and upsample res (864, 864)
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:05<00:00,  5.43s/it][A[AImage Retrieval: 100%|██████████| 1/1 [00:05<00:00,  5.43s/it]
+                                                                 
+                                                                   [AOverall Progress:  41%|████      | 9/22 [00:38<00:13,  1.02s/img]
+Retrieval Progress:  45%|████▌     | 10/22 [00:38<00:12,  1.02s/img][ALocalization Error Scene_22/L22_0091: failed
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[AImage Retrieval:   0%|          | 0/1 [00:00<?, ?it/s]
+                                                                 
+                                                                    [AOverall Progress:  45%|████▌     | 10/22 [00:38<00:12,  1.02s/img]
+Retrieval Progress:  45%|████▌     | 10/22 [00:38<00:12,  1.02s/img][A
+Retrieval Progress:  50%|█████     | 11/22 [00:38<00:40,  3.69s/img][AOverall Progress:  50%|█████     | 11/22 [00:38<00:40,  3.69s/img]Localization Error Scene_22/L22_0101: failed
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[AImage Retrieval:   0%|          | 0/1 [00:00<?, ?it/s]
+                                                                  
+                                                                    [AOverall Progress:  50%|█████     | 11/22 [00:39<00:40,  3.69s/img]
+Retrieval Progress:  50%|█████     | 11/22 [00:39<00:40,  3.69s/img][A
+Retrieval Progress:  55%|█████▍    | 12/22 [00:39<00:29,  2.99s/img][AOverall Progress:  55%|█████▍    | 12/22 [00:39<00:29,  2.99s/img]Localization Error Scene_22/L22_0111: failed
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.23it/s][A[AImage Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.23it/s]
+                                                                  
+                                                                    [AOverall Progress:  55%|█████▍    | 12/22 [00:47<00:29,  2.99s/img]
+Retrieval Progress:  59%|█████▉    | 13/22 [00:47<00:26,  2.99s/img][ALocalization Error Scene_22/L22_0121: 0.7 m
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.01s/it][A[AImage Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.01s/it]
+
+Retrieval Progress:  64%|██████▎   | 14/22 [00:48<00:29,  3.71s/img][AOverall Progress:  59%|█████▉    | 13/22 [00:50<00:26,  2.99s/img]                                                                  
+                                                                    [AOverall Progress:  59%|█████▉    | 13/22 [00:55<00:26,  2.99s/img]
+Retrieval Progress:  64%|██████▎   | 14/22 [00:55<00:29,  3.71s/img][AOverall Progress:  64%|██████▎   | 14/22 [00:55<00:38,  4.86s/img]Localization Error Scene_22/L22_0131: 0.1 m
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.46it/s][A[AImage Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.46it/s]
+
+Retrieval Progress:  68%|██████▊   | 15/22 [00:56<00:31,  4.46s/img][AxFormers not available
+xFormers not available
+Overall Progress:   0%|          | 0/22 [00:00<?, ?img/s]
+Retrieval Progress:   0%|          | 0/22 [00:00<?, ?img/s][A
+Retrieval Progress:   5%|▍         | 1/22 [00:17<06:03, 17.29s/img][AOverall Progress:   5%|▍         | 1/22 [00:17<06:03, 17.29s/img]
+Retrieval Progress:  14%|█▎        | 3/22 [00:17<01:25,  4.52s/img][AOverall Progress:  14%|█▎        | 3/22 [00:17<01:25,  4.52s/img]
+Retrieval Progress:  27%|██▋       | 6/22 [00:17<00:28,  1.77s/img][AOverall Progress:  27%|██▋       | 6/22 [00:17<00:28,  1.77s/img]===========building convnext===========
+using model_type: convnext_base as a backbone
+https://dl.fbaipublicfiles.com/convnext/convnext_base_22k_1k_224.pth
+Using coarse resolution (560, 560), and upsample res (864, 864)
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:03<00:00,  3.71s/it][A[AImage Retrieval: 100%|██████████| 1/1 [00:03<00:00,  3.71s/it]
+
+Retrieval Progress:  45%|████▌     | 10/22 [00:25<00:22,  1.88s/img][AOverall Progress:  41%|████      | 9/22 [00:30<00:22,  1.77s/img]                                                                 
+                                                                    [AOverall Progress:  41%|████      | 9/22 [00:35<00:22,  1.77s/img]
+Retrieval Progress:  45%|████▌     | 10/22 [00:35<00:22,  1.88s/img][AOverall Progress:  45%|████▌     | 10/22 [00:35<00:38,  3.23s/img]Localization Error Scene_22/L22_0091: 0.6 m
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.00it/s][A[AImage Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.00it/s]
+
+Retrieval Progress:  50%|█████     | 11/22 [00:40<00:20,  1.88s/img][A                                                                  
+                                                                    [AOverall Progress:  45%|████▌     | 10/22 [00:43<00:38,  3.23s/img]
+Retrieval Progress:  50%|█████     | 11/22 [00:43<00:20,  1.88s/img][AOverall Progress:  50%|█████     | 11/22 [00:43<00:44,  4.09s/img]Localization Error Scene_22/L22_0101: 0.2 m
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.05it/s][A[AImage Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.05it/s]
+
+Retrieval Progress:  55%|█████▍    | 12/22 [00:45<00:41,  4.11s/img][A                                                                  
+                                                                    [AOverall Progress:  50%|█████     | 11/22 [00:52<00:44,  4.09s/img]
+Retrieval Progress:  55%|█████▍    | 12/22 [00:52<00:41,  4.11s/img][A
+Retrieval Progress:  59%|█████▉    | 13/22 [00:52<00:41,  4.64s/img][AOverall Progress:  59%|█████▉    | 13/22 [00:52<00:37,  4.15s/img]Localization Error Scene_22/L22_0111: 0.3 m
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.39it/s][A[AImage Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.39it/s]
+
+Retrieval Progress:  68%|██████▊   | 15/22 [00:53<00:23,  3.32s/img][A                                                                  
+                                                                    [AOverall Progress:  64%|██████▎   | 14/22 [01:00<00:33,  4.15s/img]
+Retrieval Progress:  68%|██████▊   | 15/22 [01:00<00:23,  3.32s/img][AOverall Progress:  68%|██████▊   | 15/22 [01:00<00:28,  4.03s/img]Localization Error Scene_22/L22_0141: 0.6 m
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.23it/s][A[AImage Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.23it/s]
+
+Retrieval Progress:  73%|███████▎  | 16/22 [01:01<00:24,  4.13s/img][A                                                                  
+                                                                    [AOverall Progress:  68%|██████▊   | 15/22 [01:07<00:28,  4.03s/img]
+Retrieval Progress:  73%|███████▎  | 16/22 [01:07<00:24,  4.13s/img][AOverall Progress:  73%|███████▎  | 16/22 [01:07<00:28,  4.68s/img]Localization Error Scene_22/L22_0151: 0.1 m
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.04s/it][A[AImage Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.04s/it]
+
+Retrieval Progress:  77%|███████▋  | 17/22 [01:08<00:24,  4.90s/img][A                                                                  
+                                                                    [AOverall Progress:  73%|███████▎  | 16/22 [01:15<00:28,  4.68s/img]
+Retrieval Progress:  77%|███████▋  | 17/22 [01:15<00:24,  4.90s/img][AOverall Progress:  77%|███████▋  | 17/22 [01:15<00:26,  5.33s/img]Localization Error Scene_22/L22_0161: 0.2 m
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.03s/it][A[AImage Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.03s/it]
+
+Retrieval Progress:  82%|████████▏ | 18/22 [01:16<00:22,  5.58s/img][A                                                                  
+                                                                    [AOverall Progress:  77%|███████▋  | 17/22 [01:23<00:26,  5.33s/img]
+Retrieval Progress:  82%|████████▏ | 18/22 [01:23<00:22,  5.58s/img][AOverall Progress:  82%|████████▏ | 18/22 [01:23<00:23,  5.89s/img]Localization Error Scene_22/L22_0171: 0.2 m
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.17s/it][A[AImage Retrieval: 100%|██████████| 1/1 [00:01<00:00,  1.17s/it]
+
+Retrieval Progress:  86%|████████▋ | 19/22 [01:24<00:18,  6.18s/img][A                                                                  
+                                                                    [AOverall Progress:  82%|████████▏ | 18/22 [01:31<00:23,  5.89s/img]
+Retrieval Progress:  86%|████████▋ | 19/22 [01:31<00:18,  6.18s/img][AOverall Progress:  86%|████████▋ | 19/22 [01:31<00:19,  6.37s/img]Localization Error Scene_22/L22_0181: 0.2 m
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.44it/s][A[AImage Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.44it/s]
+
+Retrieval Progress:  91%|█████████ | 20/22 [01:32<00:12,  6.46s/img][A                                                                  
+                                                                    [AOverall Progress:  86%|████████▋ | 19/22 [01:38<00:19,  6.37s/img]
+Retrieval Progress:  91%|█████████ | 20/22 [01:38<00:12,  6.46s/img][AOverall Progress:  91%|█████████ | 20/22 [01:38<00:13,  6.74s/img]Localization Error Scene_22/L22_0191: 0.2 m
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.25it/s][A[AImage Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.25it/s]
+
+Retrieval Progress:  95%|█████████▌| 21/22 [01:40<00:06,  6.87s/img][A                                                                  
+                                                                    [AOverall Progress:  91%|█████████ | 20/22 [01:46<00:13,  6.74s/img]
+Retrieval Progress:  95%|█████████▌| 21/22 [01:46<00:06,  6.87s/img][AOverall Progress:  95%|█████████▌| 21/22 [01:46<00:07,  7.03s/img]Localization Error Scene_22/L22_0201: 0.2 m
+
+
+Image Retrieval:   0%|          | 0/1 [00:00<?, ?it/s][A[A
+
+Image Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.06it/s][A[AImage Retrieval: 100%|██████████| 1/1 [00:00<00:00,  1.06it/s]
+
+Retrieval Progress: 100%|██████████| 22/22 [01:48<00:00,  7.19s/img][A                                                                  
+                                                                    [AOverall Progress:  95%|█████████▌| 21/22 [01:54<00:07,  7.03s/img]
+Retrieval Progress: 100%|██████████| 22/22 [01:54<00:00,  7.19s/img][AOverall Progress: 100%|██████████| 22/22 [01:54<00:00,  7.19s/img]Retrieval Progress: 100%|██████████| 22/22 [01:55<00:00,  5.26s/img]
+Overall Progress: 100%|██████████| 22/22 [01:55<00:00,  5.26s/img]
+Localization Error Scene_22/L22_0211: 0.1 m

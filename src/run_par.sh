@@ -1,5 +1,5 @@
 #!/bin/bash
-cd /media/davut/disk2/proje/uav_reliability_localization/src
+cd "$(dirname "$0")"
 D=../outputs/sweep_v2s1
 # replay zinciri A
 ( systemd-run --user --scope -q -p MemoryMax=4G ../venv/bin/python -u replay_fixes.py --matcher xfeat --files alto_fixes_test.jsonl,vpair_fixes_test.jsonl,fixes_test.jsonl >> ../outputs/replay_A.log 2>&1

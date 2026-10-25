@@ -38,7 +38,8 @@ from localization_pipeline import LocalizationPipeline, MapExtractor
 from run_nav_sim import R_MAX, R_MIN, Policy
 from splits import TEST_SEQUENCES
 
-VAL_ROOT = "/media/davut/disk2/proje/uav_vloc_datasets/AerialVL_data/images/VAL/extracted"
+from paths import DATA_ROOT
+VAL_ROOT = str(DATA_ROOT / "AerialVL_data/images/VAL/extracted")
 VARIANTS = ("chi2_only", "cal_normal", "reacq_k1", "reacq_k2")
 N_REJECT_FOR_REACQ = 3
 TAU_M = 2 * 10.0 + 5.0  # M9: 2 x primary esik + beklenen goreli drift

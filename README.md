@@ -27,7 +27,7 @@ uav_reliability_localization/
   requirements.txt
   outputs/                 üretilen görseller/loglar
 
-/media/davut/disk2/proje/uav_vloc_datasets/
+../uav_vloc_datasets/        (proje klasorunun yaninda; baska yerdeyse UAV_DATA_ROOT ile ver)
   AerialVL/                 github.com/hmf21/AerialVL (kod/README, veri değil)
   AerialVL_data/images/VAL/ asıl veri: geo_referenced_map/ + long_trajtr/ + short_trajtr/
     (VAL.zip.001-027 Tsinghua Cloud + HuggingFace CDN'den indirildi, ardından
@@ -46,11 +46,15 @@ eğitmiyor, hazır/pretrained SuperPoint+LightGlue kullanıyor (M2).
 ## Çalıştırma
 
 ```bash
-VENV=/media/davut/disk2/proje/uav_reliability_localization/venv
-cd /media/davut/disk2/proje/uav_reliability_localization/src
+# Veri setleri varsayilan olarak ../uav_vloc_datasets/ altinda aranir (src/paths.py).
+# Baska bir yerdeyse:
+#   export UAV_DATA_ROOT=/yol/uav_vloc_datasets          (Linux)
+#   $env:UAV_DATA_ROOT = "D:/yol/uav_vloc_datasets"      (PowerShell)
+VENV=../venv
+cd src
 
 # 1) Veri okunuyor mu, koordinatlar doğru mu?
-$VENV/bin/python aerialvl_loader.py /media/davut/disk2/proje/uav_vloc_datasets/AerialVL_data/images/VAL/extracted/VAL
+$VENV/bin/python aerialvl_loader.py "${UAV_DATA_ROOT:-../../uav_vloc_datasets}/AerialVL_data/images/VAL/extracted/VAL"
 
 # 2) Ay-1 kriteri: >=20 query/map çifti görselleştir
 $VENV/bin/python visualize_pairs.py <VAL_kok> --n 25 --out ../outputs/pairs.png

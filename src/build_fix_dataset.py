@@ -29,7 +29,8 @@ from geo_utils import enu_to_lonlat_m, lonlat_to_enu_m
 from localization_pipeline import LocalizationPipeline, MapExtractor
 from splits import TEST_SEQUENCES, TRAIN_SEQUENCES, VAL_SEQUENCES
 
-VAL_ROOT = "/media/davut/disk2/proje/uav_vloc_datasets/AerialVL_data/images/VAL/extracted"
+from paths import DATA_ROOT
+VAL_ROOT = str(DATA_ROOT / "AerialVL_data/images/VAL/extracted")
 W = 4
 R_MIN, R_MAX = 60.0, 400.0
 # (gercek prior ofseti m, filtrenin varsaydigi sigma_pos m)

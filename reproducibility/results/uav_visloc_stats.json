@@ -1,0 +1,416 @@
+{
+ "n_drone_images": 6774,
+ "n_drone_images_paper": 6742,
+ "n_csv_rows": 6774,
+ "n_flights": 11,
+ "n_map_files": 14,
+ "n_maps_paper": 11,
+ "flights": [
+  {
+   "flight": "01",
+   "site_paper": "Changjiang-20",
+   "n_csv": 817,
+   "n_images": 817,
+   "image_size": "3976x2652",
+   "image_size_paper": "3976x2652",
+   "date_months": [
+    "2018-09"
+   ],
+   "date_paper": "2018-09",
+   "phi_first": 163.877389,
+   "phi_median": 38.393902,
+   "phi2_median": 0.097403,
+   "csv_columns": [
+    "num",
+    "filename",
+    "date",
+    "lat",
+    "lon",
+    "height",
+    "Omega",
+    "Kappa",
+    "Phi1",
+    "Phi2"
+   ],
+   "phi_paper": 165,
+   "height_median": 405.82,
+   "height_min": 402.54,
+   "height_max": 409.04,
+   "height_paper": 405,
+   "map_sizes": [
+    "9774x26762"
+   ],
+   "map_size_paper": "9774x26762",
+   "map_date_paper": "2023-11"
+  },
+  {
+   "flight": "02",
+   "site_paper": "Changjiang-23",
+   "n_csv": 1071,
+   "n_images": 1071,
+   "image_size": "3976x2652",
+   "image_size_paper": "3976x2652",
+   "date_months": [
+    "2018-09"
+   ],
+   "date_paper": "2018-09",
+   "phi_first": 167.378161,
+   "phi_median": 11.9519,
+   "phi2_median": -0.011459,
+   "csv_columns": [
+    "num",
+    "filename",
+    "date",
+    "lat",
+    "lon",
+    "height",
+    "Omega",
+    "Kappa",
+    "Phi1",
+    "Phi2"
+   ],
+   "phi_paper": 5,
+   "height_median": 405.8,
+   "height_min": 402.17,
+   "height_max": 408.46,
+   "height_paper": 405,
+   "map_sizes": [
+    "11482x34291"
+   ],
+   "map_size_paper": "11482x34291",
+   "map_date_paper": "2022-09"
+  },
+  {
+   "flight": "03",
+   "site_paper": "Taizhou-1",
+   "n_csv": 768,
+   "n_images": 768,
+   "image_size": "3976x2652",
+   "image_size_paper": "3976x2652",
+   "date_months": [
+    "2018-10"
+   ],
+   "date_paper": "2018-10",
+   "phi_first": -39.293446,
+   "phi_median": 109.704229,
+   "phi2_median": 122.973932,
+   "csv_columns": [
+    "num",
+    "filename",
+    "date",
+    "lat",
+    "lon",
+    "height",
+    "Omega",
+    "Kappa",
+    "Phi1",
+    "Phi2"
+   ],
+   "phi_paper": -40,
+   "height_median": 466.14,
+   "height_min": 465.2,
+   "height_max": 467.73,
+   "height_paper": 466,
+   "map_sizes": [
+    "35092x24308"
+   ],
+   "map_size_paper": "35092x24308",
+   "map_date_paper": "2021-04"
+  },
+  {
+   "flight": "04",
+   "site_paper": "Taizhou-6",
+   "n_csv": 738,
+   "n_images": 738,
+   "image_size": "3976x2652",
+   "image_size_paper": "3976x2652",
+   "date_months": [
+    "2018-10"
+   ],
+   "date_paper": "2018-10",
+   "phi_first": -0.154699,
+   "phi_median": 158.949952,
+   "phi2_median": 165.0806,
+   "csv_columns": [
+    "num",
+    "filename",
+    "date",
+    "lat",
+    "lon",
+    "height",
+    "Omega",
+    "Kappa",
+    "Phi1",
+    "Phi2"
+   ],
+   "phi_paper": 170,
+   "height_median": 543.5,
+   "height_min": 539.39,
+   "height_max": 546.73,
+   "height_paper": 542,
+   "map_sizes": [
+    "18093x38408"
+   ],
+   "map_size_paper": "18093x38408",
+   "map_date_paper": "2023-03"
+  },
+  {
+   "flight": "05",
+   "site_paper": "Yunnan",
+   "n_csv": 473,
+   "n_images": 473,
+   "image_size": "3000x2000",
+   "image_size_paper": "3000x2000",
+   "date_months": [
+    "2016-06"
+   ],
+   "date_paper": "2016-06",
+   "phi_first": 91.117478,
+   "phi_median": 90.160639,
+   "phi2_median": 84.058638,
+   "csv_columns": [
+    "num",
+    "filename",
+    "date",
+    "lat",
+    "lon",
+    "height",
+    "Omega",
+    "Kappa",
+    "Phi1",
+    "Phi2"
+   ],
+   "phi_paper": 100,
+   "height_median": 2312.99,
+   "height_min": 2307.26,
+   "height_max": 2319.06,
+   "height_paper": null,
+   "map_sizes": [
+    "9394x6144"
+   ],
+   "map_size_paper": "9394x6144",
+   "map_date_paper": "2022-03"
+  },
+  {
+   "flight": "06",
+   "site_paper": "Zhuxi",
+   "n_csv": 344,
+   "n_images": 344,
+   "image_size": "3976x2652",
+   "image_size_paper": "3976x2652",
+   "date_months": [
+    "2022-10"
+   ],
+   "date_paper": "2022-10",
+   "phi_first": 173.36557,
+   "phi_median": -7.723471,
+   "phi2_median": 158.737957,
+   "csv_columns": [
+    "num",
+    "filename",
+    "date",
+    "lat",
+    "lon",
+    "height",
+    "Omega",
+    "Kappa",
+    "Phi1",
+    "Phi2"
+   ],
+   "phi_paper": -15,
+   "height_median": 839.46,
+   "height_min": 498.57,
+   "height_max": 841.57,
+   "height_paper": 840,
+   "map_sizes": [
+    "8082x9780"
+   ],
+   "map_size_paper": "4119x8592",
+   "map_date_paper": "2022-09"
+  },
+  {
+   "flight": "07",
+   "site_paper": "Donghuayuan",
+   "n_csv": 30,
+   "n_images": 30,
+   "image_size": "3000x2000",
+   "image_size_paper": "3000x2000",
+   "date_months": [
+    "2018071"
+   ],
+   "date_paper": "2018-07",
+   "phi_first": null,
+   "phi_median": null,
+   "phi2_median": null,
+   "csv_columns": [
+    "num",
+    "filename",
+    "date",
+    "lat",
+    "lon",
+    "height"
+   ],
+   "phi_paper": -1.5,
+   "height_median": 688.92,
+   "height_min": 688.86,
+   "height_max": 689.56,
+   "height_paper": 688,
+   "map_sizes": [
+    "3000x170"
+   ],
+   "map_size_paper": "3000x170",
+   "map_date_paper": "2023-06"
+  },
+  {
+   "flight": "08",
+   "site_paper": "Huzhou-3",
+   "n_csv": 1033,
+   "n_images": 1033,
+   "image_size": "3976x2652",
+   "image_size_paper": "3976x2652",
+   "date_months": [
+    "2019-06"
+   ],
+   "date_paper": "2019-06",
+   "phi_first": 98.336746,
+   "phi_median": 94.841704,
+   "phi2_median": 98.628955,
+   "csv_columns": [
+    "num",
+    "filename",
+    "date",
+    "lat",
+    "lon",
+    "height",
+    "Omega",
+    "Kappa",
+    "Phi1",
+    "Phi2"
+   ],
+   "phi_paper": 100,
+   "height_median": 551.48,
+   "height_min": 544.56,
+   "height_max": 552.63,
+   "height_paper": 551,
+   "map_sizes": [
+    "43421x16294"
+   ],
+   "map_size_paper": "43421x16294",
+   "map_date_paper": "2023-07"
+  },
+  {
+   "flight": "09",
+   "site_paper": "Huzhou-6",
+   "n_csv": 766,
+   "n_images": 766,
+   "image_size": "3976x2652",
+   "image_size_paper": "3976x2652",
+   "date_months": [
+    "2019-06"
+   ],
+   "date_paper": "2019-06",
+   "phi_first": -53.697605,
+   "phi_median": -42.650978,
+   "phi2_median": -46.380934,
+   "csv_columns": [
+    "num",
+    "filename",
+    "date",
+    "lat",
+    "lon",
+    "height",
+    "Omega",
+    "Kappa",
+    "Phi1",
+    "Phi2"
+   ],
+   "phi_paper": -50,
+   "height_median": 546.47,
+   "height_min": 546.01,
+   "height_max": 546.86,
+   "height_paper": 546,
+   "map_sizes": [
+    "25600x25600",
+    "19200x25600",
+    "25600x7680",
+    "19200x7680"
+   ],
+   "map_size_paper": "44800x33280",
+   "map_date_paper": "2024-01"
+  },
+  {
+   "flight": "10",
+   "site_paper": "Huailai",
+   "n_csv": 144,
+   "n_images": 144,
+   "image_size": "3000x2000",
+   "image_size_paper": "3000x2000",
+   "date_months": [
+    "2018-09"
+   ],
+   "date_paper": "2018-09",
+   "phi_first": -168.489699,
+   "phi_median": -29.266684,
+   "phi2_median": 155.179889,
+   "csv_columns": [
+    "num",
+    "filename",
+    "date",
+    "lat",
+    "lon",
+    "height",
+    "Omega",
+    "Kappa",
+    "Phi1",
+    "Phi2"
+   ],
+   "phi_paper": 170,
+   "height_median": 773.08,
+   "height_min": 771.88,
+   "height_max": 773.98,
+   "height_paper": 772,
+   "map_sizes": [
+    "6593x5077"
+   ],
+   "map_size_paper": "6593x5077",
+   "map_date_paper": "2023-06"
+  },
+  {
+   "flight": "11",
+   "site_paper": "Shandan",
+   "n_csv": 590,
+   "n_images": 590,
+   "image_size": "3976x2652",
+   "image_size_paper": "3976x2652",
+   "date_months": [
+    "2023-10"
+   ],
+   "date_paper": "2023-10",
+   "phi_first": 95.993349,
+   "phi_median": 82.167877,
+   "phi2_median": 85.508221,
+   "csv_columns": [
+    "num",
+    "filename",
+    "date",
+    "lat",
+    "lon",
+    "height",
+    "Omega",
+    "Kappa",
+    "Phi1",
+    "Phi2"
+   ],
+   "phi_paper": 90,
+   "height_median": 2573.47,
+   "height_min": 1970.83,
+   "height_max": 2574.51,
+   "height_paper": null,
+   "map_sizes": [
+    "29592x16582"
+   ],
+   "map_size_paper": "29592x16582",
+   "map_date_paper": "2021-03"
+  }
+ ]
+}

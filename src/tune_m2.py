@@ -14,7 +14,8 @@ from geo_utils import enu_to_lonlat_m, lonlat_to_enu_m
 from localization_pipeline import LocalizationPipeline, MapExtractor, fix_error_m
 from splits import TEST_SEQUENCES
 
-VAL_ROOT = "/media/davut/disk2/proje/uav_vloc_datasets/AerialVL_data/images/VAL/extracted"
+from paths import DATA_ROOT
+VAL_ROOT = str(DATA_ROOT / "AerialVL_data/images/VAL/extracted")
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--n", type=int, default=40)

@@ -1,0 +1,138 @@
+xFormers not available
+xFormers not available
+Overall Progress:   0%|          | 0/299 [00:00<?, ?img/s]
+Retrieval Progress:   0%|          | 0/299 [00:00<?, ?img/s][A===========building convnext===========
+using model_type: convnext_base as a backbone
+https://dl.fbaipublicfiles.com/convnext/convnext_base_22k_1k_224.pth
+Using coarse resolution (560, 560), and upsample res (864, 864)
+
+
+Image Retrieval:   0%|          | 0/6 [00:00<?, ?it/s][A[A
+
+Image Retrieval:  17%|█▋        | 1/6 [00:05<00:26,  5.34s/it][A[A
+
+Image Retrieval:  33%|███▎      | 2/6 [00:06<00:11,  2.97s/it][A[A
+
+Image Retrieval:  50%|█████     | 3/6 [00:08<00:07,  2.35s/it][A[A
+
+Image Retrieval:  67%|██████▋   | 4/6 [00:09<00:03,  1.96s/it][A[A
+
+Image Retrieval:  83%|████████▎ | 5/6 [00:10<00:01,  1.73s/it][A[A
+
+Image Retrieval: 100%|██████████| 6/6 [00:11<00:00,  1.48s/it][A[AImage Retrieval: 100%|██████████| 6/6 [00:11<00:00,  1.99s/it]
+
+Retrieval Progress:   0%|          | 1/299 [03:41<18:21:10, 221.71s/img][A                                                          
+                                                                        [AOverall Progress:   0%|          | 0/299 [03:48<?, ?img/s]
+Retrieval Progress:   0%|          | 1/299 [03:48<18:21:10, 221.71s/img][AOverall Progress:   0%|          | 1/299 [03:48<18:53:56, 228.31s/img]                                                                      
+                                                                        [AOverall Progress:   0%|          | 1/299 [03:48<18:53:56, 228.31s/img]
+Retrieval Progress:   0%|          | 1/299 [03:48<18:21:10, 221.71s/img][A
+Retrieval Progress:   1%|          | 2/299 [03:48<7:51:19, 95.22s/img]  [A                                                                      
+                                                                      [AOverall Progress:   1%|          | 2/299 [03:48<18:50:08, 228.31s/img]
+Retrieval Progress:   1%|          | 2/299 [03:48<7:51:19, 95.22s/img][AOverall Progress:   1%|          | 3/299 [03:48<4:52:15, 59.24s/img]                                                                      
+                                                                      [AOverall Progress:   1%|          | 3/299 [03:48<4:52:15, 59.24s/img]
+Retrieval Progress:   1%|          | 3/299 [03:48<7:49:43, 95.22s/img][A
+Retrieval Progress:   1%|▏         | 4/299 [03:48<2:54:49, 35.56s/img][A                                                                    
+                                                                      [AOverall Progress:   1%|▏         | 4/299 [03:48<4:51:15, 59.24s/img]
+Retrieval Progress:   1%|▏         | 4/299 [03:48<2:54:49, 35.56s/img][AOverall Progress:   2%|▏         | 5/299 [03:48<2:21:12, 28.82s/img]                                                                    
+                                                                      [AOverall Progress:   2%|▏         | 5/299 [03:48<2:21:12, 28.82s/img]
+Retrieval Progress:   2%|▏         | 5/299 [03:48<2:54:14, 35.56s/img][A
+Retrieval Progress:   2%|▏         | 6/299 [03:48<1:31:45, 18.79s/img][A                                                                    
+                                                                      [AOverall Progress:   2%|▏         | 6/299 [03:48<2:20:43, 28.82s/img]
+Retrieval Progress:   2%|▏         | 6/299 [03:48<1:31:45, 18.79s/img][AOverall Progress:   2%|▏         | 7/299 [03:48<1:20:59, 16.64s/img]Localization Error Scene_04/L04_0001: failed
+Localization Error Scene_04/L04_0011: failed
+Localization Error Scene_04/L04_0021: failed
+Localization Error Scene_04/L04_0031: failed
+Localization Error Scene_04/L04_0041: failed
+Localization Error Scene_04/L04_0051: failed
+Localization Error Scene_04/L04_0061: failed
+
+
+Image Retrieval:   0%|          | 0/14 [00:00<?, ?it/s][A[A
+
+Image Retrieval:   7%|▋         | 1/14 [00:00<00:05,  2.19it/s][A[A
+
+Image Retrieval:  14%|█▍        | 2/14 [00:00<00:05,  2.19it/s][A[A
+
+Image Retrieval:  21%|██▏       | 3/14 [00:01<00:04,  2.22it/s][A[A
+
+Image Retrieval:  29%|██▊       | 4/14 [00:01<00:04,  2.24it/s][A[A
+
+Image Retrieval:  36%|███▌      | 5/14 [00:02<00:03,  2.28it/s][A[A
+
+Image Retrieval:  43%|████▎     | 6/14 [00:02<00:03,  2.31it/s][A[A
+
+Image Retrieval:  50%|█████     | 7/14 [00:03<00:03,  2.33it/s][A[A
+
+Image Retrieval:  57%|█████▋    | 8/14 [00:03<00:02,  2.34it/s][A[A
+
+Image Retrieval:  64%|██████▍   | 9/14 [00:03<00:02,  2.35it/s][A[A
+
+Image Retrieval:  71%|███████▏  | 10/14 [00:04<00:01,  2.35it/s][A[A
+
+Image Retrieval:  79%|███████▊  | 11/14 [00:04<00:01,  2.35it/s][A[A
+
+Image Retrieval:  86%|████████▌ | 12/14 [00:05<00:00,  2.34it/s][A[A
+
+Image Retrieval:  93%|█████████▎| 13/14 [00:05<00:00,  2.34it/s][A[A
+
+Image Retrieval: 100%|██████████| 14/14 [00:05<00:00,  2.43it/s][A[AImage Retrieval: 100%|██████████| 14/14 [00:05<00:00,  2.33it/s]
+
+Retrieval Progress:   3%|▎         | 8/299 [03:55<1:01:10, 12.61s/img][AOverall Progress:   2%|▏         | 7/299 [04:00<1:20:59, 16.64s/img]                                                                    
+                                                                      [AOverall Progress:   2%|▏         | 7/299 [04:02<1:20:59, 16.64s/img]
+Retrieval Progress:   3%|▎         | 8/299 [04:02<1:01:10, 12.61s/img][AOverall Progress:   3%|▎         | 8/299 [04:02<1:17:50, 16.05s/img]Localization Error Scene_04/L04_0071: 0.5 m
+
+
+Image Retrieval:   0%|          | 0/14 [00:00<?, ?it/s][A[A
+
+Image Retrieval:   7%|▋         | 1/14 [00:00<00:06,  2.07it/s][A[A
+
+Image Retrieval:  14%|█▍        | 2/14 [00:00<00:05,  2.17it/s][A[A
+
+Image Retrieval:  21%|██▏       | 3/14 [00:01<00:05,  2.19it/s][A[A
+
+Image Retrieval:  29%|██▊       | 4/14 [00:01<00:04,  2.22it/s][A[A
+
+Image Retrieval:  36%|███▌      | 5/14 [00:02<00:04,  2.22it/s][A[A
+
+Image Retrieval:  43%|████▎     | 6/14 [00:02<00:03,  2.22it/s][A[A
+
+Image Retrieval:  50%|█████     | 7/14 [00:03<00:03,  2.23it/s][A[A
+
+Image Retrieval:  57%|█████▋    | 8/14 [00:03<00:02,  2.27it/s][A[A
+
+Image Retrieval:  64%|██████▍   | 9/14 [00:04<00:02,  2.22it/s][A[A
+
+Image Retrieval:  71%|███████▏  | 10/14 [00:04<00:01,  2.11it/s][A[A
+
+Image Retrieval:  79%|███████▊  | 11/14 [00:05<00:01,  2.02it/s][A[A
+
+Image Retrieval:  86%|████████▌ | 12/14 [00:05<00:00,  2.03it/s][A[A
+
+Image Retrieval:  93%|█████████▎| 13/14 [00:06<00:00,  2.06it/s][A[A
+
+Image Retrieval: 100%|██████████| 14/14 [00:06<00:00,  2.25it/s][A[AImage Retrieval: 100%|██████████| 14/14 [00:06<00:00,  2.18it/s]
+
+Retrieval Progress:   3%|▎         | 9/299 [04:10<1:03:02, 13.04s/img][A                                                                    
+                                                                      [AOverall Progress:   3%|▎         | 8/299 [04:14<1:17:50, 16.05s/img]
+Retrieval Progress:   3%|▎         | 9/299 [04:14<1:03:02, 13.04s/img][AOverall Progress:   3%|▎         | 9/299 [04:14<1:12:14, 14.95s/img]Localization Error Scene_04/L04_0081: failed
+Traceback (most recent call last):
+  File "D:\proje\repro_ext\anyvisloc_bench\run_avl.py", line 1072, in <module>
+    main()
+  File "D:\proje\repro_ext\anyvisloc_bench\run_avl.py", line 758, in main
+    sample = dataset[idx]
+             ~~~~~~~^^^^^
+  File "D:\proje\repro_ext\anyvisloc_bench\avl_data.py", line 204, in __getitem__
+    s = _load_npz(path)
+        ^^^^^^^^^^^^^^^
+  File "D:\proje\repro_ext\anyvisloc_bench\avl_data.py", line 29, in _load_npz
+    return {k: data[k] for k in data.files}
+               ~~~~^^^
+  File "D:\proje\venv_win\Lib\site-packages\numpy\lib\_npyio_impl.py", line 254, in __getitem__
+    return format.read_array(bytes,
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\proje\venv_win\Lib\site-packages\numpy\lib\format.py", line 842, in read_array
+    array = numpy.ndarray(count, dtype=dtype)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+numpy._core._exceptions._ArrayMemoryError: Unable to allocate 2.15 MiB for an array with shape (2250000,) and data type uint8
+Overall Progress:   3%|▎         | 9/299 [04:14<2:16:43, 28.29s/img]
+Retrieval Progress:   3%|▎         | 9/299 [04:14<2:16:43, 28.29s/img]

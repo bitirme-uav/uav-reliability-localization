@@ -1,0 +1,24 @@
+{
+  "thresholds_m": [
+    1.0,
+    3.0,
+    5.0,
+    7.0,
+    10.0,
+    15.0,
+    20.0
+  ],
+  "success_rates_percent": [
+    76.47058823529412,
+    100.0,
+    100.0,
+    100.0,
+    100.0,
+    100.0,
+    100.0
+  ],
+  "attempted": 17,
+  "pnp_success": 17,
+  "failed": 0,
+  "plot": "D:\\proje\\uav_reliability_localization\\reproducibility\\results\\anyvisloc\\Roma_aerial\\Scene_24\\20261025-1703_1scenes\\aerial\\success_curve_overall.png"
+}

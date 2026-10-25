@@ -24,7 +24,8 @@ import numpy as np
 from aerialvl_loader import GeoMap
 from geo_utils import enu_to_lonlat_m, lonlat_to_enu_m
 
-ROOT = Path("/media/davut/disk2/proje/uav_vloc_datasets/AnyVisLoc")
+from paths import DATA_ROOT
+ROOT = DATA_ROOT / "AnyVisLoc"
 LON0, LAT0 = 120.0, 30.0
 # Yerel y ekseni harita satirlarinin artis yonune ters mi (-1) ayni mi (+1)?
 # anyvisloc_calib.py ile Scene_01'de belirlendi.

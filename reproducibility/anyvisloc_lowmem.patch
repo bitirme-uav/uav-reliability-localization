@@ -1,0 +1,158 @@
+diff --git a/avl_utils.py b/avl_utils.py
+index d3bba91..50a77c4 100644
+--- a/avl_utils.py
++++ b/avl_utils.py
+@@ -59,6 +59,98 @@ def dumpRotateImage(img, degree):
+     return img_rotation, mat_rotation
+ 
+ 
++class LazyRotatedMap:
++    """Memory-light stand-in for the output of dumpRotateImage (reproducibility patch).
++
++    The original code materialises the whole yaw-rotated map for every sample (up to ~4 GB for
++    the large scenes). Downstream code only reads .shape, 2-D slices and a 1/10 nearest-neighbour
++    thumbnail, so each of those is produced on demand by warping just the requested window with
++    the same affine matrix (cv2.warpAffine, INTER_LINEAR, black border)."""
++
++    def __init__(self, img, mat_rotation, shape):
++        self.src = img
++        self.M = np.asarray(mat_rotation, np.float64)
++        self.shape = shape
++        self.ndim = len(shape)
++        self.dtype = img.dtype
++
++    def _window(self, r0, r1, c0, c1):
++        h, w = max(0, r1 - r0), max(0, c1 - c0)
++        if h == 0 or w == 0:
++            return np.zeros((h, w) + self.shape[2:], self.dtype)
++        return self._warp_crop(r0, c0, w, h)
++
++    # OpenCV's remap/warpAffine overflow (32-bit offsets) on sources above 2^31 bytes, e.g. the
++    # 28452 x 30053 x 3 map of Scene_02, so only the source region a request needs is passed.
++    def _src_box(self, sx, sy, margin=3):
++        H, W = self.src.shape[:2]
++        x0 = int(np.clip(np.floor(np.min(sx)) - margin, 0, W))
++        x1 = int(np.clip(np.ceil(np.max(sx)) + margin, 0, W))
++        y0 = int(np.clip(np.floor(np.min(sy)) - margin, 0, H))
++        y1 = int(np.clip(np.ceil(np.max(sy)) + margin, 0, H))
++        return x0, x1, y0, y1
++
++    def _warp_crop(self, r0, c0, w, h):
++        inv = cv2.invertAffineTransform(self.M)
++        sx = np.array([0, w, 0, w], np.float64) + c0
++        sy = np.array([0, 0, h, h], np.float64) + r0
++        x0, x1, y0, y1 = self._src_box(inv[0, 0] * sx + inv[0, 1] * sy + inv[0, 2],
++                                       inv[1, 0] * sx + inv[1, 1] * sy + inv[1, 2])
++        if x1 <= x0 or y1 <= y0:  # window lies entirely outside the source map
++            return np.zeros((h, w) + self.shape[2:], self.dtype)
++        M = self.M.copy()
++        M[0, 2] += M[0, 0] * x0 + M[0, 1] * y0 - c0
++        M[1, 2] += M[1, 0] * x0 + M[1, 1] * y0 - r0
++        return cv2.warpAffine(np.ascontiguousarray(self.src[y0:y1, x0:x1]), M, (w, h), borderValue=(0, 0, 0))
++
++    def __getitem__(self, key):
++        if not isinstance(key, tuple):
++            key = (key,)
++        rs = key[0] if len(key) > 0 else slice(None)
++        cs = key[1] if len(key) > 1 else slice(None)
++        if not (isinstance(rs, slice) and isinstance(cs, slice)) or rs.step not in (None, 1) or cs.step not in (None, 1):
++            raise TypeError("LazyRotatedMap supports only contiguous 2-D slices")
++        r0, r1, _ = rs.indices(self.shape[0])
++        c0, c1, _ = cs.indices(self.shape[1])
++        out = self._window(r0, r1, c0, c1)
++        return out[(slice(None), slice(None)) + tuple(key[2:])] if len(key) > 2 else out
++
++    def small_nearest(self, dsize):
++        """Equals cv2.resize(full_rotated_map, dsize, INTER_NEAREST): dst(i, j) = full(floor(i*sy), floor(j*sx))."""
++        dw, dh = dsize
++        sx, sy = self.shape[1] / dw, self.shape[0] / dh
++        xs = np.minimum(np.floor(np.arange(dw) * sx), self.shape[1] - 1)
++        ys = np.minimum(np.floor(np.arange(dh) * sy), self.shape[0] - 1)
++        inv = cv2.invertAffineTransform(self.M)
++        out = np.zeros((dh, dw) + self.shape[2:], self.dtype)
++        T = 256  # thumbnail tiles, each needs a small source crop
++        for i in range(0, dh, T):
++            for j in range(0, dw, T):
++                X, Y = xs[None, j:j + T], ys[i:i + T, None]
++                mx = inv[0, 0] * X + inv[0, 1] * Y + inv[0, 2]
++                my = inv[1, 0] * X + inv[1, 1] * Y + inv[1, 2]
++                x0, x1, y0, y1 = self._src_box(mx, my)
++                if x1 <= x0 or y1 <= y0:
++                    continue
++                out[i:i + T, j:j + T] = cv2.remap(
++                    np.ascontiguousarray(self.src[y0:y1, x0:x1]), (mx - x0).astype(np.float32),
++                    (my - y0).astype(np.float32), cv2.INTER_LINEAR,
++                    borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0))
++        return out
++
++
++def dumpRotateImageLazy(img, degree):
++    """Same geometry as dumpRotateImage, returning a LazyRotatedMap instead of the full array."""
++    radians = degree / 180 * np.pi
++    height, width = img.shape[:2]
++    height_new = int(width * abs(np.sin(radians)) + height * abs(np.cos(radians)))
++    width_new = int(height * abs(np.sin(radians)) + width * abs(np.cos(radians)))
++    mat_rotation = cv2.getRotationMatrix2D((width // 2, height // 2), degree, 1)
++    mat_rotation[0, 2] += (width_new - width) // 2
++    mat_rotation[1, 2] += (height_new - height) // 2
++    return LazyRotatedMap(img, mat_rotation, (height_new, width_new) + img.shape[2:]), mat_rotation
++
++
+ def rotvector2rot(rotvector):
+     """Convert OpenCV Rodrigues rotation vector to a 3x3 rotation matrix."""
+     return cv2.Rodrigues(rotvector)[0]
+@@ -116,11 +208,14 @@ def _baseline_retrieval_init(method_dict, config):
+ def compute_block_mid_wo_black(image, block_size, step_size):
+     """Return valid reference block centers, filtering blocks with too much black area."""
+     x_size, y_size, _ = image.shape
+-    small_img = cv2.resize(
+-        image,
+-        (int(y_size / 10), int(x_size / 10)),
+-        interpolation=cv2.INTER_NEAREST,
+-    )
++    if isinstance(image, LazyRotatedMap):
++        small_img = image.small_nearest((int(y_size / 10), int(x_size / 10)))
++    else:
++        small_img = cv2.resize(
++            image,
++            (int(y_size / 10), int(x_size / 10)),
++            interpolation=cv2.INTER_NEAREST,
++        )
+ 
+     num_blocks_x = len(range(0, x_size, step_size[0]))
+     num_blocks_y = len(range(0, y_size, step_size[1]))
+@@ -599,7 +694,11 @@ def _load_ref_array(path, kind):
+     key = (str(path), kind)
+     if key in _REF_ARRAY_CACHE:
+         return _REF_ARRAY_CACHE[key]
+-    if kind == "map":
++    if kind == "map" and path.with_suffix(".npy").exists():
++        # reproducibility patch: raw BGR copy of the PNG, memory-mapped (file-backed pages do
++        # not count against the Windows commit limit; the largest maps are 2-3 GB decoded)
++        arr = np.load(str(path.with_suffix(".npy")), mmap_mode="r")
++    elif kind == "map":
+         arr = cv2.imread(str(path), cv2.IMREAD_COLOR)
+         if arr is None:
+             raise FileNotFoundError(f"Cannot read reference map PNG: {path}")
+diff --git a/run_avl.py b/run_avl.py
+index 081b6b0..01772ac 100644
+--- a/run_avl.py
++++ b/run_avl.py
+@@ -1,3 +1,4 @@
++import os
+ #!/usr/bin/env python3
+ # -*- coding: utf-8 -*-
+ """
+@@ -825,7 +826,11 @@ def main():
+ 
+                     # Rotate the selected reference map by yaw, matching the original baseline behavior.
+                     if opt.pose_priori == "yp":
+-                        ref_map, matRotation = dumpRotateImage(ref_map0, truePos["yaw"])
++                        if os.environ.get("AVL_LAZY_ROTATE") == "1":
++                            from avl_utils import dumpRotateImageLazy
++                            ref_map, matRotation = dumpRotateImageLazy(ref_map0, truePos["yaw"])
++                        else:
++                            ref_map, matRotation = dumpRotateImage(ref_map0, truePos["yaw"])
+                     else:
+                         ref_map = ref_map0
+                         matRotation = np.array([[1, 0, 0], [0, 1, 0]], dtype=np.float32)

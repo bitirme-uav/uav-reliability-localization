@@ -13,7 +13,8 @@ from fix_record import FixRecord, label_fix
 from geo_utils import enu_to_lonlat_m
 from localization_pipeline import LocalizationPipeline, MapExtractor, fix_error_m
 
-VAL_ROOT = sys.argv[1] if len(sys.argv) > 1 else "/media/davut/disk2/proje/uav_vloc_datasets/AerialVL_data/images/VAL/extracted"
+from paths import DATA_ROOT
+VAL_ROOT = sys.argv[1] if len(sys.argv) > 1 else str(DATA_ROOT / "AerialVL_data/images/VAL/extracted")
 N = int(sys.argv[2]) if len(sys.argv) > 2 else 15
 PRIOR_OFFSET_M = float(sys.argv[3]) if len(sys.argv) > 3 else 30.0
 SEARCH_RADIUS_M = float(sys.argv[4]) if len(sys.argv) > 4 else 150.0

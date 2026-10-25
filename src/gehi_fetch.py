@@ -5,6 +5,7 @@ tarihli harita. Secim kurali SONUCLARA BAKMADAN sabitlendi, kare (tile) basina:
 Cikti: ext_google/<ucus>/ge_<kural>.tif + index.json (wayback_compare.py ile ayni bicim).
 Ucus 11 haric (yakin tarihli goruntu yok)."""
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -13,7 +14,7 @@ import numpy as np
 
 from visloc_loader import ROOT, UAVVisLoc
 
-TOOL = "/media/davut/disk2/proje/tools/gehi/GEHistoricalImagery"
+TOOL = os.environ.get("GEHI_TOOL", "GEHistoricalImagery")   # PATH'te degilse tam yolu ver
 OUT = ROOT / "ext_google"
 ZOOM = 18          # ~0.5 m/px; lokalizer 0.8 m/px'de calisiyor
 PAD_DEG = 0.008    # ~800 m

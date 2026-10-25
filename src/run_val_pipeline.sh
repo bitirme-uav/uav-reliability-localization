@@ -2,7 +2,7 @@
 # VAL asamasi: kalibrasyon -> esikler -> M10 nav taramasi -> M9/E11 reacquire.
 # TRAIN uretimi bittikten sonra calistirilir. TEST'e dokunmaz.
 set -e
-cd /media/davut/disk2/proje/uav_reliability_localization/src
+cd "$(dirname "$0")"
 PY=../venv/bin/python
 OUT=../outputs
 filt() { grep -v "Warning\|warn" || true; }

@@ -7,7 +7,8 @@ from aerialvl_loader import AerialVLVal
 from drift_simulator import REGIME_PRESETS, DriftConfig, DriftSimulator, FilterNoiseConfig
 from geo_utils import lonlat_to_enu_m
 
-VAL_ROOT = "/media/davut/disk2/proje/uav_vloc_datasets/AerialVL_data/images/VAL/extracted"
+from paths import DATA_ROOT
+VAL_ROOT = str(DATA_ROOT / "AerialVL_data/images/VAL/extracted")
 SEQ = "2023-03-18-12-47-05"  # TRAIN, long
 WIN = 10.0
 

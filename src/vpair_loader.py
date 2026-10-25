@@ -23,7 +23,8 @@ import numpy as np
 from aerialvl_loader import GeoMap
 from geo_utils import enu_to_lonlat_m, lonlat_to_enu_m
 
-ROOT = Path("/media/davut/disk2/proje/uav_vloc_datasets/VPAIR/vpair_sample")
+from paths import DATA_ROOT
+ROOT = DATA_ROOT / "VPAIR/vpair_sample"
 MAP_TIF = ROOT.parent / "vpair_map.tif"
 F_PX = 747.0
 MAP_GSD = 0.8   # lokalizer zaten 0.8 m/px'de calisiyor; bellek icin

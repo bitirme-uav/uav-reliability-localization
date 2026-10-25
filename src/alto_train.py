@@ -17,8 +17,9 @@ import numpy as np
 from aerialvl_loader import GeoMap
 from alto_loader import BODY_BIAS_M, MAP_GSD, QUERY_FOOTPRINT_M, REF_GSD, ROT_OFFSET_DEG, utm_to_lonlat
 
-ZIP = Path("/media/davut/disk2/proje/uav_vloc_datasets/Train.zip")
-MAPDIR = Path("/media/davut/disk2/proje/uav_vloc_datasets/ALTO/train_maps")
+from paths import DATA_ROOT
+ZIP = DATA_ROOT / "Train.zip"
+MAPDIR = DATA_ROOT / "ALTO/train_maps"
 CORE, OVL = 300, 60          # parca basina referans (rota boyu ~10 m aralik) ve ortusme
 STEP = 20
 

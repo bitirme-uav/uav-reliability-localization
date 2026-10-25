@@ -22,3 +22,10 @@ outputs/*.png
 *.tfw
 *.zip
 *.npz
+
+# Kisisel klasorler
+Bitirme/
+
+# Yeniden uretilebilir onbellek
+reproducibility/results/cache/
+*.npy

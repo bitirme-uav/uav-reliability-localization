@@ -1,7 +1,7 @@
 #!/bin/bash
 # TEST asamasi (SS9.1): config freeze SONRASI, bir kez. Hicbir ayar degismez.
 set -e
-cd /media/davut/disk2/proje/uav_reliability_localization/src
+cd "$(dirname "$0")"
 PY=../venv/bin/python
 OUT=../outputs
 filt() { grep -v "Warning\|warn" || true; }

@@ -1,6 +1,6 @@
 #!/bin/bash
 # Bellek yetmedigi icin: sahne basina ayri surec, sirayla. Sonra wayback 09 tamamla + karsilastirmalar.
-cd /media/davut/disk2/proje/uav_reliability_localization/src
+cd "$(dirname "$0")"
 LOG=../outputs/anyvisloc_chain.log
 for s in 19 22 24; do
   echo "test $s basladi $(date +%T)" >> $LOG

@@ -1,0 +1,177 @@
+{
+ "chi2_table": {
+  "chi2_2dof_0.95": 5.99,
+  "chi2_2dof_0.975": 7.38,
+  "chi2_2dof_0.025": 0.05,
+  "chi2_2dof_0.99": 9.21,
+  "chi2_100dof_2.5_97.5": [
+   74.2,
+   129.6
+  ],
+  "chi2_50dof_2.5_97.5": [
+   32.4,
+   71.4
+  ]
+ },
+ "q1_matched": {
+  "q_true": 1,
+  "q_filter": 1,
+  "steps_evaluated": 98,
+  "steady_state_gain": [
+   0.75,
+   0.5
+  ],
+  "single_run_nees_points_outside_5.99": 2,
+  "mc_avg_nees_region": [
+   1.48,
+   2.59
+  ],
+  "mc_avg_nees_points_outside": 4,
+  "mc_avg_nis_region": [
+   0.65,
+   1.43
+  ],
+  "mc_avg_nis_points_outside": 6,
+  "mc_avg_nis_points_above_upper": 3,
+  "mc_autocorr_region": [
+   -0.277,
+   0.277
+  ],
+  "mc_autocorr_points_outside": 4,
+  "realtime_rho1": -0.104,
+  "realtime_rho1_region": [
+   -0.196,
+   0.196
+  ],
+  "realtime_time_avg_nis": 0.878,
+  "realtime_nis_region": [
+   0.74,
+   1.3
+  ]
+ },
+ "q9_matched": {
+  "q_true": 9,
+  "q_filter": 9,
+  "steps_evaluated": 98,
+  "steady_state_gain": [
+   0.901,
+   0.942
+  ],
+  "single_run_nees_points_outside_5.99": 6,
+  "mc_avg_nees_region": [
+   1.48,
+   2.59
+  ],
+  "mc_avg_nees_points_outside": 2,
+  "mc_avg_nis_region": [
+   0.65,
+   1.43
+  ],
+  "mc_avg_nis_points_outside": 9,
+  "mc_avg_nis_points_above_upper": 7,
+  "mc_autocorr_region": [
+   -0.277,
+   0.277
+  ],
+  "mc_autocorr_points_outside": 9,
+  "realtime_rho1": 0.027,
+  "realtime_rho1_region": [
+   -0.196,
+   0.196
+  ],
+  "realtime_time_avg_nis": 0.864,
+  "realtime_nis_region": [
+   0.74,
+   1.3
+  ]
+ },
+ "q9_true_q1_filter_mismatched": {
+  "q_true": 9,
+  "q_filter": 1,
+  "steps_evaluated": 98,
+  "steady_state_gain": [
+   0.75,
+   0.5
+  ],
+  "single_run_nees_points_outside_5.99": 43,
+  "mc_avg_nees_region": [
+   1.48,
+   2.59
+  ],
+  "mc_avg_nees_points_outside": 98,
+  "mc_avg_nis_region": [
+   0.65,
+   1.43
+  ],
+  "mc_avg_nis_points_outside": 97,
+  "mc_avg_nis_points_above_upper": 97,
+  "mc_autocorr_region": [
+   -0.277,
+   0.277
+  ],
+  "mc_autocorr_points_outside": 95,
+  "realtime_rho1": 0.638,
+  "realtime_rho1_region": [
+   -0.196,
+   0.196
+  ],
+  "realtime_time_avg_nis": 4.046,
+  "realtime_nis_region": [
+   0.74,
+   1.3
+  ]
+ },
+ "gate_false_reject_rate": {
+  "true_cov_x1": {
+   "0.05": 0.05,
+   "0.01": 0.0102
+  },
+  "true_cov_x2": {
+   "0.05": 0.2232,
+   "0.01": 0.0989
+  },
+  "true_cov_x4": {
+   "0.05": 0.4705,
+   "0.01": 0.3141
+  },
+  "true_cov_x9": {
+   "0.05": 0.7152,
+   "0.01": 0.5981
+  }
+ },
+ "book": {
+  "gain_q1": [
+   0.75,
+   0.5
+  ],
+  "gain_q9": [
+   0.9,
+   0.94
+  ],
+  "matched_single_run_outside": "3-6 of 100",
+  "mc_nees_region": [
+   1.5,
+   2.6
+  ],
+  "mc_nees_outside": 6,
+  "mc_nis_region": [
+   0.65,
+   1.43
+  ],
+  "mc_nis_outside": 4,
+  "mc_autocorr_region": [
+   -0.277,
+   0.277
+  ],
+  "mc_autocorr_outside": 8,
+  "realtime_rho1_matched": 0.152,
+  "realtime_rho1_mismatched": 0.509,
+  "realtime_nis_matched": 0.936,
+  "realtime_nis_region": [
+   0.74,
+   1.3
+  ],
+  "mismatched_single_run_outside": 41,
+  "mismatched_mc": "all points outside (upper tail)"
+ }
+}

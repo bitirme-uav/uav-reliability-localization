@@ -14,7 +14,8 @@ import torch
 from lightglue import LightGlue, SuperPoint
 from lightglue.utils import rbd
 
-D = "/media/davut/disk2/proje/uav_vloc_datasets/AnyVisLoc/"
+from paths import DATA_ROOT
+D = str(DATA_ROOT / "AnyVisLoc") + "/"
 S = sys.argv[1]
 N = int(sys.argv[2]) if len(sys.argv) > 2 else 10
 MODE = sys.argv[3] if len(sys.argv) > 3 else "aerial"

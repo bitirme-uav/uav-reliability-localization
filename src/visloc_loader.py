@@ -25,7 +25,8 @@ import rasterio
 
 from aerialvl_loader import GeoMap
 
-ROOT = Path("/media/davut/disk2/proje/uav_vloc_datasets/UAV-VisLoc")
+from paths import DATA_ROOT
+ROOT = DATA_ROOT / "UAV-VisLoc"
 ZIP = ROOT / "UAV_VisLoc_dataset.zip"
 EXT = ROOT / "ext"
 

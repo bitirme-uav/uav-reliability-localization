@@ -1,0 +1,58 @@
+[
+  {
+    "dataset_root": "",
+    "scenes": [
+      "Scene_20"
+    ],
+    "reference_mode": "",
+    "num_samples_requested": 26,
+    "num_attempted_rows": 26,
+    "num_result_rows": 26,
+    "num_exception_failed_rows": 0,
+    "num_pnp_success_rows": 26,
+    "num_pnp_failed_rows": 0,
+    "failure_rate": 0.0,
+    "mean_error_m_success_only": 4.0232880118466605,
+    "median_error_m_success_only": 2.7633271859253234,
+    "success_thresholds_m": [
+      1.0,
+      3.0,
+      5.0,
+      7.0,
+      10.0,
+      15.0,
+      20.0
+    ],
+    "success_rate_1m": 0.11538461538461539,
+    "recall_1m": 0.11538461538461539,
+    "success_rate_3m": 0.5384615384615384,
+    "recall_3m": 0.5384615384615384,
+    "success_rate_5m": 0.6923076923076923,
+    "recall_5m": 0.6923076923076923,
+    "success_rate_7m": 0.8461538461538461,
+    "recall_7m": 0.8461538461538461,
+    "success_rate_10m": 0.8846153846153846,
+    "recall_10m": 0.8846153846153846,
+    "success_rate_15m": 1.0,
+    "recall_15m": 1.0,
+    "success_rate_20m": 1.0,
+    "recall_20m": 1.0,
+    "retrieval_k": 5,
+    "retrieval_metric_valid_rows": 26,
+    "pdm_at_k": 0.8630995200551468,
+    "recall_at_k": 0.9615384615384616,
+    "PDM@5": 0.8630995200551468,
+    "Recall@5": 0.9615384615384616,
+    "scene_name": "Scene_20",
+    "success_curve_png": "D:\\proje\\uav_reliability_localization\\reproducibility\\results\\anyvisloc\\Roma_aerial\\Scene_20\\run\\aerial\\aerial-CAMP-Roma-yp\\scene_success_stats\\Scene_20\\success_curve.png",
+    "success_rates_percent": [
+      11.538461538461538,
+      53.84615384615385,
+      69.23076923076923,
+      84.61538461538461,
+      88.46153846153845,
+      100.0,
+      100.0
+    ]
+  }
+]

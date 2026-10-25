@@ -22,7 +22,8 @@ import numpy as np
 
 from aerialvl_loader import GeoMap
 
-ROOT = Path("/media/davut/disk2/proje/uav_vloc_datasets/ALTO/Val")
+from paths import DATA_ROOT
+ROOT = DATA_ROOT / "ALTO/Val"
 MAP_TIF = ROOT.parent / "alto_val_map.tif"
 REF_GSD = 0.613
 QUERY_FOOTPRINT_M = 253.0

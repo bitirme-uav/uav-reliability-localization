@@ -1,0 +1,67 @@
+{
+ "Scene_24": {
+  "n_images": 162,
+  "n_sampled": 17,
+  "every": 10
+ },
+ "Scene_01": {
+  "n_images": 1846,
+  "n_sampled": 185,
+  "every": 10
+ },
+ "Scene_02": {
+  "n_images": 1833,
+  "n_sampled": 184,
+  "every": 10
+ },
+ "Scene_03": {
+  "n_images": 1737,
+  "n_sampled": 174,
+  "every": 10
+ },
+ "Scene_04": {
+  "n_images": 2990,
+  "n_sampled": 299,
+  "every": 10
+ },
+ "Scene_05": {
+  "n_images": 1118,
+  "n_sampled": 112,
+  "every": 10
+ },
+ "Scene_23": {
+  "n_images": 196,
+  "n_sampled": 20,
+  "every": 10
+ },
+ "Scene_18": {
+  "n_images": 214,
+  "n_sampled": 22,
+  "every": 10
+ },
+ "Scene_22": {
+  "n_images": 220,
+  "n_sampled": 22,
+  "every": 10
+ },
+ "Scene_16": {
+  "n_images": 295,
+  "n_sampled": 30,
+  "every": 10
+ },
+ "Scene_20": {
+  "n_images": 252,
+  "n_sampled": 26,
+  "every": 10
+ },
+ "Scene_15": {
+  "n_images": 300,
+  "n_sampled": 30,
+  "every": 10
+ },
+ "Scene_19": {
+  "n_images": 256,
+  "n_sampled": 26,
+  "every": 10
+ }
+}

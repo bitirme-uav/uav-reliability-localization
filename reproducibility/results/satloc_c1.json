@@ -1,0 +1,117 @@
+{
+ "AerialVL TEST": {
+  "n": 1043,
+  "label_le_10m": {
+   "base_rate": 0.47,
+   "Cscore_as_printed": 0.243,
+   "Cscore_sign_corrected": 0.757,
+   "Cres_lower": 0.712,
+   "project_satloc_style_heuristic": 0.757,
+   "C1_corrected_ws0.25": 0.763,
+   "C1_corrected_ws0.5": 0.773,
+   "C1_corrected_ws0.75": 0.768
+  },
+  "label_le_25m": {
+   "base_rate": 0.689,
+   "Cscore_as_printed": 0.158,
+   "Cscore_sign_corrected": 0.842,
+   "Cres_lower": 0.761,
+   "project_satloc_style_heuristic": 0.842,
+   "C1_corrected_ws0.25": 0.836,
+   "C1_corrected_ws0.5": 0.85,
+   "C1_corrected_ws0.75": 0.847
+  }
+ },
+ "UAV-VisLoc TEST": {
+  "n": 1266,
+  "label_le_10m": {
+   "base_rate": 0.11,
+   "Cscore_as_printed": 0.486,
+   "Cscore_sign_corrected": 0.514,
+   "Cres_lower": 0.501,
+   "project_satloc_style_heuristic": 0.514,
+   "C1_corrected_ws0.25": 0.486,
+   "C1_corrected_ws0.5": 0.494,
+   "C1_corrected_ws0.75": 0.505
+  },
+  "label_le_25m": {
+   "base_rate": 0.413,
+   "Cscore_as_printed": 0.458,
+   "Cscore_sign_corrected": 0.542,
+   "Cres_lower": 0.528,
+   "project_satloc_style_heuristic": 0.542,
+   "C1_corrected_ws0.25": 0.509,
+   "C1_corrected_ws0.5": 0.526,
+   "C1_corrected_ws0.75": 0.536
+  }
+ },
+ "AnyVisLoc TEST": {
+  "n": 2874,
+  "label_le_10m": {
+   "base_rate": 0.635,
+   "Cscore_as_printed": 0.218,
+   "Cscore_sign_corrected": 0.782,
+   "Cres_lower": 0.634,
+   "project_satloc_style_heuristic": 0.782,
+   "C1_corrected_ws0.25": 0.697,
+   "C1_corrected_ws0.5": 0.753,
+   "C1_corrected_ws0.75": 0.782
+  },
+  "label_le_25m": {
+   "base_rate": 0.716,
+   "Cscore_as_printed": 0.219,
+   "Cscore_sign_corrected": 0.781,
+   "Cres_lower": 0.69,
+   "project_satloc_style_heuristic": 0.781,
+   "C1_corrected_ws0.25": 0.753,
+   "C1_corrected_ws0.5": 0.798,
+   "C1_corrected_ws0.75": 0.802
+  }
+ },
+ "ALTO TEST": {
+  "n": 1890,
+  "label_le_10m": {
+   "base_rate": 0.389,
+   "Cscore_as_printed": 0.349,
+   "Cscore_sign_corrected": 0.651,
+   "Cres_lower": 0.551,
+   "project_satloc_style_heuristic": 0.651,
+   "C1_corrected_ws0.25": 0.603,
+   "C1_corrected_ws0.5": 0.633,
+   "C1_corrected_ws0.75": 0.648
+  },
+  "label_le_25m": {
+   "base_rate": 0.887,
+   "Cscore_as_printed": 0.2,
+   "Cscore_sign_corrected": 0.8,
+   "Cres_lower": 0.41,
+   "project_satloc_style_heuristic": 0.8,
+   "C1_corrected_ws0.25": 0.686,
+   "C1_corrected_ws0.5": 0.756,
+   "C1_corrected_ws0.75": 0.788
+  }
+ },
+ "VPAIR TEST": {
+  "n": 1105,
+  "label_le_10m": {
+   "base_rate": 0.414,
+   "Cscore_as_printed": 0.329,
+   "Cscore_sign_corrected": 0.671,
+   "Cres_lower": 0.577,
+   "project_satloc_style_heuristic": 0.671,
+   "C1_corrected_ws0.25": 0.614,
+   "C1_corrected_ws0.5": 0.655,
+   "C1_corrected_ws0.75": 0.672
+  },
+  "label_le_25m": {
+   "base_rate": 0.679,
+   "Cscore_as_printed": 0.34,
+   "Cscore_sign_corrected": 0.66,
+   "Cres_lower": 0.564,
+   "project_satloc_style_heuristic": 0.66,
+   "C1_corrected_ws0.25": 0.617,
+   "C1_corrected_ws0.5": 0.651,
+   "C1_corrected_ws0.75": 0.66
+  }
+ }
+}

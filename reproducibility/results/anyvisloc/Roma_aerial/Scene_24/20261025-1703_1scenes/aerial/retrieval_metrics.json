@@ -1,0 +1,17 @@
+{
+  "retrieval_k": 5,
+  "num_regions": 1,
+  "normalization": "equal mean over regions; each region is the mean over its UAV queries",
+  "pdm_at_k_norm": 0.9085745504433468,
+  "recall_at_k_norm": 1.0,
+  "PDM@5_norm": 0.9085745504433468,
+  "Recall@5_norm": 1.0,
+  "per_scene": [
+    {
+      "scene_name": "Scene_24",
+      "num_queries": 17,
+      "pdm_at_k": 0.9085745504433468,
+      "recall_at_k": 1.0
+    }
+  ]
+}

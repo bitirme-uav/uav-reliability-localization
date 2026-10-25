@@ -101,7 +101,7 @@ Zoom 19'da, uçuş tarihinin ±2 yıl çevresi tarandı. "Kapsama" = uçuş kare
 - ESA SPOT 6-7 arşivi: https://earth.esa.int/eogateway/catalog/spot-6-to-7-full-archive-and-tasking-and-spotmaps-2-5-dataset
 
 ## 6. Yerel test dosyaları (geçici, projede değil)
-`/tmp/claude-1000/.../scratchpad/gehi/`:
+Gecici calisma klasoru (`gehi/`):
 - `GEHistoricalImagery` ikili dosyası,
 - `av*.json` (uçuş başına tarih/kapsama poligonları), `cov.py` (kapsama hesabı),
 - `t04_*.tif`, `t02_*.tif`, `t08_*.tif` (450 m'lik örnekler),

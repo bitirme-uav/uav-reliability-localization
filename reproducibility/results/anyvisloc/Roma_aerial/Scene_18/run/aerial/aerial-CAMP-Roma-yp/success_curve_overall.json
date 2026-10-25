@@ -1,0 +1,24 @@
+{
+  "thresholds_m": [
+    1.0,
+    3.0,
+    5.0,
+    7.0,
+    10.0,
+    15.0,
+    20.0
+  ],
+  "success_rates_percent": [
+    31.818181818181817,
+    77.27272727272727,
+    86.36363636363636,
+    86.36363636363636,
+    90.9090909090909,
+    95.45454545454545,
+    95.45454545454545
+  ],
+  "attempted": 22,
+  "pnp_success": 22,
+  "failed": 0,
+  "plot": "D:\\proje\\uav_reliability_localization\\reproducibility\\results\\anyvisloc\\Roma_aerial\\Scene_18\\run\\aerial\\aerial-CAMP-Roma-yp\\success_curve_overall.png"
+}

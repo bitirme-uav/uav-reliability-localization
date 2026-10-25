@@ -1,6 +1,6 @@
 #!/bin/bash
 # Bellek yetmedigi icin isler SIRAYLA: test uretimi bitsin -> recal uretimi -> wayback 09 tamamla
-cd /media/davut/disk2/proje/uav_reliability_localization/src
+cd "$(dirname "$0")"
 while pgrep -f "anyvisloc_build_fix_dataset.py --group test" >/dev/null; do sleep 30; done
 ../venv/bin/python -u anyvisloc_build_fix_dataset.py --group recal --per-scene 40 > ../outputs/anyvisloc_build_recal.log 2>&1
 echo ANYVISLOC_BUILD_BITTI >> ../outputs/anyvisloc_build_recal.log

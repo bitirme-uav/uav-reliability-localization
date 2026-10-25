@@ -1,5 +1,5 @@
 #!/bin/bash
-cd /media/davut/disk2/proje/uav_reliability_localization/src
+cd "$(dirname "$0")"
 OUT=../outputs
 echo "=== $(date +%T) reacquire (8 kosu, 2 paralel) ==="
 xargs -P 2 -I{} sh -c '{}' < $OUT/sweep_val/cmds_reacq.txt

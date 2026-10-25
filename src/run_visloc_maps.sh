@@ -1,6 +1,6 @@
 #!/bin/bash
 # UAV-VisLoc yeni harita kurallari. Bellek nedeniyle TEK surec, sirayla.
-cd /media/davut/disk2/proje/uav_reliability_localization/src
+cd "$(dirname "$0")"
 LOG=../outputs/visloc_maps.log
 while kill -0 76037 2>/dev/null; do sleep 20; done      # calisan test k1
 echo "test k1 bitti $(date +%T)" >> $LOG

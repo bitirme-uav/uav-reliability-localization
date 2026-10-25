@@ -1,0 +1,43 @@
+{
+  "dataset_root": "D:\\proje\\repro_ext\\avl_data",
+  "scenes": [
+    "Scene_03"
+  ],
+  "reference_mode": "aerial",
+  "num_samples_requested": 174,
+  "num_attempted_rows": 80,
+  "num_result_rows": 80,
+  "num_exception_failed_rows": 0,
+  "num_pnp_success_rows": 80,
+  "num_pnp_failed_rows": 0,
+  "failure_rate": 0.0,
+  "mean_error_m_success_only": 40.12753146958463,
+  "median_error_m_success_only": 0.7652921978938355,
+  "success_thresholds_m": [
+    1.0,
+    3.0,
+    5.0,
+    10.0,
+    20.0
+  ],
+  "success_rate_1m": 0.675,
+  "recall_1m": 0.675,
+  "success_rate_3m": 0.9625,
+  "recall_3m": 0.9625,
+  "success_rate_5m": 0.9875,
+  "recall_5m": 0.9875,
+  "success_rate_10m": 0.9875,
+  "recall_10m": 0.9875,
+  "success_rate_20m": 0.9875,
+  "recall_20m": 0.9875,
+  "retrieval_k": 5,
+  "retrieval_metric_valid_rows": 80,
+  "pdm_at_k": 0.569092286090995,
+  "recall_at_k": 0.875,
+  "PDM@5": 0.569092286090995,
+  "Recall@5": 0.875,
+  "combo_name": "aerial-CAMP-Roma-yp",
+  "retrieval_method": "CAMP",
+  "matching_method": "Roma",
+  "pose_priori": "yp"
+}
