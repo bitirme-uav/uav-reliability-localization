@@ -17,7 +17,7 @@ Results (JSON/JSONL) are written to `reproducibility/results/`.
 | 2 | GeoVINS (Li et al., T-RO 2025) | no | no (rosbags, Baidu, large) | not feasible | — | infeasible |
 | 3 | SatLoc / SatLoc-Fusion (Zhou et al., Remote Sens. 2025) | empty repo | no (529 GB, Quark) | Eq. (2) confidence C1 re-implemented and scored on our fix records (dataset not downloadable) | `satloc_c1.py` | done (sign error found) |
 | 4 | Zhang et al. (UST 2026), Map-Aided UAV Visual Localization via VO and Orthophoto Map Alignment | no | no (two private Tianjin flights) | method re-implemented (homography VO, gated map correction, local relocalization, pure-VO baseline) and run on AerialVL ST.5 / LT.5 / LT.6 | `aerialvl_zhang.py` | queued |
-| 5 | AnyVisLoc (Ye et al., CVPR-F 2026) | yes (UAV-AVL/Benchmark) | yes (24 scenes, 60 GB zips) | Table 6 aerial baseline (CAMP + RoMa + top-5, A@5/10/20 m), Table 4 SP+LG rows | `anyvisloc_run.py` | in progress |
+| 5 | AnyVisLoc (Ye et al., CVPR-F 2026) | yes (UAV-AVL/Benchmark) | yes (24 scenes, 60 GB zips) | Table 6 aerial baseline (CAMP + RoMa + top-5, A@5/10/20 m), Table 4 SP+LG rows | `anyvisloc_run.py` | 9-scene run done (not comparable); full 24-scene run on Kaggle in progress |
 | 6 | UAV-VisLoc (Xu et al., arXiv 2024) | data only | yes | dataset statistics, Table II | `uav_visloc_stats.py` | done |
 | 7 | Bar-Shalom et al. (2001) | textbook | simulated | §5.3–5.4 DWNA Kalman example, NEES/NIS consistency tests, χ² regions | `barshalom_consistency.py` | reproduced |
 | 8 | Sequence Matching (Wang et al., TGRS 2024) | no (site down) | yes (ALTO Val = paper's test split) | Table I "Ours", Table IV, Table V, k sweep | `seqmatch_alto.py` | sorting reproduced; matching partly |
@@ -26,6 +26,7 @@ Results (JSON/JSONL) are written to `reproducibility/results/`.
 | 11 | OrthoTrack (Dhaouadi et al., ECCV 2026) | announced | no (MovingDrone, large) | not feasible | — | infeasible |
 | 12 | Ahmedelbadawi et al. (SPIE 2025) | no | no | not feasible | — | infeasible |
 | 13 | Bi et al. (ISPRS J. 2026), UAV coarse visual localization (XIAN-Visloc) | yes (VERYBC/UCVL, eval only) | Kaggle (HF, 26 GB + 4.5 GB) | Tables 4/7/9 retrieval on XIAN-Visloc; Table 13 real-world | `bi_xian_visloc/` | Table 13 reproduced exactly; XIAN-Visloc tables partly (released weights are the real-world model) |
+| 14 | Wang et al. (ISPRS Archives 2026), UAV Visual Localization in GNSS-Denied Environments | no | no (own NCSIST-funded flights, 3,770 images, not released) | not feasible | — | infeasible |
 
 Results are filled in below as each experiment finishes.
 
@@ -88,6 +89,35 @@ then the forward-only candidate window ({I_s^j … I_s^(j+m)}, as written in the
 by one patch, the true patch falls behind the window, and the track is never recovered
 (last 384 frames: R@1 15 %). The paper does not describe a recovery mechanism; sensitivity runs
 with native 500 px matching and a window starting one patch behind j are listed below when done.
+
+## 5. AnyVisLoc (Ye et al., CVPR-F 2026) — Table 6 aerial baseline (`anyvisloc_run.py`)
+
+Setting as in the paper: CAMP retrieval + RoMa matching, top-5 re-ranking, `Topn_opt`, P3P,
+yaw/pitch prior without noise, aerial reference map, 10 % subset (every 10th image).
+Code: UAV-AVL/Benchmark @ `6c8f798` with `anyvisloc_lowmem.patch` (lazy map rotation, no change
+to the method).
+
+Paper (Table 6, aerial): R@1 61.6, A@5 74.1, A@10 87.7, A@20 94.2 (10 % subset: A@5 74.6,
+A@10 87.6, A@20 94.2).
+
+**First run (laptop, RTX 4060): 9 scenes, not comparable.** 378 images, A@5 96.8 / A@10 98.7 /
+A@20 99.7, R@1 65.6 (scene mean A@5 94.6). Scenes 02–05 crashed (out of memory) and the others
+were not run, so only 9 of 24 scenes are in it: 01, 15, 16, 18, 19, 20, 22, 23, 24. Scene_01 alone
+is 185 of the 378 images (A@5 100 %). This number is far above the paper because the large and
+hard scenes are missing; it must not be quoted as a reproduction.
+
+**Full run (Kaggle, 2× T4): all 24 scenes, 2,018 images, in progress.** The 24 zips (62 GB)
+were downloaded from the authors' OneDrive and the scenes split over the two GPUs (~1,000
+images each, ~26 s/image, ~7.5 h). Finished scenes so far (2026-10-27 17:50 UTC):
+
+| Scene | Images | A@5 (%) |
+|---|---|---|
+| Scene_01 | 185 | 100.0 |
+| Scene_02 | 184 | 93.5 |
+| Scene_04 | 299 | 89.6 |
+
+Scenes 02 and 04 crashed on the laptop and now run without problems (5 GB of 31 GB RAM used).
+The final image-weighted and scene-mean metrics replace this table when the run ends.
 
 ## 3. SatLoc (Zhou et al., Remote Sens. 2025) — Eq. (2) C1 on our fix records (`satloc_c1.py`)
 
@@ -166,3 +196,14 @@ AerialVL trajectories are 3–5× longer and flown higher (120–200 m) than Zha
 Note on the project's earlier wording: `src/gates.py` contains no Zhang-specific gate; the
 comparison to Zhang in the proposal is conceptual (heuristic quality gating + relocalization
 vs. calibrated reliability + chi-square gating).
+
+## 14. Wang et al. (ISPRS Archives 2026) — not feasible
+
+T.-C. Wang, L.-H. Tsou, J.-P. Jhan, R.-S. Tang, "UAV Visual Localization in GNSS-Denied
+Environments," ISPRS Archives XLIX-B1-2026 (XXV ISPRS Congress). SuperPoint + LightGlue
+matching to a true orthophoto and DSM, pose by IRLS, plus a reliability check of the estimated
+pose. No code is released. The data are the authors' own flights (3,770 images at 100–250 m
+over three terrain types; project NCSIST-ACOM-114-172C001), which are not public. Neither the
+code nor the data can be obtained, so nothing can be re-run. The method is close to the project's
+own pipeline (SuperPoint + LightGlue to an orthophoto), so it is used only as a conceptual
+comparison.
