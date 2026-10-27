@@ -1,0 +1,11 @@
+Real-world flight data (HF VERYBC/XIAN_Visloc, "Real-world flight data.zip"), run on Kaggle 2026-10-27.
+Unmodified eval_real_world.py (BEMN-Tiny, SC+GA+CM), library from scripts/Real_world_flight_test.py (392x392).
+Only changes: data under a path containing 'Xian_visloc' (dataset class needs it), center features stored
+as fp16 instead of fp32 on CPU (fp32 ran out of 31 GB RAM). Flight 3 and BEMN-Base not finished
+(session closed once; BEMN-Base with center-region matching then crashed the notebook, out of RAM).
+
+Flight 1: q=300 g=6417  R@1 56.00  R@5 70.67  AP 40.06  Dis@1 1027.41  Dis@5 544.55
+Flight 2: q=401 g=6580  R@1 52.62  R@5 76.56  AP 44.16  Dis@1  916.07
+
+Paper Table 13 (first trajectory): BEMN-T       R@1 56.00  AP 39.81  Dis@1 1027.41
+                                   BEMN-T w/SC  R@1 56.00  AP 40.06  Dis@1 1027.41   <- exact match

@@ -25,6 +25,7 @@ Results (JSON/JSONL) are written to `reproducibility/results/`.
 | 10 | OrthoLoC (Dhaouadi et al., NeurIPS 2025) | yes | no (287 GB) | not feasible | — | infeasible |
 | 11 | OrthoTrack (Dhaouadi et al., ECCV 2026) | announced | no (MovingDrone, large) | not feasible | — | infeasible |
 | 12 | Ahmedelbadawi et al. (SPIE 2025) | no | no | not feasible | — | infeasible |
+| 13 | Bi et al. (ISPRS J. 2026), UAV coarse visual localization (XIAN-Visloc) | yes (VERYBC/UCVL, eval only) | Kaggle (HF, 26 GB + 4.5 GB) | Tables 4/7/9 retrieval on XIAN-Visloc; Table 13 real-world | `bi_xian_visloc/` | Table 13 reproduced exactly; XIAN-Visloc tables partly (released weights are the real-world model) |
 
 Results are filled in below as each experiment finishes.
 

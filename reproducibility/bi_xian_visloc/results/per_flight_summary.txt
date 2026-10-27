@@ -1,0 +1,53 @@
+Raw output of eval_xian_same.py (Kaggle, 2026-10-26), filtered to the metric lines.
+Dis@1 = TOP1_Distance, Dis@5 = TOP5_Distance (mean over queries of the distance from the true
+position to the nearest of the top-K tiles). Averages are weighted by the number of queries.
+
+##### tiny_none  (BEMN-Tiny, no retrieval method)
+16: q=429 g=3928  R@1 57.58  R@5 82.05  AP 63.00  Dis@1 673.17  Dis@5 109.17
+17: q=475 g=3928  R@1 71.58  R@5 91.37  AP 75.81  Dis@1 474.77  Dis@5  90.97
+18: q=466 g=3432  R@1 77.47  R@5 95.92  AP 75.24  Dis@1 766.78  Dis@5 392.99
+19: q=645 g=3294  R@1 89.30  R@5 100.0  AP 80.05  Dis@1  63.41  Dis@5  46.09
+avg               R@1 75.63  R@5 93.20  AP 74.31  Dis@1 452.86  Dis@5 150.33
+
+##### tiny_scga  (BEMN-Tiny, SC+GA)
+16: R@1 55.24  R@5 81.12  AP 60.68  Dis@1 793.56  Dis@5 158.20
+17: R@1 71.58  R@5 90.74  AP 75.46  Dis@1 474.77  Dis@5 130.79
+18: R@1 77.47  R@5 94.21  AP 73.86  Dis@1 766.78  Dis@5 633.59
+19: R@1 89.30  R@5 99.85  AP 79.83  Dis@1  63.41  Dis@5  48.66
+avg R@1 75.14  R@5 92.41  AP 73.34  Dis@1 478.50  Dis@5 226.62
+
+##### tiny_full  (BEMN-Tiny, SC+GA+CM)
+16: R@1 55.24  R@5 81.12  AP 60.68  Dis@1 793.56  Dis@5 158.20
+17: R@1 71.58  R@5 90.74  AP 75.46  Dis@1 474.77  Dis@5 130.79
+18: R@1 78.11  R@5 94.21  AP 74.23  Dis@1 765.97  Dis@5 633.59
+19: R@1 92.09  R@5 99.85  AP 81.22  Dis@1  61.08  Dis@5  48.66
+avg R@1 76.18  R@5 92.41  AP 73.88  Dis@1 477.56  Dis@5 226.62
+
+##### base_none  (BEMN-Base, no retrieval method)
+16: R@1 44.06  R@5  60.61  AP 48.01  Dis@1 1121.23  Dis@5 201.95
+17: R@1 70.74  R@5  85.26  AP 74.22  Dis@1  426.66  Dis@5 114.42
+18: R@1 96.57  R@5 100.00  AP 93.07  Dis@1   49.20  Dis@5  45.18
+19: R@1 96.90  R@5 100.00  AP 91.40  Dis@1   50.49  Dis@5  45.56
+avg R@1 79.40  R@5  88.14  AP 78.50  Dis@1  366.83  Dis@5  95.00
+
+##### base_scga  (BEMN-Base, SC+GA; SC+GA+CM ran out of 31 GB RAM)
+16: R@1 44.06  R@5  60.84  AP 47.93  Dis@1 1121.23  Dis@5 231.27
+17: R@1 70.74  R@5  85.47  AP 74.09  Dis@1  426.66  Dis@5 147.81
+18: R@1 96.57  R@5 100.00  AP 89.11  Dis@1   49.20  Dis@5  45.21
+19: R@1 96.90  R@5 100.00  AP 90.58  Dis@1   50.49  Dis@5  45.56
+avg R@1 79.40  R@5  88.24  AP 77.27  Dis@1  366.83  Dis@5 109.12
+
+##### cross_tiny_none  (Weinan 01-02, BEMN-Tiny, no retrieval method)
+01: q=437 g=4563  R@1 80.09  R@5 92.22  AP 59.88  Dis@1 282.24  Dis@5 81.41
+02: q=506 g=4462  R@1 80.43  R@5 97.04  AP 68.39  Dis@1 204.46  Dis@5 57.57
+avg               R@1 80.28  R@5 94.80  AP 64.44  Dis@1 240.50  Dis@5 68.62
+
+##### cross_tiny_scga  (Weinan, BEMN-Tiny, SC+GA; SC+GA+CM ran out of RAM)
+01: R@1 80.09  R@5 91.08  AP 60.98  Dis@1 282.24  Dis@5 110.79
+02: R@1 80.43  R@5 93.48  AP 69.38  Dis@1 204.46  Dis@5 129.69
+avg R@1 80.28  R@5 92.36  AP 65.49  Dis@1 240.50  Dis@5 120.93
+
+##### authorslib16_tiny_none  (flight 16 only, the authors' prebuilt satellite_test_392 library)
+16: q=429 g=3928  R@1 69.23  R@5 89.74  AP 52.04  Dis@1 675.02  Dis@5 108.33
+Top-1 error distribution on this run: mean 675.0 m, median 68.3 m, 75th percentile 111.2 m,
+16.3 % of queries > 500 m, max 16 266 m; mean without errors > 1 km: 84.2 m.
