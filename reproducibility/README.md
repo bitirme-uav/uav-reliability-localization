@@ -27,6 +27,7 @@ Results (JSON/JSONL) are written to `reproducibility/results/`.
 | 12 | Ahmedelbadawi et al. (SPIE 2025) | no | no | not feasible | — | infeasible |
 | 13 | Bi et al. (ISPRS J. 2026), UAV coarse visual localization (XIAN-Visloc) | yes (VERYBC/UCVL, eval only) | Kaggle (HF, 26 GB + 4.5 GB) | Tables 4/7/9 retrieval on XIAN-Visloc; Table 13 real-world | `bi_xian_visloc/` | Table 13 reproduced exactly; XIAN-Visloc tables partly (released weights are the real-world model) |
 | 14 | Wang et al. (ISPRS Archives 2026), UAV Visual Localization in GNSS-Denied Environments | no | no (own NCSIST-funded flights, 3,770 images, not released) | not feasible | — | infeasible |
+| 15 | SUE (Zaffar et al., CVPR 2024), image-matching uncertainty in VPR | yes (tudelft-iv/SUE, SUE only, St Lucia data) | St Lucia pickle in the repo (Git LFS) | Table 2, St Lucia column (AUC-PR of all 8 methods) + sensitivity | `sue_check.py` | reproduced exactly (St Lucia only) |
 
 Results are filled in below as each experiment finishes.
 
@@ -233,3 +234,37 @@ over three terrain types; project NCSIST-ACOM-114-172C001), which are not public
 code nor the data can be obtained, so nothing can be re-run. The method is close to the project's
 own pipeline (SuperPoint + LightGlue to an orthophoto), so it is used only as a conceptual
 comparison.
+
+## 15. SUE (Zaffar et al., CVPR 2024) — Table 2, St Lucia (`sue_check.py`)
+
+M. Zaffar, L. Nan, J. F. P. Kooij, "On the Estimation of Image-matching Uncertainty in Visual
+Place Recognition," CVPR 2024. Code: `tudelft-iv/SUE` @ `24bdae5` (same as `MubarizZaffar/SUE`).
+The repository contains only `sue.py` and one pickle with the authors' precomputed St Lucia test
+data (STUN/BTL descriptors, top-10 retrievals and L2 distances, reference UTM poses, inlier
+counts of SIFT/DELF/SuperPoint-RANSAC). The other five datasets of Table 2 are not released in
+this form, so only the St Lucia column can be re-run. The pickle was opened only on the Kaggle VM
+(a pickle can run code when loaded).
+
+**Result: reproduced exactly.** The unmodified `sue.py` prints the values of the README and of
+Table 2 (St Lucia, AUC-PR, 1,464 queries, top-1 correct 55.8 %):
+
+| | L2 | PA-score | BTL | STUN | **SUE** | SIFT-RANSAC | DELF-RANSAC | SP-RANSAC |
+|---|---|---|---|---|---|---|---|---|
+| Paper / README | 0.79 / 0.7970 | 0.7735 | 0.3419 | 0.6628 | **0.88 / 0.8849** | 0.9313 | 0.9719 | 0.9736 |
+| Ours | 0.7971 | 0.7735 | 0.3419 | 0.6629 | **0.8850** | 0.9313 | 0.9719 | 0.9736 |
+
+**Checks (same data):**
+
+1. *Clipping.* The code limits offsets with `min(500, d)`, so only positive offsets are capped at
+   500 m; negative ones are not (219 offsets below −500 m stay unclipped). A symmetric clip gives
+   0.887, no clip 0.884; the effect is negligible.
+2. *Slope λ (Gaussian weight on the descriptor distance).* AUC-PR: λ = 0 → 0.669, 50 → 0.743,
+   100 → 0.817, 200 → 0.871, 350 → 0.885, 500 → 0.886, 1000 → 0.861. The paper's range of
+   200–400 being stable is confirmed. Without the weighting (λ = 0), the pose spread alone is
+   *worse* than plain L2 (0.669 vs 0.797): SUE needs the distance weights.
+   λ = 350 and K = 10 were tuned on Pittsburgh, which is also a test set of Table 2.
+3. *Number of neighbours K.* 2 → 0.831, 3 → 0.871, 5 → 0.879, 10 → 0.885.
+
+For our project: SUE needs only the poses of the top-K map tiles and their descriptor
+distances, which our retrieval front end already produces. It is a cheap extra reliability
+feature; it is not a calibrated probability (scores are min-max normalised per dataset).
