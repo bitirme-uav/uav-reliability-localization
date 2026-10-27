@@ -17,7 +17,7 @@ Results (JSON/JSONL) are written to `reproducibility/results/`.
 | 2 | GeoVINS (Li et al., T-RO 2025) | no | no (rosbags, Baidu, large) | not feasible | — | infeasible |
 | 3 | SatLoc / SatLoc-Fusion (Zhou et al., Remote Sens. 2025) | empty repo | no (529 GB, Quark) | Eq. (2) confidence C1 re-implemented and scored on our fix records (dataset not downloadable) | `satloc_c1.py` | done (sign error found) |
 | 4 | Zhang et al. (UST 2026), Map-Aided UAV Visual Localization via VO and Orthophoto Map Alignment | no | no (two private Tianjin flights) | method re-implemented (homography VO, gated map correction, local relocalization, pure-VO baseline) and run on AerialVL ST.5 / LT.5 / LT.6 | `aerialvl_zhang.py` | queued |
-| 5 | AnyVisLoc (Ye et al., CVPR-F 2026) | yes (UAV-AVL/Benchmark) | yes (24 scenes, 60 GB zips) | Table 6 aerial baseline (CAMP + RoMa + top-5, A@5/10/20 m), Table 4 SP+LG rows | `anyvisloc_run.py` | 9-scene run done (not comparable); full 24-scene run on Kaggle in progress |
+| 5 | AnyVisLoc (Ye et al., CVPR-F 2026) | yes (UAV-AVL/Benchmark) | yes (24 scenes, 60 GB zips) | Table 6 aerial baseline (CAMP + RoMa + top-5, A@5/10/20 m), Table 4 SP+LG rows | `anyvisloc_run.py` | retrieval R@1 reproduced (61.9 vs 61.6); A@5 m not comparable (94.4 vs 74.1: released code and data differ from the paper) |
 | 6 | UAV-VisLoc (Xu et al., arXiv 2024) | data only | yes | dataset statistics, Table II | `uav_visloc_stats.py` | done |
 | 7 | Bar-Shalom et al. (2001) | textbook | simulated | §5.3–5.4 DWNA Kalman example, NEES/NIS consistency tests, χ² regions | `barshalom_consistency.py` | reproduced |
 | 8 | Sequence Matching (Wang et al., TGRS 2024) | no (site down) | yes (ALTO Val = paper's test split) | Table I "Ours", Table IV, Table V, k sweep | `seqmatch_alto.py` | sorting reproduced; matching partly |
@@ -106,18 +106,44 @@ were not run, so only 9 of 24 scenes are in it: 01, 15, 16, 18, 19, 20, 22, 23, 
 is 185 of the 378 images (A@5 100 %). This number is far above the paper because the large and
 hard scenes are missing; it must not be quoted as a reproduction.
 
-**Full run (Kaggle, 2× T4): all 24 scenes, 2,018 images, in progress.** The 24 zips (62 GB)
-were downloaded from the authors' OneDrive and the scenes split over the two GPUs (~1,000
-images each, ~26 s/image, ~7.5 h). Finished scenes so far (2026-10-27 17:50 UTC):
+**Full run (Kaggle, 2× T4, 2026-10-27): all 24 scenes, 2,018 images.** The 24 zips (62 GB) were
+downloaded from the authors' OneDrive and the scenes split over the two GPUs (~26 s/image,
+6.7 h). No scene failed and no image raised an exception; scenes 02–05, which crashed on the
+laptop, ran without problems (5 GB of 31 GB RAM). Per-scene numbers:
+`results/anyvisloc/summary_Roma_aerial_full24.json`.
 
-| Scene | Images | A@5 (%) |
-|---|---|---|
-| Scene_01 | 185 | 100.0 |
-| Scene_02 | 184 | 93.5 |
-| Scene_04 | 299 | 89.6 |
+| | n | R@1 | R@5 | A@1 m | A@3 m | A@5 m | A@10 m | A@20 m |
+|---|---|---|---|---|---|---|---|---|
+| Paper, Table 6 (aerial) | ~18,000 | 61.6 | | | | 74.1 | 87.7 | 94.2 |
+| Paper, 10 % subset (Table 7, std 0) | | | | | | 74.6 | 87.6 | 94.2 |
+| **Ours, image-weighted** | 2,018 | **61.9** | 88.5 | 71.1 | 92.7 | **94.4** | **95.7** | **96.5** |
+| Ours, mean over 24 scenes | | 61.4 | | | | 95.4 | 97.1 | 97.8 |
 
-Scenes 02 and 04 crashed on the laptop and now run without problems (5 GB of 31 GB RAM used).
-The final image-weighted and scene-mean metrics replace this table when the run ends.
+Hardest scenes (A@5 m): Scene_20 76.9 (A@1 m only 11.5), Scene_06 86.0, Scene_21 86.3,
+Scene_04 89.6. Failures are mostly all-or-nothing: in Scene_06 and Scene_21, A@5 m and A@20 m
+are almost equal, so a wrong fix is far off, not a few metres off.
+
+**Conclusion: retrieval reproduced, localization accuracy not comparable.**
+
+1. **Retrieval matches.** R@1 is 61.9 vs 61.6 in the paper (scene mean 61.4).
+2. **Localization is far better than in the paper.** A@5 m 94.4 vs 74.1. Our A@3 m (92.7) is
+   already close to the paper's A@20 m (94.2). With the same retrieval, the gain comes
+   from the matching + PnP stage.
+3. **The released code and data are not the ones the paper used.** On 2026-07-01 the repository
+   was replaced by an "updated AnyVisLoc release" (commit `d3b4119`, 198 files, mostly rewritten),
+   and the dataset was changed: "we removed three scenes … and added two new scenes. The current
+   release contains 24 scenes and 20,077 UAV images" (Benchmark README); the paper reports
+   about 18,000 images. The new code also uses the per-image camera distortion coefficients in
+   PnP ("Default behavior: use the NPZ camera distortion coefficients"). The paper's 74.1 %
+   therefore cannot be re-run with what is public; the released baseline is much stronger.
+4. **Candidate selection does not use ground truth.** `Topn_opt` picks the top-5 candidate with
+   the most PnP inliers (`pos2error_anyvisloc`); the true position is used only for the
+   yaw/pitch prior and for the prior search region, as in the paper's protocol. Failed PnP is
+   counted as a miss in our summary (error = ∞).
+
+For our project: on the public release, aerial-reference localization with CAMP + RoMa is
+already at ~94 % within 5 m, so AnyVisLoc aerial is an easy setting for the fix itself; the
+remaining ~5 % are large errors, which is the case the reliability gate has to catch.
 
 ## 3. SatLoc (Zhou et al., Remote Sens. 2025) — Eq. (2) C1 on our fix records (`satloc_c1.py`)
 
