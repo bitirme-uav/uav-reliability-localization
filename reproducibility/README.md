@@ -88,8 +88,31 @@ the intermediate values.
 The re-implementation matches the paper while the tracker stays locked (first 1300 frames),
 then the forward-only candidate window ({I_s^j … I_s^(j+m)}, as written in the paper) overshoots
 by one patch, the true patch falls behind the window, and the track is never recovered
-(last 384 frames: R@1 15 %). The paper does not describe a recovery mechanism; sensitivity runs
-with native 500 px matching and a window starting one patch behind j are listed below when done.
+(last 384 frames: R@1 15 %). The paper does not describe a recovery mechanism.
+
+**Sensitivity runs (Kaggle T4, 2026-10-27, same script, `--size` / `--back`):**
+
+| LoFTR input | Window | R@1 | R@5 | mAP | Pred. within 1 patch |
+|---|---|---|---|---|---|
+| Paper | j … j+M | 41.63 | 99.11 | 69.42 | |
+| 256 px (laptop run above) | j … j+M | 35.21 | 75.30 | 54.21 | |
+| 256 px (Kaggle re-run) | j … j+M | 35.27 | 75.36 | 54.26 | 79.9 |
+| 256 px | j−1 … j+M−1 | 36.52 | 84.44 | 57.74 | 82.0 |
+| 500 px (native) | j … j+M | 8.49 | 12.05 | 10.27 | 14.6 |
+| 500 px (native) | j−1 … j+M−1 | 40.50 | 83.31 | 59.91 | 82.2 |
+
+- The Kaggle re-run matches the laptop run (35.27 vs 35.21), so the result is deterministic
+  up to LoFTR/GPU noise.
+- Starting the window one patch behind j (so the current patch stays a candidate) raises R@5 from
+  75 to 84 at 256 px, but the tracker still gets lost later in the route (R@1 36.5).
+- At native 500 px with the paper's forward-only window the track is lost after ~350 frames
+  (R@1 8.5): finer matches make the forward overshoot happen earlier. With the window starting
+  one patch behind j, 500 px stays locked for the first ~900 frames (R@5 99.9 at frame 900,
+  R@1 49), i.e. at the paper's level on that part, but over the whole route it ends at R@1 40.5 /
+  R@5 83.3, close to the paper's R@1 (41.6) but not its R@5 (99.1).
+- Conclusion: the paper's R@5 of 99 % needs a matcher setting that keeps the true patch inside
+  the window over the whole route; with the window exactly as written, our re-implementation
+  loses the track. The paper's recall is reached only on the part where the track holds.
 
 ## 5. AnyVisLoc (Ye et al., CVPR-F 2026) — Table 6 aerial baseline (`anyvisloc_run.py`)
 
