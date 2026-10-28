@@ -2,8 +2,8 @@
 
 Tarih: 2026-10-28. Kapsam: proje önerisi v6 §19'daki öncelikli okuma listesi (16 kalem).
 Proje belgeleri repo kökünde:
-- `BBM479_Proposal_Report.docx`: Önerinin güncel hali. Drive'daki sürüm 2026-10-27 tarihli ve
-  danışman tarafından düzenlenmiş. Ajanların okuyabilmesi için metin kopyası
+- `BBM479_Proposal_Report.docx`: Önerinin güncel hali. Danışmanın 28 Ekim dönütüne göre
+  düzeltilmiş sürüm (Drive, 2026-10-28). Ajanların okuyabilmesi için metin kopyası
   `BBM479_Proposal_Report.md`.
 - `Proposal_v6.md` / `.pdf`: 28 Eylül tarihli ilk ayrıntılı tasarım.
 
@@ -39,9 +39,12 @@ Proje belgeleri repo kökünde:
 - Asıl karşılaştırma şu iki politika arasında:
   - Önerilen: kalibre risk skoru, ardından χ² testi.
   - Temel yöntem: Zhang'dan uyarlanmış geometrik kapı, ardından aynı χ² testi.
-  - Ölçüt (Özet ve Problem Tanımı'nda): 100 deneme başına zararlı düzeltme sayısı. Yörünge
-    hatası (ATE) kontrol olarak izleniyor.
-- Ayrıca tek başına reprojection hatası eşiği, Zhang kapısı ve χ² kapısı ile karşılaştırılıyor.
+  - Ana ölçüt: 100 deneme başına zararlı düzeltme sayısı. Yörünge hatası (ATE) guardrail.
+    Bu deney (E0) kapalı döngü; politikaların aday fix'leri birbirinden farklılaşabilir.
+- Ayrıca tek başına çalışan politikalar raporlanıyor: χ²'siz kalibre model (prior-aware
+  özelliklerle, d² girdi olarak), reprojection hatası eşiği, Zhang kapısı ve χ² kapısı.
+- Ham skorlar ve SUE opsiyonel karşılaştırma. SatLoc-Fusion karşılaştırma listesinden
+  çıkarıldı.
 - χ² ve REACQUIRE (geniş arama ile yeniden yakalama) bütün politikalarda ortak. Bunlar katkı
   değil, ortak altyapı. v6 §2.1 kapılamanın ve yeniden yakalamanın tek başına katkı
   olmadığını açıkça söylüyor.
@@ -56,10 +59,14 @@ Proje belgeleri repo kökünde:
 - **χ² testinin zayıflığı ölçüldü.** Filtrenin kovaryansı küçük tahmin edilirse χ² testi doğru
   fix'leri reddediyor: 2 kat hatada %22, 9 kat hatada %72 (§11). Önerideki "büyük sapmadan
   sonra χ² doğru fix'i reddeder" iddiasının mekanizması bu.
-- **SatLoc-Fusion karşılaştırması işaret düzeltmesi istiyor.** Güven formülü basıldığı haliyle
-  ters çalışıyor ve UAV-VisLoc'ta bilgi taşımıyor (§8). Karşılaştırmada işareti düzeltilmiş
-  hali kullanılmalı ve bu belgelenmeli.
-- **SUE ancak mesafe ağırlığıyla işe yarıyor.** Ağırlık olmadan L2'den kötü (§7).
+- **SatLoc-Fusion karşılaştırmadan çıkarıldı.** Güven formülü basıldığı haliyle ters
+  çalışıyor ve UAV-VisLoc'ta bilgi taşımıyor (§8). İleride yeniden eklenirse işareti
+  düzeltilmiş hali kullanılmalı ve bu belgelenmeli.
+- **SUE (opsiyonel) ancak mesafe ağırlığıyla işe yarıyor.** Ağırlık olmadan L2'den kötü (§7).
+- **REACQUIRE'da kovaryans büyütmenin gerekçesi.** Kapalı döngü reprodüksiyonlarında (§3, §4)
+  iz, hata arama menzilini aşınca geri gelmedi. χ² ölçümü (§11) de küçük kovaryansla doğru
+  fix'in reddedildiğini gösteriyor. Öneri §6 bu yüzden kovaryansı büyütüyor ve birkaç
+  tutarlı fix ile onay istiyor.
 - **Harita düzeltmesi şart.** Saf VO kilometrelerce sapıyor (§4).
 
 **4. Değerlendirme için uyarılar çıkardık.**
@@ -74,8 +81,8 @@ Proje belgeleri repo kökünde:
 
 ### Öneri metniyle ilgili dikkat edilecek noktalar
 
-Bunlar reprodüksiyonlardan çıkan, öneri metnini ilgilendiren noktalar. Drive'daki belge
-değiştirilmedi; karar ekibin ve danışmanındır.
+Bunlar reprodüksiyonlardan çıkan, öneri metnini ilgilendiren noktalar. Durumları 28 Ekim
+düzeltmelerinden sonraki öneriye göre işaretlendi; karar ekibin ve danışmanındır.
 
 1. **AerialVL başarı oranının tanımı.** Öneri §2.1'de "error below 25 m on 79.6–88.0% of three
    trajectories" yazıyor. Bu oran makalede rotanın tamamı için değil, kayıp olmayan kısım için
@@ -91,12 +98,14 @@ değiştirilmedi; karar ekibin ve danışmanındır.
    ayarlanacak. Bizim LT.6 sonucumuz (düzeltmeler kabul edilmemeye başladı) önerideki "ham
    uzaklık kriteri büyük sapmada doğru fix'i reddeder" iddiasıyla uyumlu. Ancak reddi hangi
    kriterin yaptığını ayrıca incelemedik.
-5. **Etiket eşiği T.** Güncel öneride T geçici olarak 25 m ve sadece eğitim verisiyle
-   seçilecek. v6'da ve mevcut kodda birincil eşik 10 m, ikincil eşik 25 m. Test dizilerine
-   dokunmadan önce tek bir değer sabitlenmeli.
-6. **Birincil ölçüt iki yerde farklı.** Özet, Problem Tanımı ve Outcome bölümlerinde ana ölçüt
-   "100 deneme başına zararlı düzeltme". Methodology §5'te ise ayrım ve kalibrasyon ölçütleri
-   birincil, navigasyon ölçütleri ikincil. Bu ikisi tek bir tanımda birleştirilmeli.
+5. **Etiket eşiği T (öneride tanımlandı, kod bekliyor).** Öneri Methodology §3: T geçici
+   olarak 25 m; son değer yalnızca training dizilerinden, {10, 15, 25, 50} m içinden, doğru
+   bölgeden gelen fix'lerin hata dağılımının %95'lik değerini aşan en küçük değer olarak
+   seçilir. v6'da ve mevcut kodda birincil eşik 10 m, ikincil eşik 25 m. T kesinleşince kod
+   güncellenmeli.
+6. **Birincil ölçüt (giderildi).** 28 Ekim düzeltmeleriyle bütün bölümlerde ana ölçüt "100
+   deneme başına zararlı düzeltme", ATE guardrail. Ayrım ve kalibrasyon ölçütleri
+   fixed-candidate değerlendirmesinde (RQ1, RQ2).
 7. **Sequence Matching iddiası doğrulandı.** Öneri §2.2'deki "önceki konum doğru olmalı" tespiti
    reprodüksiyonda görüldü: iz kayınca gerçek yama pencerenin dışında kalıyor (§9).
 
@@ -402,7 +411,8 @@ Her madde yukarıdaki bölümlere dayanıyor.
      (seed) ve medyan kullanılmalı.
 5. **Güven skorları dikkatle kullanılmalı.**
    - SatLoc'un formülü basıldığı haliyle ters çalışıyor ve UAV-VisLoc'ta bilgi taşımıyor (§8).
-   - SUE ucuz bir ek özellik olabilir (§7).
+     Öneri SatLoc'u karşılaştırma listesinden çıkardı.
+   - SUE ucuz bir ek özellik ya da opsiyonel karşılaştırma olabilir (§7).
    - χ² testi doğru kovaryansa bağlı (§11). Öneride χ² bütün politikalarda ortak bir adım ve
      ayrıca tek başına bir temel yöntem. Projenin katkısı χ²'den önce gelen kalibre risk skoru.
 6. **Yayımlanan kod ve veri makaledekiyle aynı olmayabilir** (§5 AnyVisLoc, §6 Bi). Bu
@@ -426,7 +436,8 @@ Her madde yukarıdaki bölümlere dayanıyor.
 - **Birebir olmayan sonuçlar:** "Birebir değil" ya da "karşılaştırılamaz" diye işaretlenen
   sonuçlar (§3, §4, §5 A@5 m, §6 Dis@1) makale reprodüksiyonu diye sunulmamalı.
 - **Proje kuralları:** Etiket eşiği T, test dizilerine dokunmadan önce sabitlenir ve sonra
-  değiştirilmez. Güncel öneride T geçici olarak 25 m; v6'da ve mevcut kodda 10 m. Ayar
+  değiştirilmez. Güncel öneride T geçici olarak 25 m ve seçim kuralı Methodology §3'te
+  tanımlı; v6'da ve mevcut kodda 10 m. Ayar
   sadece train/val dizilerinde yapılır. Kapı ve güvenilirlik modeli girdi olarak hatadan
   türetilen hiçbir nicelik kullanmaz.
 - **Kaggle:**

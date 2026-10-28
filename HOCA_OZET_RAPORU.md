@@ -74,25 +74,29 @@ Kullanılanlar ham skorlar, eşikler ve elle seçilmiş ağırlıklar.
 - **Projenin önerdiği şey tam bu boşluğa denk geliyor.** Öneride, χ² testinden önce hafif bir
   sınıflandırıcı (lojistik regresyon, random forest ya da XGBoost) her fix için kalibre bir
   "T metreden uzak" olasılığı üretiyor. Bunu Zhang'dan uyarlanmış kapı ile karşılaştırıyoruz.
-  χ² testi iki politikada da ortak.
+  χ² testi iki politikada da ortak. Kalibre model ayrıca χ²'siz, tek başına da deneniyor.
 - **Temel yöntemler hazır.** Zhang kapısı yeniden yazıldı ve AerialVL'de çalışıyor. χ²
-  testinin zayıf noktası ölçüldü. SatLoc ve SUE'nin hangi biçimde karşılaştırılacağı
-  netleşti.
+  testinin zayıf noktası ölçüldü. Bu da önerideki REACQUIRE kovaryans büyütmesinin
+  gerekçesi.
+- **Karşılaştırma listesi netleşti.** SatLoc'un güven formülü basıldığı haliyle ters
+  çalıştığı için zorunlu karşılaştırmalardan çıkarıldı. SUE ancak mesafe ağırlığıyla işe
+  yarıyor; opsiyonel karşılaştırma olarak kaldı.
 - **Bu çalışma problemi gösteriyor, çözümü değil.** Önerilen yöntemin işe yarayıp yaramadığı
   projenin kendi deneylerinde ölçülecek.
 
 ## Öneri metniyle ilgili tespitler
 
-1. **Birincil ölçüt iki yerde farklı.** Özet ve Problem Tanımı'nda ana ölçüt "100 deneme
-   başına zararlı düzeltme". Methodology §5'te ise ayrım ve kalibrasyon ölçütleri birincil.
-   Tek bir tanımda birleştirilmeli.
-2. **AerialVL "79.6–88.0%" ifadesi.** Bu oran rotanın tamamı için değil, iz kaybolmayan kısım
+28 Ekim düzeltmelerinden sonra hâlâ geçerli olanlar. Birincil ölçütteki tutarsızlık bu
+düzeltmelerde giderildi.
+
+1. **AerialVL "79.6–88.0%" ifadesi.** Bu oran rotanın tamamı için değil, iz kaybolmayan kısım
    için hesaplanıyor. Metinde bu belirtilmeli.
-3. **AnyVisLoc %74,1 değeri.** Makaleye göre doğru. Ama bugünkü açık kod ve veriyle aynı
+2. **AnyVisLoc %74,1 değeri.** Makaleye göre doğru. Ama bugünkü açık kod ve veriyle aynı
    kurulum %94,4 veriyor. Açık sürümü kullanırsak bizim başlangıç değerimiz farklı olacak.
-4. **Etiket eşiği T.** Öneride geçici olarak 25 m, mevcut kodda 10 m. Test dizilerine
-   dokunmadan önce tek bir değerde sabitlenmeli.
-5. **XIAN-Visloc.** Georeferans doğru. Ancak CSV'lerde zaman damgası ve kamera duruşu yok.
+3. **Etiket eşiği T.** Öneri artık T'nin yalnızca training verisiyle nasıl seçileceğini
+   tanımlıyor (geçici değer 25 m). Mevcut kod 10 m kullanıyor; T kesinleşince kod
+   güncellenecek.
+4. **XIAN-Visloc.** Georeferans doğru. Ancak CSV'lerde zaman damgası ve kamera duruşu yok.
    Lisans henüz kontrol edilmedi.
 
 ## Açık işler
