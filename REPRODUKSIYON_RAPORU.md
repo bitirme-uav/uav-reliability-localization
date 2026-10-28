@@ -1,6 +1,13 @@
 # Reprodüksiyon Raporu — öncelikli okuma listesindeki makaleler
 
 Tarih: 2026-10-28. Kapsam: proje önerisi v6 §19'daki öncelikli okuma listesi (16 kalem).
+Proje belgeleri repo kökünde:
+- `BBM479_Proposal_Report.docx`: Önerinin güncel hali. Drive'daki sürüm 2026-10-27 tarihli ve
+  danışman tarafından düzenlenmiş. Ajanların okuyabilmesi için metin kopyası
+  `BBM479_Proposal_Report.md`.
+- `Proposal_v6.md` / `.pdf`: 28 Eylül tarihli ilk ayrıntılı tasarım.
+
+İki belge çeliştiğinde güncel öneri esas alınır.
 
 ## Bu rapor ne için
 
@@ -13,48 +20,85 @@ Tarih: 2026-10-28. Kapsam: proje önerisi v6 §19'daki öncelikli okuma listesi 
 
 ## Bu çalışma projeye ne kattı
 
-**1. Çözmeye çalıştığımız problemin gerçek olduğunu literatürün kendi yöntemleriyle gösterdik.**
-- İz bir kez kaybolunca geri gelmiyor. Bunu üç farklı yöntemde gördük: AerialVL protokolü
-  (LT.6'da rotanın %75'i), Zhang vd. (LT.6'da son hata 1,2 km) ve Sequence Matching.
+**1. Problemin gerçek olduğunu literatürün kendi yöntemleriyle gösterdik.**
 - Yanlış fix'ler küçük değil, büyük ve kendinden emin görünüyor:
-  - AnyVisLoc'ta hatalar "ya hep ya hiç".
-  - XIAN-Visloc'ta ilk sıradaki karo kilometrelerce uzak çıkabiliyor.
-  - Yerde eğitilmiş VPR ağları ilk sırada ancak %30 civarında doğru karoyu buluyor.
-- İncelenen yöntemlerin hiçbiri, bir fix'in ne zaman yanlış olduğunu güvenilir biçimde
-  söylemiyor. Bu yöntemlerin bir kısmı kalite kapısı ve yerel yeniden konumlama kullanıyor.
+  - Yerde eğitilmiş VPR ağları doğru karoyu ilk sırada ancak %30 civarında buluyor (§2).
+  - AnyVisLoc'ta kalan hatalar "ya hep ya hiç" (§5).
+  - XIAN-Visloc'ta ilk sıradaki karo kilometrelerce uzak çıkabiliyor (§6).
+- Yanlış fix kabul edilince iz kayboluyor ve geri gelmiyor. Bunu üç yöntemde gördük:
+  AerialVL protokolü (LT.6'da rotanın %75'i), Zhang vd. (LT.6'da son hata 1,2 km) ve Sequence
+  Matching (§3, §4, §9). Bu yöntemlerin kalite kapıları ve yerel yeniden konumlama adımları
+  bunu önleyemedi.
+- İncelediğimiz yöntemlerin hiçbiri, bir fix'in yanlış olma olasılığını kalibre biçimde
+  vermiyor. Kullanılanlar ham skorlar, eşikler ve elle tasarlanmış ağırlıklar.
 
-**2. Projenin hedefi tam bu boşluk.**
-- Projenin ana katkısı öğrenilmiş, kalibre bir güvenilirlik modeli. Model eşleştirme
-  istatistiklerini ve tahmine göre tutarlılığı (Mahalanobis uzaklığı) birlikte kullanıyor ve
-  "bu fix 10 m içinde mi" olasılığını veriyor.
-- Fix bu olasılığa göre kabul ediliyor, ağırlığı düşürülüyor ya da reddediliyor.
-- İz kaybolunca yeniden yakalama (REACQUIRE) ve 2-fix teyidi devreye giriyor.
-- χ² kapısı bizim yöntemimiz değil, karşılaştırdığımız temel yöntemlerden biri (E5). Ham skor
-  (E3) ve SatLoc tarzı skor (E4) da öyle.
-- Bu raporun gösterdiği şey problemin varlığı. Projenin bu problemi ne kadar çözdüğü ise
-  projenin kendi deneylerinin konusu (`FINAL_RAPOR.md`). O deneylerdeki kapalı döngü eşik
-  seçimi henüz bitmedi (§14).
+**2. Projenin cevaplayacağı soru bu.** Güncel önerideki tanım şöyle:
+- Projenin katkısı, eşleştirme ve geometri kanıtından hafif bir sınıflandırıcıyla (lojistik
+  regresyon, random forest ya da XGBoost) "bu fix T metreden uzak mı" olasılığını üretmek ve bu
+  olasılığın kalibre olup olmadığını test etmek.
+- Asıl karşılaştırma şu iki politika arasında:
+  - Önerilen: kalibre risk skoru, ardından χ² testi.
+  - Temel yöntem: Zhang'dan uyarlanmış geometrik kapı, ardından aynı χ² testi.
+  - Ölçüt (Özet ve Problem Tanımı'nda): 100 deneme başına zararlı düzeltme sayısı. Yörünge
+    hatası (ATE) kontrol olarak izleniyor.
+- Ayrıca tek başına reprojection hatası eşiği, Zhang kapısı ve χ² kapısı ile karşılaştırılıyor.
+- χ² ve REACQUIRE (geniş arama ile yeniden yakalama) bütün politikalarda ortak. Bunlar katkı
+  değil, ortak altyapı. v6 §2.1 kapılamanın ve yeniden yakalamanın tek başına katkı
+  olmadığını açıkça söylüyor.
+- Bu rapor problemin varlığını gösteriyor. Önerilen yöntemin işe yarayıp yaramadığı projenin
+  kendi deneylerinin konusu. Olumsuz ya da karışık bir sonuç da öneride geçerli bir bulgu
+  olarak tanımlanmış.
 
-**3. Tasarım kararlarına doğrudan dayanak sağladı.**
-- Harita düzeltmesi şart: saf VO kilometrelerce sapıyor (§4).
-- Klasik χ² kapısı ancak filtrenin kovaryansı doğruysa çalışıyor; yanlışsa doğru fix'leri
-  reddediyor (§11). FINAL_RAPOR'a göre Mahalanobis uzaklığı kullanan bizim kalibre kapımız da
-  bu durumda zayıflıyor. Projedeki çare, REACQUIRE ve 2-fix teyidi.
-- SatLoc'un güven formülü basıldığı haliyle ters çalışıyor ve UAV-VisLoc'ta bilgi taşımıyor
-  (§8). Sezgisel güven skorlarına güvenilemiyor.
-- SUE, eklenebilecek ucuz bir güvenilirlik özelliği (§7).
+**3. Temel yöntemler ve tasarım için dayanak sağladı.**
+- **Zhang kapısı asıl temel yöntem.** Zhang'ın kapısı (Eq. 9) ve yeniden konumlaması zaten
+  yeniden yazıldı ve AerialVL'de koşuldu (§4, `aerialvl_zhang.py`). "Zhang'dan uyarlanmış
+  kapı" bu koddan türetilebilir.
+- **χ² testinin zayıflığı ölçüldü.** Filtrenin kovaryansı küçük tahmin edilirse χ² testi doğru
+  fix'leri reddediyor: 2 kat hatada %22, 9 kat hatada %72 (§11). Önerideki "büyük sapmadan
+  sonra χ² doğru fix'i reddeder" iddiasının mekanizması bu.
+- **SatLoc-Fusion karşılaştırması işaret düzeltmesi istiyor.** Güven formülü basıldığı haliyle
+  ters çalışıyor ve UAV-VisLoc'ta bilgi taşımıyor (§8). Karşılaştırmada işareti düzeltilmiş
+  hali kullanılmalı ve bu belgelenmeli.
+- **SUE ancak mesafe ağırlığıyla işe yarıyor.** Ağırlık olmadan L2'den kötü (§7).
+- **Harita düzeltmesi şart.** Saf VO kilometrelerce sapıyor (§4).
 
-**4. Değerlendirme yöntemimizi belirledi.**
-- AerialVL'nin başarı oranı iz kaybını gizleyebiliyor. Bu yüzden kayıp payını ve CTL'yi de
-  raporlayacağız.
-- Kapalı döngü sonuçları koşudan koşuya değişiyor. Bu yüzden birden fazla tohum (seed) ve
-  medyan kullanacağız.
+**4. Değerlendirme için uyarılar çıkardık.**
+- AerialVL'nin başarı oranı iz kaybını gizleyebiliyor (§3).
+- Kapalı döngüde ortalama ve en büyük hata koşudan koşuya değişiyor (§4). Önerideki beş tohum
+  (seed) ve dizi bazlı raporlama bu yüzden yerinde.
 
-**5. Karşılaştırma için güvenilir referanslar elde ettik.**
+**5. Güvenilir referanslar elde ettik.**
 - Birebir tekrarlananlar: SUE, Bi vd. Table 13, Bar-Shalom.
 - Yakından tekrarlananlar: AerialVL Table III, AnyVisLoc R@1.
 - Yayımlanan kod ve verinin makaleden farklı olduğu yerleri belgeledik (AnyVisLoc, Bi vd.).
-  Bunlarla yanlış bir kıyas yapmayacağız.
+
+### Öneri metniyle ilgili dikkat edilecek noktalar
+
+Bunlar reprodüksiyonlardan çıkan, öneri metnini ilgilendiren noktalar. Drive'daki belge
+değiştirilmedi; karar ekibin ve danışmanındır.
+
+1. **AerialVL başarı oranının tanımı.** Öneri §2.1'de "error below 25 m on 79.6–88.0% of three
+   trajectories" yazıyor. Bu oran makalede rotanın tamamı için değil, kayıp olmayan kısım için
+   hesaplanıyor (§3). "of the non-drift part" gibi bir ekleme daha doğru olur.
+2. **AnyVisLoc %74,1 değeri.** Makalenin değeri doğru. Ancak bugün açık olan kod ve veriyle aynı
+   kurulum %94,4 veriyor (§5). v6 M3'teki 10 m gerekçesi de bu değere dayanıyor. Biz açık sürümü
+   kullanacaksak kendi temel sonucumuz %74,1 değil.
+3. **XIAN-Visloc kontrolü.** Öneri zaman damgası, yer gerçeği, georeferans ve lisansın
+   kontrol edileceğini söylüyor. Kontrol ettiklerimiz: georeferans doğru (EPSG:3857, 0,2986 m
+   piksel). CSV'lerde zaman damgası ve kamera duruşu yok (§6). Lisansı kontrol etmedik.
+4. **Zhang kapısının eşikleri.** Makale eşik değerlerini vermiyor. Bizim kodda eşikler
+   sonuçlara bakmadan önce sabitlendi. Önerideki planda ise eşikler doğrulama verisinde
+   ayarlanacak. Bizim LT.6 sonucumuz (düzeltmeler kabul edilmemeye başladı) önerideki "ham
+   uzaklık kriteri büyük sapmada doğru fix'i reddeder" iddiasıyla uyumlu. Ancak reddi hangi
+   kriterin yaptığını ayrıca incelemedik.
+5. **Etiket eşiği T.** Güncel öneride T geçici olarak 25 m ve sadece eğitim verisiyle
+   seçilecek. v6'da ve mevcut kodda birincil eşik 10 m, ikincil eşik 25 m. Test dizilerine
+   dokunmadan önce tek bir değer sabitlenmeli.
+6. **Birincil ölçüt iki yerde farklı.** Özet, Problem Tanımı ve Outcome bölümlerinde ana ölçüt
+   "100 deneme başına zararlı düzeltme". Methodology §5'te ise ayrım ve kalibrasyon ölçütleri
+   birincil, navigasyon ölçütleri ikincil. Bu ikisi tek bir tanımda birleştirilmeli.
+7. **Sequence Matching iddiası doğrulandı.** Öneri §2.2'deki "önceki konum doğru olmalı" tespiti
+   reprodüksiyonda görüldü: iz kayınca gerçek yama pencerenin dışında kalıyor (§9).
 
 Terimler:
 - **Reprodüksiyon:** Yazarların kodu ve verisiyle (ya da makalenin tarif ettiği veriyle)
@@ -349,7 +393,8 @@ Her madde yukarıdaki bölümlere dayanıyor.
    - Bu, güvenilirlik kapısının neden gerektiğini gösteriyor.
 2. **Kapalı döngüde iz bir kez kaybolunca geri gelmiyor.** AerialVL döngümüz, Zhang ve Sequence
    Matching'in üçü de bunu gösteriyor (§3, §4, §9). Bu yöntemlerin yerel yeniden konumlama ya da
-   kurtarma adımları, menzil dışına çıkmış bir izi toparlamıyor. Yeniden yakalama (REACQUIRE) ve güvenilirlik kontrolü projenin asıl katkı alanı.
+   kurtarma adımları, menzil dışına çıkmış bir izi toparlamıyor. Bu yüzden yanlış fix'i en
+   baştan kabul etmemek önemli. Projenin güvenilirlik modeli de bu karar için tasarlandı.
 3. **Harita düzeltmesi şart.** Saf VO 4,5–9,8 km'lik rotalarda kilometrelerce sapıyor (§4).
 4. **Değerlendirmede tek bir başarı ölçütü yetmez.**
    - Succ. Rate kayıp kısmı gizleyebiliyor (§3); kayıp payı ve CTL de raporlanmalı.
@@ -358,8 +403,8 @@ Her madde yukarıdaki bölümlere dayanıyor.
 5. **Güven skorları dikkatle kullanılmalı.**
    - SatLoc'un formülü basıldığı haliyle ters çalışıyor ve UAV-VisLoc'ta bilgi taşımıyor (§8).
    - SUE ucuz bir ek özellik olabilir (§7).
-   - Klasik χ² kapısı doğru kovaryansa bağlı (§11). χ² bizim yöntemimiz değil, kıyas için
-     kullandığımız temel yöntemlerden biri.
+   - χ² testi doğru kovaryansa bağlı (§11). Öneride χ² bütün politikalarda ortak bir adım ve
+     ayrıca tek başına bir temel yöntem. Projenin katkısı χ²'den önce gelen kalibre risk skoru.
 6. **Yayımlanan kod ve veri makaledekiyle aynı olmayabilir** (§5 AnyVisLoc, §6 Bi). Bu
    kaynaklara atıf yapılırken commit ve veri sürümü de verilmeli.
 
@@ -380,9 +425,10 @@ Her madde yukarıdaki bölümlere dayanıyor.
   Dosyada olmayan bir sayı yazılmamalı.
 - **Birebir olmayan sonuçlar:** "Birebir değil" ya da "karşılaştırılamaz" diye işaretlenen
   sonuçlar (§3, §4, §5 A@5 m, §6 Dis@1) makale reprodüksiyonu diye sunulmamalı.
-- **Proje kuralları:** Etiket eşikleri (10 m ve 25 m) sonuçlara bakıldıktan sonra
-  değiştirilmez. Ayar sadece train/val dizilerinde yapılır. Kapı ve güvenilirlik modeli girdi
-  olarak hatadan türetilen hiçbir nicelik kullanmaz.
+- **Proje kuralları:** Etiket eşiği T, test dizilerine dokunmadan önce sabitlenir ve sonra
+  değiştirilmez. Güncel öneride T geçici olarak 25 m; v6'da ve mevcut kodda 10 m. Ayar
+  sadece train/val dizilerinde yapılır. Kapı ve güvenilirlik modeli girdi olarak hatadan
+  türetilen hiçbir nicelik kullanmaz.
 - **Kaggle:**
   - Repo private olduğu için Kaggle'dan klonlanamıyor; kod dosyaları elle aktarılıyor.
   - Bölünmüş zip'ler birleştirilmeden okunabiliyor (`SplitFile`, `aerialvl_vpr/avl_vpr.py`).
