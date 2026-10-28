@@ -1,0 +1,11 @@
+{
+ "note": "Kaggle T4, 2026-10-27, seqmatch_alto.py match --size S --back B; summary lines copied from the run logs (Kaggle VM no longer available). seqmatch_match_s500_b0.log is an earlier 1-query smoke test, not this run.",
+ "paper_ours": {"R@1": 41.63, "R@5": 99.11, "mAP": 69.42},
+ "runs": [
+  {"size": 256, "back": 0, "n": 1684, "R@1": 35.27, "R@5": 75.36, "mAP": 54.26, "pred_within_1_patch": 79.87},
+  {"size": 256, "back": 1, "n": 1684, "R@1": 36.52, "R@5": 84.44, "mAP": 57.74, "pred_within_1_patch": 82.01},
+  {"size": 500, "back": 0, "n": 1684, "R@1": 8.49, "R@5": 12.05, "mAP": 10.27, "pred_within_1_patch": 14.61},
+  {"size": 500, "back": 1, "n": 1684, "R@1": 40.5, "R@5": 83.31, "mAP": 59.91, "pred_within_1_patch": 82.24}
+ ],
+ "size500_back1_after_901_queries": {"R@1": 48.95, "R@5": 99.89, "mAP": 72.27, "pred_within_1_patch": 99.22}
+}

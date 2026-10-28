@@ -91,7 +91,8 @@ then the forward-only candidate window ({I_s^j … I_s^(j+m)}, as written in the
 by one patch, the true patch falls behind the window, and the track is never recovered
 (last 384 frames: R@1 15 %). The paper does not describe a recovery mechanism.
 
-**Sensitivity runs (Kaggle T4, 2026-10-27, same script, `--size` / `--back`):**
+**Sensitivity runs (Kaggle T4, 2026-10-27, same script, `--size` / `--back`; raw numbers:
+`results/seqmatch_sensitivity.json`):**
 
 | LoFTR input | Window | R@1 | R@5 | mAP | Pred. within 1 patch |
 |---|---|---|---|---|---|
