@@ -11,6 +11,45 @@ Tarih: 2026-10-28. Kapsam: proje önerisi v6 §19'daki öncelikli okuma listesi 
    ham sayılar `reproducibility/results/` altındadır. Bu rapordaki her sayı o dosyalardan
    alınmış ve 2026-10-28'de karşılaştırılarak kontrol edilmiştir.
 
+## Bu çalışma projeye ne kattı
+
+**1. Çözmeye çalıştığımız problemin gerçek olduğunu literatürün kendi yöntemleriyle gösterdik.**
+- İz bir kez kaybolunca geri gelmiyor. Bunu üç farklı yöntemde gördük: AerialVL protokolü
+  (LT.6'da rotanın %75'i), Zhang vd. (LT.6'da son hata 1,2 km) ve Sequence Matching.
+- Yanlış fix'ler küçük değil, büyük ve kendinden emin görünüyor:
+  - AnyVisLoc'ta hatalar "ya hep ya hiç".
+  - XIAN-Visloc'ta ilk sıradaki karo kilometrelerce uzak çıkabiliyor.
+  - Yerde eğitilmiş VPR ağları ilk sırada ancak %30 civarında doğru karoyu buluyor.
+- İncelenen yöntemlerin hiçbiri, bir fix'in ne zaman yanlış olduğunu güvenilir biçimde
+  söylemiyor. Bu yöntemlerin bir kısmı kalite kapısı ve yerel yeniden konumlama kullanıyor.
+
+**2. Projenin hedefi tam bu boşluk.**
+- Proje her fix için kalibre edilmiş bir güvenilirlik tahmini üretiyor.
+- Bu tahmine ve χ² kapısına göre fix kabul ya da reddediliyor.
+- İz kaybolunca yeniden yakalama (REACQUIRE) başlıyor.
+- Bu raporun gösterdiği şey problemin varlığı. Projenin bu problemi ne kadar çözdüğü ise
+  projenin kendi deneylerinin konusu (`FINAL_RAPOR.md`). O deneylerdeki kapalı döngü eşik
+  seçimi henüz bitmedi (§14).
+
+**3. Tasarım kararlarına doğrudan dayanak sağladı.**
+- Harita düzeltmesi şart: saf VO kilometrelerce sapıyor (§4).
+- χ² kapısı ancak kovaryans doğruysa çalışıyor, bu yüzden kalibrasyon gerekli (§11).
+- SatLoc'un güven formülü basıldığı haliyle ters çalışıyor ve UAV-VisLoc'ta bilgi taşımıyor
+  (§8). Sezgisel güven skorlarına güvenilemiyor.
+- SUE, eklenebilecek ucuz bir güvenilirlik özelliği (§7).
+
+**4. Değerlendirme yöntemimizi belirledi.**
+- AerialVL'nin başarı oranı iz kaybını gizleyebiliyor. Bu yüzden kayıp payını ve CTL'yi de
+  raporlayacağız.
+- Kapalı döngü sonuçları koşudan koşuya değişiyor. Bu yüzden birden fazla tohum (seed) ve
+  medyan kullanacağız.
+
+**5. Karşılaştırma için güvenilir referanslar elde ettik.**
+- Birebir tekrarlananlar: SUE, Bi vd. Table 13, Bar-Shalom.
+- Yakından tekrarlananlar: AerialVL Table III, AnyVisLoc R@1.
+- Yayımlanan kod ve verinin makaleden farklı olduğu yerleri belgeledik (AnyVisLoc, Bi vd.).
+  Bunlarla yanlış bir kıyas yapmayacağız.
+
 Terimler:
 - **Reprodüksiyon:** Yazarların kodu ve verisiyle (ya da makalenin tarif ettiği veriyle)
   aynı deneyi tekrar çalıştırmak.
