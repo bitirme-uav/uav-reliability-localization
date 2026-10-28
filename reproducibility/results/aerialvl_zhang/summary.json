@@ -162,5 +162,305 @@
    "E3_low": 0.3671875
   },
   "seconds": 86
+ },
+ "LT.5/zhang": {
+  "sequence": "2023-03-18-15-01-14",
+  "zhang_table2": {
+   "localized": "945/945",
+   "mean": 21.4,
+   "median": 11.7,
+   "rmse": 35.6,
+   "max": 154.3,
+   "final": 127.1,
+   "le10": 39.5,
+   "le20": 76.6
+  },
+  "zhang_table3": {
+   "map_candidates": 2347,
+   "accepted_map": 320,
+   "relocalizations": 220,
+   "vo_time_s": 0.08,
+   "map_align_time_s": 0.449
+  },
+  "aerialvl_table7": {
+   "frames": 945,
+   "path_km": 6.86,
+   "succ_rate_nondrift_pct": 93.96,
+   "succ_rate_total_pct": 84.19,
+   "MLE_nondrift_m": 12.64,
+   "RMSE_nondrift_m": 14.9,
+   "CTL_m": 6145.0,
+   "drift_pct": 10.4,
+   "median_err_m": 11.73,
+   "accept_rate": 0.339
+  },
+  "paper_aerialvl": {
+   "km": 7.83,
+   "Comb.1": [
+    40.87,
+    26.92
+   ],
+   "Comb.2": [
+    83.27,
+    14.22
+   ]
+  },
+  "settings": {
+   "seqs": [
+    "LT.5",
+    "LT.6"
+   ],
+   "modes": [
+    "zhang",
+    "pure_vo"
+   ],
+   "stride": 1,
+   "keyframe": 2,
+   "radius": 60.0,
+   "min_matches": 30,
+   "min_inliers": 20,
+   "max_reproj": 3.0,
+   "max_disp": 30.0,
+   "reloc_after": 3,
+   "reloc_step": 60.0,
+   "reloc_max_disp": 150.0,
+   "limit": 0,
+   "E3_low": 0.3671875
+  },
+  "seconds": 1216,
+  "run": "Kaggle 2x T4, 2026-10-28, on a copy of VAL with every 2nd frame (stride 1 here = default stride 2); per-frame logs stayed on the VM"
+ },
+ "LT.5/pure_vo": {
+  "sequence": "2023-03-18-15-01-14",
+  "zhang_table2": {
+   "localized": "945/945",
+   "mean": 7934.3,
+   "median": 3163.3,
+   "rmse": 50848.9,
+   "max": 1215487.7,
+   "final": 3914.1,
+   "le10": 0.0,
+   "le20": 1.3
+  },
+  "zhang_table3": {
+   "map_candidates": 1,
+   "accepted_map": 1,
+   "relocalizations": 0,
+   "vo_time_s": 0.077,
+   "map_align_time_s": 0.581
+  },
+  "aerialvl_table7": {
+   "frames": 945,
+   "path_km": 6.86,
+   "succ_rate_nondrift_pct": 79.27,
+   "succ_rate_total_pct": 2.24,
+   "MLE_nondrift_m": 21.17,
+   "RMSE_nondrift_m": 22.64,
+   "CTL_m": 194.0,
+   "drift_pct": 97.17,
+   "median_err_m": 3163.3,
+   "accept_rate": 0.001
+  },
+  "paper_aerialvl": {
+   "km": 7.83,
+   "Comb.1": [
+    40.87,
+    26.92
+   ],
+   "Comb.2": [
+    83.27,
+    14.22
+   ]
+  },
+  "settings": {
+   "seqs": [
+    "LT.5",
+    "LT.6"
+   ],
+   "modes": [
+    "zhang",
+    "pure_vo"
+   ],
+   "stride": 1,
+   "keyframe": 2,
+   "radius": 60.0,
+   "min_matches": 30,
+   "min_inliers": 20,
+   "max_reproj": 3.0,
+   "max_disp": 30.0,
+   "reloc_after": 3,
+   "reloc_step": 60.0,
+   "reloc_max_disp": 150.0,
+   "limit": 0,
+   "E3_low": 0.3671875
+  },
+  "seconds": 151,
+  "run": "Kaggle 2x T4, 2026-10-28, on a copy of VAL with every 2nd frame (stride 1 here = default stride 2); per-frame logs stayed on the VM"
+ },
+ "LT.6/zhang": {
+  "sequence": "2023-03-18-15-40-18",
+  "zhang_table2": {
+   "localized": "1302/1302",
+   "mean": 353.7,
+   "median": 25.1,
+   "rmse": 611.5,
+   "max": 1387.3,
+   "final": 1215.8,
+   "le10": 28.5,
+   "le20": 46.3
+  },
+  "zhang_table3": {
+   "map_candidates": 6447,
+   "accepted_map": 260,
+   "relocalizations": 681,
+   "vo_time_s": 0.072,
+   "map_align_time_s": 0.432
+  },
+  "aerialvl_table7": {
+   "frames": 1302,
+   "path_km": 9.84,
+   "succ_rate_nondrift_pct": 84.9,
+   "succ_rate_total_pct": 51.4,
+   "MLE_nondrift_m": 13.97,
+   "RMSE_nondrift_m": 17.73,
+   "CTL_m": 5957.0,
+   "drift_pct": 39.46,
+   "median_err_m": 25.14,
+   "accept_rate": 0.2
+  },
+  "paper_aerialvl": {
+   "km": 11.05,
+   "Comb.1": [
+    70.05,
+    17.89
+   ],
+   "Comb.2": [
+    88.04,
+    17.5
+   ]
+  },
+  "settings": {
+   "seqs": [
+    "LT.5",
+    "LT.6"
+   ],
+   "modes": [
+    "zhang",
+    "pure_vo"
+   ],
+   "stride": 1,
+   "keyframe": 2,
+   "radius": 60.0,
+   "min_matches": 30,
+   "min_inliers": 20,
+   "max_reproj": 3.0,
+   "max_disp": 30.0,
+   "reloc_after": 3,
+   "reloc_step": 60.0,
+   "reloc_max_disp": 150.0,
+   "limit": 0,
+   "E3_low": 0.3671875
+  },
+  "seconds": 2997,
+  "run": "Kaggle 2x T4, 2026-10-28, on a copy of VAL with every 2nd frame (stride 1 here = default stride 2); per-frame logs stayed on the VM"
+ },
+ "LT.6/pure_vo": {
+  "sequence": "2023-03-18-15-40-18",
+  "zhang_table2": {
+   "localized": "1302/1302",
+   "mean": 1482.8,
+   "median": 1184.5,
+   "rmse": 1720.2,
+   "max": 3079.2,
+   "final": 2172.4,
+   "le10": 0.9,
+   "le20": 2.2
+  },
+  "zhang_table3": {
+   "map_candidates": 1,
+   "accepted_map": 1,
+   "relocalizations": 0,
+   "vo_time_s": 0.069,
+   "map_align_time_s": 0.58
+  },
+  "aerialvl_table7": {
+   "frames": 1302,
+   "path_km": 9.84,
+   "succ_rate_nondrift_pct": 81.86,
+   "succ_rate_total_pct": 2.59,
+   "MLE_nondrift_m": 16.88,
+   "RMSE_nondrift_m": 19.83,
+   "CTL_m": 312.0,
+   "drift_pct": 96.83,
+   "median_err_m": 1184.47,
+   "accept_rate": 0.001
+  },
+  "paper_aerialvl": {
+   "km": 11.05,
+   "Comb.1": [
+    70.05,
+    17.89
+   ],
+   "Comb.2": [
+    88.04,
+    17.5
+   ]
+  },
+  "settings": {
+   "seqs": [
+    "LT.5",
+    "LT.6"
+   ],
+   "modes": [
+    "zhang",
+    "pure_vo"
+   ],
+   "stride": 1,
+   "keyframe": 2,
+   "radius": 60.0,
+   "min_matches": 30,
+   "min_inliers": 20,
+   "max_reproj": 3.0,
+   "max_disp": 30.0,
+   "reloc_after": 3,
+   "reloc_step": 60.0,
+   "reloc_max_disp": 150.0,
+   "limit": 0,
+   "E3_low": 0.3671875
+  },
+  "seconds": 191,
+  "run": "Kaggle 2x T4, 2026-10-28, on a copy of VAL with every 2nd frame (stride 1 here = default stride 2); per-frame logs stayed on the VM"
+ },
+ "ST.5/zhang_kaggle_check": {
+  "zhang_table2": {
+   "localized": "603/603",
+   "mean": 10.8,
+   "median": 7.1,
+   "rmse": 17.2,
+   "max": 91.0,
+   "final": 1.9,
+   "le10": 70.8,
+   "le20": 92.0
+  },
+  "zhang_table3": {
+   "map_candidates": 773,
+   "accepted_map": 237,
+   "relocalizations": 55,
+   "vo_time_s": 0.08,
+   "map_align_time_s": 0.485
+  },
+  "aerialvl_table7": {
+   "frames": 603,
+   "path_km": 4.52,
+   "succ_rate_nondrift_pct": 98.69,
+   "succ_rate_total_pct": 94.85,
+   "MLE_nondrift_m": 8.49,
+   "RMSE_nondrift_m": 10.5,
+   "CTL_m": 4346.0,
+   "drift_pct": 3.9,
+   "median_err_m": 7.14,
+   "accept_rate": 0.393
+  },
+  "note": "same script and settings re-run on Kaggle to compare with the laptop run above"
  }
 }

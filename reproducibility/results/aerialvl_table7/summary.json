@@ -1,0 +1,135 @@
+{
+ "_run": "Kaggle 2x T4, 2026-10-28. Run on a copy of VAL holding every 2nd frame of each sequence (sorted by timestamp), so stride 1 here = the script's default stride 2. Per-frame logs stayed on the Kaggle VM; frame indices below are in that stride-2 numbering.",
+ "ST.5": {
+  "sequence": "2023-03-18-16-43-16",
+  "ours": {
+   "frames": 603,
+   "path_km": 4.52,
+   "succ_rate_nondrift_pct": 98.61,
+   "succ_rate_total_pct": 95.82,
+   "MLE_nondrift_m": 9.01,
+   "RMSE_nondrift_m": 10.95,
+   "CTL_m": 4394.0,
+   "drift_pct": 2.83,
+   "median_err_m": 7.81,
+   "accept_rate": 0.811
+  },
+  "track": {
+   "first_err_gt_50m": 68,
+   "lost_for_good_at": null
+  },
+  "paper": {
+   "km": 5.09,
+   "Comb.1": [
+    71.41,
+    20.01
+   ],
+   "Comb.2": [
+    79.57,
+    22.27
+   ]
+  },
+  "settings": {
+   "seqs": [
+    "ST.5",
+    "LT.5",
+    "LT.6"
+   ],
+   "stride": 1,
+   "radius": 60.0,
+   "recover_radius": 300.0,
+   "miss": 5,
+   "min_inliers": 15,
+   "E3_low": 0.3671875
+  },
+  "seconds": 426
+ },
+ "LT.5": {
+  "sequence": "2023-03-18-15-01-14",
+  "ours": {
+   "frames": 945,
+   "path_km": 6.86,
+   "succ_rate_nondrift_pct": 86.68,
+   "succ_rate_total_pct": 68.38,
+   "MLE_nondrift_m": 14.96,
+   "RMSE_nondrift_m": 18.01,
+   "CTL_m": 5411.0,
+   "drift_pct": 21.11,
+   "median_err_m": 14.66,
+   "accept_rate": 0.666
+  },
+  "track": {
+   "first_err_gt_50m": 314,
+   "lost_for_good_at": 896
+  },
+  "paper": {
+   "km": 7.83,
+   "Comb.1": [
+    40.87,
+    26.92
+   ],
+   "Comb.2": [
+    83.27,
+    14.22
+   ]
+  },
+  "settings": {
+   "seqs": [
+    "ST.5",
+    "LT.5",
+    "LT.6"
+   ],
+   "stride": 1,
+   "radius": 60.0,
+   "recover_radius": 300.0,
+   "miss": 5,
+   "min_inliers": 15,
+   "E3_low": 0.3671875
+  },
+  "seconds": 869
+ },
+ "LT.6": {
+  "sequence": "2023-03-18-15-40-18",
+  "ours": {
+   "frames": 1302,
+   "path_km": 9.84,
+   "succ_rate_nondrift_pct": 89.47,
+   "succ_rate_total_pct": 21.97,
+   "MLE_nondrift_m": 13.53,
+   "RMSE_nondrift_m": 16.44,
+   "CTL_m": 2417.0,
+   "drift_pct": 75.44,
+   "median_err_m": 7413.89,
+   "accept_rate": 0.186
+  },
+  "track": {
+   "first_err_gt_50m": 71,
+   "lost_for_good_at": 372
+  },
+  "paper": {
+   "km": 11.05,
+   "Comb.1": [
+    70.05,
+    17.89
+   ],
+   "Comb.2": [
+    88.04,
+    17.5
+   ]
+  },
+  "settings": {
+   "seqs": [
+    "ST.5",
+    "LT.5",
+    "LT.6"
+   ],
+   "stride": 1,
+   "radius": 60.0,
+   "recover_radius": 300.0,
+   "miss": 5,
+   "min_inliers": 15,
+   "E3_low": 0.3671875
+  },
+  "seconds": 478
+ }
+}

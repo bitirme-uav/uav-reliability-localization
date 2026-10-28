@@ -13,10 +13,10 @@ Results (JSON/JSONL) are written to `reproducibility/results/`.
 
 | # | Paper | Code released? | Data here? | What we reproduce | Script | Status |
 |---|---|---|---|---|---|---|
-| 1 | AerialVL (He et al., RA-L 2024) | data only (no baseline code) | yes (5 of 11 sequences on disk; TRAIN images deleted) | Table VII protocol (sequential alignment from known start, Succ. Rate / MLE / CTL) on ST.5, LT.5, LT.6 with our localizer | `aerialvl_table7.py` | queued |
+| 1 | AerialVL (He et al., RA-L 2024) | data only (no baseline code) | yes (5 of 11 sequences on disk; TRAIN images deleted) | Table VII protocol (sequential alignment from known start, Succ. Rate / MLE / CTL) on ST.5, LT.5, LT.6 with our localizer | `aerialvl_table7.py` | run (not 1:1, no VO): ST.5/LT.5 above the paper, LT.6 track lost |
 | 2 | GeoVINS (Li et al., T-RO 2025) | no | no (rosbags, Baidu, large) | not feasible | — | infeasible |
 | 3 | SatLoc / SatLoc-Fusion (Zhou et al., Remote Sens. 2025) | empty repo | no (529 GB, Quark) | Eq. (2) confidence C1 re-implemented and scored on our fix records (dataset not downloadable) | `satloc_c1.py` | done (sign error found) |
-| 4 | Zhang et al. (UST 2026), Map-Aided UAV Visual Localization via VO and Orthophoto Map Alignment | no | no (two private Tianjin flights) | method re-implemented (homography VO, gated map correction, local relocalization, pure-VO baseline) and run on AerialVL ST.5 / LT.5 / LT.6 | `aerialvl_zhang.py` | queued |
+| 4 | Zhang et al. (UST 2026), Map-Aided UAV Visual Localization via VO and Orthophoto Map Alignment | no | no (two private Tianjin flights) | method re-implemented (homography VO, gated map correction, local relocalization, pure-VO baseline) and run on AerialVL ST.5 / LT.5 / LT.6 | `aerialvl_zhang.py` | run on AerialVL (paper data private): ST.5 at the paper's level, LT.6 track lost |
 | 5 | AnyVisLoc (Ye et al., CVPR-F 2026) | yes (UAV-AVL/Benchmark) | yes (24 scenes, 60 GB zips) | Table 6 aerial baseline (CAMP + RoMa + top-5, A@5/10/20 m), Table 4 SP+LG rows | `anyvisloc_run.py` | retrieval R@1 reproduced (61.9 vs 61.6); A@5 m not comparable (94.4 vs 74.1: released code and data differ from the paper) |
 | 6 | UAV-VisLoc (Xu et al., arXiv 2024) | data only | yes | dataset statistics, Table II | `uav_visloc_stats.py` | done |
 | 7 | Bar-Shalom et al. (2001) | textbook | simulated | §5.3–5.4 DWNA Kalman example, NEES/NIS consistency tests, χ² regions | `barshalom_consistency.py` | reproduced |
@@ -225,6 +225,27 @@ Not comparable 1:1: we have no VO, so the prediction is constant velocity from a
 the acceptance gate is the project's frozen raw-score gate (E3, chosen on open-loop VAL fixes);
 every second frame is used (~1 s).
 
+**Results (Kaggle, 2× T4, 2026-10-28; `results/aerialvl_table7/summary.json`).** Run on a copy of
+VAL that holds every second frame of the three sequences (so `--stride 1` there = default
+stride 2 here). Succ. Rate is defined as in the paper: share of the *non-drift* part with error
+< 25 m; drift = error > 50 m.
+
+| | Ours: Succ. Rate / MLE | Ours: drift share / CTL | Paper Comb.1 | Paper Comb.2 |
+|---|---|---|---|---|
+| ST.5 (4.52 km here) | **98.6 % / 9.0 m** | 2.8 % / 4.39 km | 71.41 % / 20.01 m | 79.57 % / 22.27 m |
+| LT.5 (6.86 km) | **86.7 % / 15.0 m** | 21.1 % / 5.41 km | 40.87 % / 26.92 m | 83.27 % / 14.22 m |
+| LT.6 (9.84 km) | 89.5 % / 13.5 m | **75.4 %** / 2.42 km | 70.05 % / 17.89 m | 88.04 % / 17.50 m |
+
+- ST.5 and LT.5: above both of the paper's combinations in Succ. Rate, with MLE below Comb.1
+  and close to Comb.2 (15.0 vs 14.2 m on LT.5).
+- LT.6: the track is lost at frame 372 of 1,302 (the error first exceeds 50 m at frame 71 and
+  comes back below it later) and never recovered: the 300 m recovery search does not reach a track that is
+  already kilometres off (max error 28 km). LT.5 is lost for good at frame 896 of 945.
+- The paper's Succ. Rate ignores the drift part. On LT.6 it reads 89.5 % although only 22 % of
+  the route has an error below 25 m and the median error is 7.4 km. The drift share / CTL must be
+  reported next to it.
+- Not 1:1 (see above): no VO, a different localizer and gate, sequence lengths from our frames.
+
 ## 4. Zhang et al. (UST 2026) — method re-implemented on AerialVL (`aerialvl_zhang.py`)
 
 Paper results (Table II, proposed / pure VO), private data, no code:
@@ -244,6 +265,36 @@ a similarity (project localizer); the gate thresholds are not given in the paper
 fixed a priori (matches ≥ 30, inliers ≥ 20, inlier ratio ≥ frozen E3 0.367, mean reprojection
 ≤ 3 px, correction displacement ≤ 30 m; relocalization: 3×3 grid, 60 m spacing, ≤ 150 m);
 AerialVL trajectories are 3–5× longer and flown higher (120–200 m) than Zhang's.
+
+**Results** (`results/aerialvl_zhang/summary.json`; ST.5 on the laptop, LT.5/LT.6 on Kaggle
+2× T4, 2026-10-28, same stride-2 frames as §1). Zhang's metrics, error in m:
+
+| | Localized | Mean | Median | RMSE | Max | Final | ≤ 10 m | ≤ 20 m | Relocalizations |
+|---|---|---|---|---|---|---|---|---|---|
+| ST.5 (603 frames, 4.5 km) | 603/603 | **8.8** | **7.5** | 10.2 | 35.3 | 2.7 | 71.0 % | 95.4 % | 74 |
+| ST.5, pure VO | 603/603 | 1003.1 | 1092.4 | 1092.6 | 1702.0 | 1700.6 | 0.7 % | 4.5 % | |
+| LT.5 (945 frames, 6.9 km) | 945/945 | 21.4 | 11.7 | 35.6 | 154.3 | 127.1 | 39.5 % | 76.6 % | 220 |
+| LT.5, pure VO | 945/945 | 7934.3 | 3163.3 | 50848.9 | 1215487.7 | 3914.1 | 0.0 % | 1.3 % | |
+| LT.6 (1,302 frames, 9.8 km) | 1302/1302 | 353.7 | 25.1 | 611.5 | 1387.3 | 1215.8 | 28.5 % | 46.3 % | 681 |
+| LT.6, pure VO | 1302/1302 | 1482.8 | 1184.5 | 1720.2 | 3079.2 | 2172.4 | 0.9 % | 2.2 % | |
+
+AerialVL Table VII metrics of the same runs (Succ. Rate / MLE / drift share): ST.5 98.5 % /
+8.8 m / 0 %; LT.5 94.0 % / 12.6 m / 10.4 %; LT.6 84.9 % / 14.0 m / 39.5 %.
+
+- On ST.5 the re-implementation reaches the paper's accuracy (mean 8.8 m vs 8.1 / 8.4 m) on a
+  route 2.5–7.5× longer than Zhang's. On LT.5 the median stays near 12 m, but the mean doubles.
+  On LT.6 the corrections stop being accepted (260 accepted of 6,447 candidates) and the
+  relocalization grid (±60 m) does not catch the track again: median 25 m, final error 1.2 km.
+- Pure VO drifts by kilometres on all three routes, so map correction is essential. This
+  matches the paper's qualitative finding (pure VO far worse), at a larger scale.
+- Zhang vs. our Table VII loop (§1): with VO and gated corrections, Zhang's method keeps LT.5
+  better (10 % vs 21 % drift) and loses LT.6 later (39 % vs 75 % drift). Neither recovers once
+  the error exceeds the relocalization range.
+- **Kaggle vs. laptop check.** ST.5 was re-run on Kaggle with the same script and settings:
+  median 7.1 m (laptop 7.5), ≤ 10 m 70.8 % (71.0 %), but mean 10.8 m (8.8) and max 91.0 m (35.3).
+  Closed-loop runs are path-dependent: small numerical differences (GPU, library versions)
+  change which corrections pass the gate, and the tail moves. Medians are stable to ~0.5 m;
+  means and maxima of a single run should not be over-read.
 
 Note on the project's earlier wording: `src/gates.py` contains no Zhang-specific gate; the
 comparison to Zhang in the proposal is conceptual (heuristic quality gating + relocalization

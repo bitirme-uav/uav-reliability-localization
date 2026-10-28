@@ -24,6 +24,7 @@ Usage: python aerialvl_table7.py [--seqs ST.5 LT.5 LT.6] [--stride 2]
 """
 import argparse
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -38,7 +39,7 @@ from boresight import correct_fix_enu  # noqa: E402
 from geo_utils import enu_to_lonlat_m, lonlat_to_enu_m  # noqa: E402
 from localization_pipeline import LocalizationPipeline, MapExtractor  # noqa: E402
 
-VAL_ROOT = r"D:/proje/uav_vloc_datasets/AerialVL_data/images/VAL/extracted"
+VAL_ROOT = os.environ.get("AVL_VAL_ROOT", r"D:/proje/uav_vloc_datasets/AerialVL_data/images/VAL/extracted")
 OUT = Path(__file__).resolve().parent / "results" / "aerialvl_table7"
 SEQS = {"ST.5": "2023-03-18-16-43-16", "LT.5": "2023-03-18-15-01-14", "LT.6": "2023-03-18-15-40-18"}
 PAPER = {  # Table VII: Succ. Rate (%), MLE (m)
