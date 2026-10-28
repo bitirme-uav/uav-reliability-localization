@@ -1,0 +1,1 @@
+{"model": "resnet101_netvlad", "backbone": "resnet101conv4", "aggregation": "netvlad", "resize": [480, 640], "n_db": 14096, "n_q": 18361, "ms_per_image": 93.24, "R@1_50m": 30.7, "R@5_50m": 58.7, "R@10_50m": 68.1, "R@20_50m": 74.8, "queries_without_positive_50m": 0, "R@1_100m": 53.8, "R@5_100m": 74.0, "R@10_100m": 79.7, "R@20_100m": 84.9, "queries_without_positive_100m": 0}

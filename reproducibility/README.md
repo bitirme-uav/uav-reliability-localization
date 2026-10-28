@@ -28,6 +28,7 @@ Results (JSON/JSONL) are written to `reproducibility/results/`.
 | 13 | Bi et al. (ISPRS J. 2026), UAV coarse visual localization (XIAN-Visloc) | yes (VERYBC/UCVL, eval only) | Kaggle (HF, 26 GB + 4.5 GB) | Tables 4/7/9 retrieval on XIAN-Visloc; Table 13 real-world | `bi_xian_visloc/` | Table 13 reproduced exactly; XIAN-Visloc tables partly (released weights are the real-world model) |
 | 14 | Wang et al. (ISPRS Archives 2026), UAV Visual Localization in GNSS-Denied Environments | no | no (own NCSIST-funded flights, 3,770 images, not released) | not feasible | — | infeasible |
 | 15 | SUE (Zaffar et al., CVPR 2024), image-matching uncertainty in VPR | yes (tudelft-iv/SUE, SUE only, St Lucia data) | St Lucia pickle in the repo (Git LFS) | Table 2, St Lucia column (AUC-PR of all 8 methods) + sensitivity | `sue_check.py` | reproduced exactly (St Lucia only) |
+| 16 | AerialVL (He et al., RA-L 2024), Table III one-stage VPR | data (HF) + MSLS weights of Berton et al. benchmark | Kaggle (VPR part, 76.5 GB) | Table III, 6 models, R@1/5/10 at 50/100 m | `aerialvl_vpr/` | reproduced (31/36 values within 2.5 pts; GeM-VGG16 up to +4.3) |
 
 Results are filled in below as each experiment finishes.
 
@@ -291,3 +292,44 @@ Table 2 (St Lucia, AUC-PR, 1,464 queries, top-1 correct 55.8 %):
 For our project: SUE needs only the poses of the top-K map tiles and their descriptor
 distances, which our retrieval front end already produces. It is a cheap extra reliability
 feature; it is not a calibrated probability (scores are min-max normalised per dataset).
+
+## 16. AerialVL (He et al., RA-L 2024) — Table III, one-stage VPR (`aerialvl_vpr/`)
+
+Data: VPR part of AerialVL from Hugging Face (`hmf21/AerialVL`, `images/VPR`, 36 × 2.15 GB):
+14,096 map tiles in three sizes (`map_database/level_1..3`) and 18,361 query frames
+(`query_images_1..4`); both counts are exactly those of the paper (Table II). Models: the
+MSLS-trained checkpoints of the deep-visual-geo-localization benchmark (Berton et al., CVPR 2022,
+`gmberton/deep-visual-geo-localization-benchmark` @ `4af5194`), which the paper says it used
+("pre-trained weights on ground-based MSLS dataset, which are provided in benchmark [33]").
+ResNets are cropped at conv4 as in that benchmark; images are resized to its default 480 × 640.
+Database = all three tile levels; tile position = centre of its corner coordinates; a query
+is correctly retrieved if a top-N tile is within 50 m / 100 m (UTM 51N). Kaggle, 2× T4,
+2026-10-27/28. Script: `aerialvl_vpr/avl_vpr.py`, commands: `aerialvl_vpr/run_on_kaggle.sh`,
+raw numbers: `results/aerialvl_vpr/`.
+
+R@N in %, "paper → ours", threshold 50 m / 100 m:
+
+| Model | R@1 | R@5 | R@10 |
+|---|---|---|---|
+| NetVLAD (VGG16) | 24.0 / 44.4 → **24.8 / 42.9** | 50.0 / 64.1 → 48.9 / 62.8 | 60.2 / 71.8 → 59.6 / 71.1 |
+| NetVLAD (ResNet50) | 31.8 / 53.2 → **29.3 / 52.0** | 58.0 / 73.8 → 57.3 / 72.2 | 66.5 / 79.8 → 66.5 / 78.3 |
+| NetVLAD (ResNet101) | 28.6 / 51.5 → **30.7 / 53.8** | 56.3 / 71.9 → 58.7 / 74.0 | 65.5 / 78.6 → 68.1 / 79.7 |
+| GeM (VGG16) | 17.6 / 33.1 → **21.2 / 37.0** | 42.4 / 55.1 → 44.6 / 58.2 | 53.1 / 62.7 → 54.7 / 67.0 |
+| GeM (ResNet50) | 27.3 / 48.4 → **27.8 / 50.2** | 54.9 / 69.7 → 55.8 / 70.0 | 65.7 / 78.5 → 67.4 / 77.6 |
+| GeM (ResNet101) | 30.4 / 54.7 → **31.0 / 57.2** | 62.4 / 77.0 → 61.0 / 76.4 | 72.5 / 83.5 → 70.7 / 82.3 |
+
+**Result: reproduced.** 31 of the 36 values are within 2.5 points of the paper (mean absolute
+difference 1.6 points). The larger gaps are GeM-VGG16 (R@1 +3.6 / +3.9, R@5 at 100 m +3.1, R@10
+at 100 m +4.3, all in our favour) and NetVLAD-ResNet101 R@10 at 50 m (+2.6). The paper's qualitative findings hold: deeper backbones
+help a little, NetVLAD and GeM are comparable, and even the best model finds the right tile
+(50 m) for fewer than a third of the queries at R@1.
+Our runtime per image (47–93 ms) is not comparable with the paper's 1.3–8 ms: ours includes
+PNG decoding of large frames on 4 shared CPU cores, theirs is network time only.
+
+Unstated details we had to choose: the input size (benchmark default 480 × 640) and whether
+the three tile levels form one database (yes; 14,096 = the paper's number). With these choices
+no tuning was done.
+
+For our project: ground-trained global descriptors give R@1 ≈ 30 % (50 m) on real UAV frames.
+A retrieval-only fix is therefore wrong most of the time, which is why the fix needs local
+matching and a reliability check before it is used.

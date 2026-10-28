@@ -1,0 +1,1 @@
+{"model": "vgg16_gem", "backbone": "vgg16", "aggregation": "gem", "resize": [480, 640], "n_db": 14096, "n_q": 18361, "ms_per_image": 89.48, "R@1_50m": 21.2, "R@5_50m": 44.6, "R@10_50m": 54.7, "R@20_50m": 63.4, "queries_without_positive_50m": 0, "R@1_100m": 37.0, "R@5_100m": 58.2, "R@10_100m": 67.0, "R@20_100m": 75.2, "queries_without_positive_100m": 0}

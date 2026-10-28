@@ -1,0 +1,1 @@
+{"model": "resnet50_gem", "backbone": "resnet50conv4", "aggregation": "gem", "resize": [480, 640], "n_db": 14096, "n_q": 18361, "ms_per_image": 53.36, "R@1_50m": 27.8, "R@5_50m": 55.8, "R@10_50m": 67.4, "R@20_50m": 76.2, "queries_without_positive_50m": 0, "R@1_100m": 50.2, "R@5_100m": 70.0, "R@10_100m": 77.6, "R@20_100m": 84.4, "queries_without_positive_100m": 0}

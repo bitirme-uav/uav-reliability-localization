@@ -1,0 +1,1 @@
+{"model": "vgg16_netvlad", "backbone": "vgg16", "aggregation": "netvlad", "resize": [480, 640], "n_db": 14096, "n_q": 18361, "ms_per_image": 83.08, "R@1_50m": 24.8, "R@5_50m": 48.9, "R@10_50m": 59.6, "R@20_50m": 68.8, "queries_without_positive_50m": 0, "R@1_100m": 42.9, "R@5_100m": 62.8, "R@10_100m": 71.1, "R@20_100m": 79.4, "queries_without_positive_100m": 0}
