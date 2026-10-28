@@ -24,16 +24,22 @@ Tarih: 2026-10-28. Kapsam: proje önerisi v6 §19'daki öncelikli okuma listesi 
   söylemiyor. Bu yöntemlerin bir kısmı kalite kapısı ve yerel yeniden konumlama kullanıyor.
 
 **2. Projenin hedefi tam bu boşluk.**
-- Proje her fix için kalibre edilmiş bir güvenilirlik tahmini üretiyor.
-- Bu tahmine ve χ² kapısına göre fix kabul ya da reddediliyor.
-- İz kaybolunca yeniden yakalama (REACQUIRE) başlıyor.
+- Projenin ana katkısı öğrenilmiş, kalibre bir güvenilirlik modeli. Model eşleştirme
+  istatistiklerini ve tahmine göre tutarlılığı (Mahalanobis uzaklığı) birlikte kullanıyor ve
+  "bu fix 10 m içinde mi" olasılığını veriyor.
+- Fix bu olasılığa göre kabul ediliyor, ağırlığı düşürülüyor ya da reddediliyor.
+- İz kaybolunca yeniden yakalama (REACQUIRE) ve 2-fix teyidi devreye giriyor.
+- χ² kapısı bizim yöntemimiz değil, karşılaştırdığımız temel yöntemlerden biri (E5). Ham skor
+  (E3) ve SatLoc tarzı skor (E4) da öyle.
 - Bu raporun gösterdiği şey problemin varlığı. Projenin bu problemi ne kadar çözdüğü ise
   projenin kendi deneylerinin konusu (`FINAL_RAPOR.md`). O deneylerdeki kapalı döngü eşik
   seçimi henüz bitmedi (§14).
 
 **3. Tasarım kararlarına doğrudan dayanak sağladı.**
 - Harita düzeltmesi şart: saf VO kilometrelerce sapıyor (§4).
-- χ² kapısı ancak kovaryans doğruysa çalışıyor, bu yüzden kalibrasyon gerekli (§11).
+- Klasik χ² kapısı ancak filtrenin kovaryansı doğruysa çalışıyor; yanlışsa doğru fix'leri
+  reddediyor (§11). FINAL_RAPOR'a göre Mahalanobis uzaklığı kullanan bizim kalibre kapımız da
+  bu durumda zayıflıyor. Projedeki çare, REACQUIRE ve 2-fix teyidi.
 - SatLoc'un güven formülü basıldığı haliyle ters çalışıyor ve UAV-VisLoc'ta bilgi taşımıyor
   (§8). Sezgisel güven skorlarına güvenilemiyor.
 - SUE, eklenebilecek ucuz bir güvenilirlik özelliği (§7).
@@ -316,7 +322,7 @@ DWNA Kalman örneği kitaptaki gibi simüle edildi: 100 adım, 50 Monte Carlo ko
   [0,901, 0,942]; χ² eşikleri ve NEES/NIS bölgeleri.
 - **Rastgele sayımlar beklenen aralıkta.** Örnek: uyumsuz filtrede tek koşuda 5,99'u aşan NEES
   noktası kitapta 41/100, bizde 43/100.
-- **Proje kapısı için ek deney:** İnovasyon kovaryansı 2 / 4 / 9 kat küçük tahmin edilirse
+- **χ² temel yöntemi için ek deney:** İnovasyon kovaryansı 2 / 4 / 9 kat küçük tahmin edilirse
   2 serbestlik dereceli χ² kapısı (α = 0,05) doğru fix'lerin %22 / %47 / %72'sini reddediyor.
   Kovaryans doğruyken bu oran %5. FINAL_RAPOR'daki "kovaryans yanlış belirlendiğinde χ² kapısı
   çöküyor" bulgusunun mekanizması bu.
@@ -352,8 +358,8 @@ Her madde yukarıdaki bölümlere dayanıyor.
 5. **Güven skorları dikkatle kullanılmalı.**
    - SatLoc'un formülü basıldığı haliyle ters çalışıyor ve UAV-VisLoc'ta bilgi taşımıyor (§8).
    - SUE ucuz bir ek özellik olabilir (§7).
-   - χ² kapısı doğru kovaryansa bağlı (§11). Bu, kalibre edilmiş güvenilirlik modeli fikrini
-     destekliyor.
+   - Klasik χ² kapısı doğru kovaryansa bağlı (§11). χ² bizim yöntemimiz değil, kıyas için
+     kullandığımız temel yöntemlerden biri.
 6. **Yayımlanan kod ve veri makaledekiyle aynı olmayabilir** (§5 AnyVisLoc, §6 Bi). Bu
    kaynaklara atıf yapılırken commit ve veri sürümü de verilmeli.
 
